@@ -60,7 +60,7 @@ This is the step that actually protects the data. Don't skip it.
 ### 6. Make yourself the admin
 1. **Firestore Database** → **Data** tab → **Start collection**.
 2. Collection ID: `admins` → **Next**.
-3. Document ID: **your email address**, exactly — `cmfellow2025.ysca@gmail.com`
+3. Document ID: **your own email address**, exactly as you sign in with.
 4. Add no fields at all. Just **Save**.
 
 > Being listed here is what unlocks the tracker and audit log. To add another admin later,
@@ -73,7 +73,10 @@ This is the step that actually protects the data. Don't skip it.
 ### 7. Create the repository
 1. Go to **https://github.com/new**
 2. Repository name: `cm-scheme-questionnaire`
-3. Choose **Private** if you prefer — GitHub Pages works either way on a free account.
+3. Choose **Public**. GitHub Pages only works from a private repository on a PAID
+   plan; on a free account the repository must be public. No answers live in the
+   repository — they are in Firestore, behind sign-in — and the Firebase config values
+   are designed to be public.
 4. **Create repository**, then follow GitHub's instructions to upload this folder.
    The simplest route is the **"uploading an existing file"** link on that page: drag in
    everything from this folder.

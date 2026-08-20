@@ -169,7 +169,7 @@ with a post-deploy check list. The short version:
    `js/firebase-config.js`, replacing the `PASTE_…` placeholders.
 5. **Firestore → Rules** → paste the contents of `firestore.rules` → Publish.
 6. **Firestore → Data** → create collection `admins`, add a document whose **ID is your
-   email address** (`cmfellow2025.ysca@gmail.com`). The document can be empty — its
+   email address**. The document can be empty — its
    existence is what grants admin.
 7. **Push this folder to a new GitHub repo** → Settings → Pages → deploy from `main`.
 8. **Firebase → Authentication → Settings → Authorized domains** → add your
