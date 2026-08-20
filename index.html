@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#2557a7" />
+  <title>Cultural Schemes Questionnaire — SYCAD</title>
+
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Gujarati:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- ============ App bar (hidden until signed in — Feature 2) ============ -->
+  <header id="appbar" class="topbar hidden">
+    <div class="app">
+      <div class="topbar-inner">
+        <div class="brand">
+          <div class="logo">સા</div>
+          <div>
+            <b>Cultural Schemes Questionnaire</b>
+            <small class="guj">સાંસ્કૃતિક યોજના પ્રશ્નાવલિ</small>
+          </div>
+        </div>
+        <div class="whoami" id="whoami">
+          <span id="who-text"></span>
+          <button id="btn-home" class="btn ghost sm hidden">Home <span class="guj">/ મુખ્ય</span></button>
+          <button id="btn-profile" class="btn ghost sm hidden">Profile <span class="guj">/ પ્રોફાઇલ</span></button>
+          <button id="btn-admin" class="btn ghost sm hidden">Admin <span class="guj">/ વહીવટ</span></button>
+          <button id="btn-signout" class="btn ghost sm">Sign out <span class="guj">/ સાઇન આઉટ</span></button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="app" id="main">
+
+    <!-- ============ Loading ============ -->
+    <section id="view-loading" class="view center-wrap">
+      <div>
+        <div class="spinner"></div>
+        <p class="muted" style="text-align:center">Loading… <span class="guj">લોડ થઈ રહ્યું છે…</span></p>
+      </div>
+    </section>
+
+    <!-- ============ Setup pending (no Firebase config yet) ============ -->
+    <section id="view-setup" class="view center-wrap hidden">
+      <div class="card pad" style="max-width:560px">
+        <h2><span id="setup-title">Setup pending</span>
+            <span class="guj" id="setup-title-gu">/ સેટઅપ બાકી</span></h2>
+        <p class="muted" style="margin-top:8px" id="setup-body">
+          Open js/firebase-config.js and paste the config from your Firebase
+          project (Project settings → Your apps → Web app).
+          See README.md for the full 8-step setup.
+        </p>
+        <p class="note">These values are not secrets — they ship to every browser. Your data is
+        protected by Authentication + <code>firestore.rules</code>, not by hiding this config.</p>
+      </div>
+    </section>
+
+    <!-- ============ Login (Feature 2) ============ -->
+    <section id="view-login" class="view center-wrap hidden">
+      <div class="card pad auth-card">
+        <div class="logo lg">સા</div>
+        <h1>Cultural Schemes Questionnaire</h1>
+        <p class="guj sub">સાંસ્કૃતિક યોજના પ્રશ્નાવલિ</p>
+        <p class="muted sub2">
+          Sports, Youth &amp; Cultural Activities Department, Government of Gujarat
+          <span class="guj block">રમતગમત, યુવા અને સાંસ્કૃતિક પ્રવૃત્તિઓ વિભાગ, ગુજરાત સરકાર</span>
+        </p>
+        <button id="btn-google" class="gbtn">
+          <svg class="gmark" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.6l6.7-6.7C35.6 2.6 30.2 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.8 6.1C12.2 13.2 17.6 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.5 3-2.2 5.5-4.7 7.2l7.3 5.7c4.3-4 6.2-9.9 6.2-17.4z"/><path fill="#FBBC05" d="M10.4 28.3c-.5-1.5-.8-3-.8-4.8s.3-3.3.8-4.8l-7.8-6.1C.9 16 0 19.9 0 24s.9 8 2.6 11.4l7.8-6.1z"/><path fill="#34A853" d="M24 48c6.2 0 11.4-2 15.2-5.5l-7.3-5.7c-2 1.4-4.7 2.3-7.9 2.3-6.4 0-11.8-3.7-13.6-9.1l-7.8 6.1C6.5 42.6 14.6 48 24 48z"/></svg>
+          <span>Sign in with Google <span class="guj">/ Google થી સાઇન ઇન</span></span>
+        </button>
+        <div id="login-error" class="banner err hidden"></div>
+        <p class="note">Use your official Google account. Your name, rank and office are
+          recorded with every answer you save.
+          <span class="guj block">આપના સત્તાવાર Google ખાતાથી પ્રવેશ કરો. આપ સાચવો તે દરેક જવાબ સાથે
+          આપનું નામ, હોદ્દો અને કચેરી નોંધાય છે.</span></p>
+      </div>
+    </section>
+
+    <!-- ============ Profile setup ============ -->
+    <section id="view-profile" class="view hidden">
+      <div class="card pad form-card">
+        <h2 id="pf-title">Set up your profile <span class="guj">/ પ્રોફાઇલ સેટ કરો</span></h2>
+        <p class="muted" style="font-size:13px;margin-top:6px">
+          Asked once. Your name, rank and office are recorded with every answer you save.
+          <span class="guj block">એક જ વાર પૂછવામાં આવે છે. આપ સાચવો તે દરેક જવાબ સાથે આપનું નામ,
+          હોદ્દો અને કચેરી નોંધાય છે.</span>
+        </p>
+
+        <label class="fl" for="pf-body">Office / body <span class="guj">/ કચેરી</span></label>
+        <select id="pf-body"></select>
+
+        <label class="fl" for="pf-name">Full name <span class="guj">/ પૂરું નામ</span></label>
+        <input id="pf-name" type="text" maxlength="120" autocomplete="name"
+               placeholder="e.g. Kushal M. Dixit" />
+
+        <label class="fl" for="pf-rank">Rank / designation <span class="guj">/ હોદ્દો</span></label>
+        <div id="pf-rank-wrap"></div>
+
+        <div id="pf-branch-wrap" class="hidden">
+          <label class="fl" for="pf-branch">Branch / unit <span class="guj">/ શાખા</span></label>
+          <select id="pf-branch"></select>
+          <p class="note">Branches apply to the Commissionerate only.
+            <span class="guj block">શાખા ફક્ત કચેરીને લાગુ પડે છે.</span></p>
+        </div>
+
+        <div id="pf-error" class="banner err hidden"></div>
+
+        <button id="pf-save" class="btn block" style="margin-top:22px">
+          Save and continue <span class="guj">/ સાચવીને આગળ વધો</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ============ Home ============ -->
+    <section id="view-home" class="view hidden">
+      <div class="home-top">
+        <h2 id="home-greet"></h2>
+        <p class="muted" id="home-who"></p>
+        <p class="muted home-note">
+          Everything you type is saved automatically. You can stop and come back any time.
+          <span class="guj block">આપ લખો તે આપોઆપ સચવાય છે. વચ્ચે બંધ કરીને પછી ફરી ચાલુ કરી શકો છો.</span>
+        </p>
+      </div>
+
+      <div class="home-cards">
+        <!-- Part A -->
+        <div class="card pad homecard">
+          <div class="homecard-head">
+            <h3>Part A — Universal <span class="guj">/ સામાન્ય પ્રશ્નાવલિ</span></h3>
+            <span id="home-a-status" class="pill todo">—</span>
+          </div>
+          <p class="muted homecard-sub">
+            Answered once for your office. 25 questions.
+            <span class="guj block">આપની કચેરી માટે એક જ વાર. ૨૫ પ્રશ્નો.</span>
+          </p>
+          <div class="prog"><i id="home-a-bar" style="width:0%"></i></div>
+          <p class="mini" id="home-a-progress"></p>
+          <p class="mini" id="home-a-edited"></p>
+          <button id="home-parta" class="btn block" style="margin-top:16px">
+            <span id="home-a-btn">Open</span> <span class="guj">/ ખોલો</span>
+          </button>
+        </div>
+
+        <!-- Part B -->
+        <div class="card pad homecard">
+          <div class="homecard-head">
+            <h3>Part B — Per scheme <span class="guj">/ યોજના દીઠ</span></h3>
+            <span id="home-b-count" class="pill todo">—</span>
+          </div>
+          <p class="muted homecard-sub">
+            One questionnaire for each scheme, up to 58 questions. Pick a scheme to begin.
+            <span class="guj block">દરેક યોજના માટે અલગ પ્રશ્નાવલિ, વધુમાં વધુ ૫૮ પ્રશ્નો. શરૂ કરવા યોજના પસંદ કરો.</span>
+          </p>
+
+          <div id="home-b-mine" class="minebox hidden">
+            <div class="minebox-head">
+              <b id="home-b-mine-title"></b>
+              <span id="home-b-mine-pill" class="pill todo"></span>
+            </div>
+            <div class="prog"><i id="home-b-mine-bar" style="width:0%"></i></div>
+            <p class="mini" id="home-b-mine-text"></p>
+          </div>
+
+          <div id="sp-branchwrap" class="hidden" style="margin-top:14px">
+            <label class="fl" for="sp-branch">Branch <span class="guj">/ શાખા</span></label>
+            <select id="sp-branch"></select>
+          </div>
+
+          <input id="sp-search" type="text" style="margin-top:12px"
+                 placeholder="Search scheme name / યોજનાનું નામ શોધો" />
+
+          <p class="mini" id="sp-note"></p>
+          <div id="sp-list" class="scheme-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Part A form ============ -->
+    <section id="view-parta" class="view hidden">
+      <div class="crumb"><a id="pa-back">Home</a> › Part A — Universal</div>
+
+      <div class="card">
+        <div class="pad formhead">
+          <div class="formhead-row">
+            <h2>Part A — Universal <span class="guj">/ સામાન્ય પ્રશ્નાવલિ</span></h2>
+            <span id="pa-savechip" class="savechip hidden"></span>
+          </div>
+          <p class="muted" style="font-size:13px" id="pa-body-label"></p>
+          <div class="prog"><i id="pa-progbar" style="width:0%"></i></div>
+          <p class="mini" id="pa-progtext"></p>
+          <div id="pa-banner" class="banner info hidden"></div>
+        </div>
+      </div>
+
+      <div id="pa-loading" class="center-wrap hidden" style="min-height:200px">
+        <div>
+          <div class="spinner"></div>
+          <p class="muted" style="text-align:center">Loading your saved answers…
+            <span class="guj block">સાચવેલા જવાબો લવાય છે…</span></p>
+        </div>
+      </div>
+
+      <div id="pa-questions"></div>
+
+      <div class="card pad formfoot">
+        <button id="pa-exit" class="btn ghost sm">Save &amp; exit <span class="guj">/ સાચવીને બહાર</span></button>
+        <button id="pa-submit" class="btn sm">Submit Part A <span class="guj">/ સબમિટ</span></button>
+      </div>
+    </section>
+
+    <!-- ============ Part B form ============ -->
+    <section id="view-partb" class="view hidden">
+      <div class="crumb"><a id="pb-back">Home</a> › Part B</div>
+      <div class="card">
+        <div class="pad formhead">
+          <div class="formhead-row">
+            <h2 id="pb-title"></h2>
+            <span id="pb-savechip" class="savechip hidden"></span>
+          </div>
+          <p class="muted guj" id="pb-title-gu" style="font-size:13.5px"></p>
+          <p class="mini" id="pb-meta"></p>
+        </div>
+      </div>
+      <!-- wrong body / branch -->
+      <div class="card pad" style="margin-top:14px">
+        <div class="formhead-row">
+          <h3 style="font-size:14.5px">Is this scheme filed correctly?
+            <span class="guj">/ શું આ યોજના સાચી જગ્યાએ છે?</span></h3>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button id="fix-confirm" class="btn ghost sm hidden">Yes — confirm this branch
+              <span class="guj">/ હા — આ શાખા ખરી છે</span></button>
+            <button id="fix-open" class="btn ghost sm">Report a correction
+              <span class="guj">/ સુધારો સૂચવો</span></button>
+          </div>
+        </div>
+        <p class="muted" style="font-size:12.5px;margin-top:8px" id="fix-current"></p>
+        <p class="note hidden" id="fix-confirm-note">This scheme's branch was our guess. If it is
+          right, confirming it here removes the "(to confirm)" mark for everyone. If it is wrong,
+          report it instead — the scheme only moves once an administrator applies it, so it can
+          never disappear from your list by mistake.
+          <span class="guj block">આ યોજનાની શાખા અમારું અનુમાન છે. ખરી હોય તો અહીં ખાતરી કરો,
+          જેથી બધા માટે "(ખાતરી બાકી)" નિશાન દૂર થશે. ખોટી હોય તો સુધારો સૂચવો — વહીવટકર્તા
+          મંજૂર કરે ત્યારે જ યોજના ખસે છે, તેથી ભૂલથી આપની યાદીમાંથી ગુમ નહીં થાય.</span></p>
+
+        <div id="fix-form" class="hidden" style="margin-top:14px">
+          <label class="fl" for="fix-body">Correct office <span class="guj">/ સાચી કચેરી</span></label>
+          <select id="fix-body"></select>
+
+          <div id="fix-branchwrap" class="hidden">
+            <label class="fl" for="fix-branch">Correct branch <span class="guj">/ સાચી શાખા</span></label>
+            <select id="fix-branch"></select>
+          </div>
+
+          <label class="fl" for="fix-note">Anything to add? <span class="guj">/ કંઈ ઉમેરવું છે?</span></label>
+          <textarea id="fix-note" rows="2" maxlength="500"
+                    placeholder="Optional / મરજિયાત"></textarea>
+
+          <p class="note">Your report goes to the administrator. The scheme stays where it is
+            until they apply it, so nothing disappears from anyone's list by mistake.
+            <span class="guj block">આપની જાણ વહીવટકર્તાને જશે. તેઓ મંજૂર કરે ત્યાં સુધી યોજના
+            જ્યાં છે ત્યાં જ રહેશે, જેથી કોઈની યાદીમાંથી ભૂલથી ગુમ ન થાય.</span></p>
+
+          <div id="fix-msg" class="banner err hidden"></div>
+          <div style="display:flex;gap:10px;margin-top:14px">
+            <button id="fix-send" class="btn sm">Send <span class="guj">/ મોકલો</span></button>
+            <button id="fix-cancel" class="btn ghost sm">Cancel <span class="guj">/ રદ</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- progress -->
+      <div class="card">
+        <div class="pad formhead">
+          <div class="prog"><i id="pb-progbar" style="width:0%"></i></div>
+          <p class="mini" id="pb-progtext"></p>
+          <p class="mini" id="pb-asidetext"></p>
+          <div id="pb-banner" class="banner info hidden"></div>
+        </div>
+      </div>
+
+      <div id="pb-loading" class="center-wrap hidden" style="min-height:200px">
+        <div>
+          <div class="spinner"></div>
+          <p class="muted" style="text-align:center">Loading saved answers for this scheme…
+            <span class="guj block">આ યોજનાના સાચવેલા જવાબો લવાય છે…</span></p>
+        </div>
+      </div>
+
+      <div id="pb-questions"></div>
+
+      <div class="card pad formfoot">
+        <button id="pb-exit" class="btn ghost sm">Save &amp; exit
+          <span class="guj">/ સાચવીને બહાર</span></button>
+        <button id="pb-showall" class="btn ghost sm">Show every question
+          <span class="guj">/ બધા પ્રશ્નો બતાવો</span></button>
+        <button id="pb-submit" class="btn sm">Submit this scheme
+          <span class="guj">/ સબમિટ</span></button>
+      </div>
+    </section>
+
+    <!-- ============ Admin ============ -->
+    <section id="view-admin" class="view hidden">
+
+      <!-- ---- progress tracker ---- -->
+      <div class="home-top">
+        <h2>Progress tracker <span class="guj">/ પ્રગતિ</span></h2>
+        <p class="muted home-note">Part A is answered once per body.
+          <span class="guj block">દરેક કચેરી માટે Part A એક જ વાર ભરાય છે.</span></p>
+      </div>
+
+      <div class="card pad">
+        <div class="formhead-row">
+          <h3>Part A — by body <span class="guj">/ Part A — કચેરી પ્રમાણે</span></h3>
+          <button id="adm-refresh" class="btn ghost sm">Refresh <span class="guj">/ તાજું કરો</span></button>
+        </div>
+        <div id="adm-tracker" class="tracker"></div>
+      </div>
+
+      <!-- ---- Part B progress, branch by branch ---- -->
+      <div class="card pad" style="margin-top:18px">
+        <div class="formhead-row">
+          <h3>Part B — by branch <span class="guj">/ Part B — શાખા પ્રમાણે</span></h3>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button id="adm-b-copy" class="btn ghost sm">Copy summary
+              <span class="guj">/ સારાંશ કોપી કરો</span></button>
+            <button id="adm-b-refresh" class="btn ghost sm">Refresh
+              <span class="guj">/ તાજું કરો</span></button>
+          </div>
+        </div>
+        <p class="mini" id="adm-b-note"></p>
+        <div id="adm-b-tracker" class="tracker"></div>
+
+        <!-- Fallback for when the browser refuses clipboard access: the text is
+             shown and selected so it can be copied by hand. -->
+        <div id="adm-b-copybox" class="hidden" style="margin-top:12px">
+          <p class="note">Your browser would not let the app copy for you. The summary is below —
+            select it and copy.
+            <span class="guj block">બ્રાઉઝરે કોપી કરવા દીધું નથી. નીચેનો સારાંશ પસંદ કરીને કોપી કરો.</span></p>
+          <textarea id="adm-b-copytext" rows="10" readonly></textarea>
+        </div>
+      </div>
+
+      <!-- ---- branch tags still unconfirmed ---- -->
+      <div class="card pad" style="margin-top:18px">
+        <div class="formhead-row">
+          <h3>Branch tags to confirm <span class="guj">/ ખાતરી બાકી શાખા</span></h3>
+          <button id="adm-tags-refresh" class="btn ghost sm">Refresh
+            <span class="guj">/ તાજું કરો</span></button>
+        </div>
+        <p class="note">These schemes carry a branch we guessed. Confirm each one, or change it to
+          the right branch. There is no "confirm all" — the point of asking is lost if the whole
+          list is cleared in one click.
+          <span class="guj block">આ યોજનાઓની શાખા અમારું અનુમાન છે. દરેકની ખાતરી કરો, અથવા સાચી
+          શાખામાં બદલો. "બધા સ્વીકારો" નથી — એક ક્લિકે આખી યાદી પતાવવાથી પૂછવાનો અર્થ જ રહેતો નથી.</span></p>
+        <p class="mini" id="adm-tags-note"></p>
+        <div id="adm-tags"></div>
+      </div>
+
+      <!-- ---- scheme corrections reported by officers ---- -->
+      <div class="card pad" style="margin-top:18px">
+        <div class="formhead-row">
+          <h3>Scheme corrections <span class="guj">/ યોજના સુધારા</span></h3>
+          <button id="adm-fix-refresh" class="btn ghost sm">Refresh <span class="guj">/ તાજું કરો</span></button>
+        </div>
+        <p class="muted" style="font-size:12.5px;margin-top:8px">
+          Officers reporting a scheme filed under the wrong office or branch. Applying one moves
+          the scheme for everybody.
+          <span class="guj block">ખોટી કચેરી કે શાખામાં મુકાયેલ યોજના અંગે અધિકારીઓની જાણ.
+          મંજૂર કરવાથી યોજના બધા માટે ખસેડાય છે.</span>
+        </p>
+        <div id="adm-fixes"></div>
+      </div>
+
+      <!-- ---- audit log ---- -->
+      <div class="card pad" style="margin-top:18px">
+        <div class="formhead-row">
+          <h3>Audit log <span class="guj">/ ઓડિટ લોગ</span></h3>
+          <button id="adm-audit-refresh" class="btn ghost sm">Refresh <span class="guj">/ તાજું કરો</span></button>
+        </div>
+        <p class="muted" style="font-size:12.5px;margin-top:8px">
+          Every change ever made, newest first. Entries can never be edited or deleted.
+          <span class="guj block">દરેક ફેરફારની કાયમી નોંધ, નવીથી જૂની. આ નોંધ કદી બદલી કે ભૂંસી શકાતી નથી.</span>
+        </p>
+
+        <div class="filters">
+          <select id="adm-f-body"></select>
+          <input id="adm-f-text" type="text"
+                 placeholder="Search name, question or value / નામ, પ્રશ્ન કે જવાબ શોધો" />
+        </div>
+        <p class="mini" id="adm-audit-note"></p>
+
+        <div class="table-scroll">
+          <table class="qtable audit-table">
+            <thead>
+              <tr>
+                <th>When <span class="guj">/ ક્યારે</span></th>
+                <th>Who <span class="guj">/ કોણે</span></th>
+                <th>Question <span class="guj">/ પ્રશ્ન</span></th>
+                <th>Change <span class="guj">/ ફેરફાર</span></th>
+              </tr>
+            </thead>
+            <tbody id="adm-audit-rows"></tbody>
+          </table>
+        </div>
+
+        <button id="adm-audit-more" class="btn ghost sm hidden" style="margin-top:14px">
+          Load more <span class="guj">/ વધુ લાવો</span>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Firebase compat SDK — global scripts, no build step, no ES modules. -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <script src="js/schemes.js"></script>
+  <script src="js/spec-a.js"></script>
+  <script src="js/spec-b.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/route-b.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/firebase.js"></script>
+  <!-- Demo mode. Does nothing at all unless the address ends in ?demo=1. -->
+  <script src="js/demo.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

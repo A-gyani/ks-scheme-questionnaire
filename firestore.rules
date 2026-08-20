@@ -1,0 +1,321 @@
+rules_version = '2';
+
+/*
+ * Firestore rules — Cultural Schemes Questionnaire (SYCAD).
+ * Enforced on Google's servers regardless of what the client code does.
+ *
+ * FREE-TIER NOTE: exists()/get() calls inside rules are billed as document
+ * reads. isAdmin() is therefore never placed on an officer's hot path — it is
+ * always the right-hand side of an || so it short-circuits away for non-admins.
+ */
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null
+        && request.auth.token.email != null
+        && request.auth.token.email_verified == true;
+    }
+
+    function isAdmin() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+    }
+
+    /*
+     * Optional access gate — OFF by default (v1 = open Google sign-in, with
+     * every action tied to a named profile and a field-level audit trail).
+     *
+     * To switch ON: create an allowlist/{email} doc per officer from the
+     * console, then swap the body of this function for the commented line.
+     * That is the free-tier replacement for the access-code + custom-claim
+     * Cloud Function, which needs Blaze.
+     */
+    function isAllowed() {
+      return isSignedIn();
+      // return isSignedIn()
+      //   && exists(/databases/$(database)/documents/allowlist/$(request.auth.token.email));
+    }
+
+    function isBody(id) {
+      return id in ['commissionerate', 'lalitKala', 'sangeetNatak'];
+    }
+
+    /*
+     * The officer's OWN body, read from their profile.
+     *
+     * A scheme's Part B sheet may be filled in by anyone in the same office —
+     * Commissionerate, Lalit Kala or Sangeet Natak — but not across offices.
+     * Deliberately NOT narrowed to the scheme's branch: 43 of the branch tags
+     * are still unconfirmed guesses, and a wrong tag would lock the right
+     * officer out of their own scheme with no way back.
+     *
+     * This costs one document read per response write. Against 50,000 free
+     * reads a day that is nothing, and it is the difference between a real
+     * boundary and a suggestion the client could ignore.
+     */
+    function myBody() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.body;
+    }
+    function isMyBody(id) {
+      return isBody(id) && myBody() == id;
+    }
+
+    /*
+     * A profile is what every audit entry is attributed to, so its shape is
+     * enforced here rather than trusted from the client.
+     *
+     * rank is a free string on purpose: the official rank lists per body are
+     * still being compiled, so officers type their designation until the lists
+     * land in CONST.RANKS and the field becomes a dropdown. Both paths write
+     * the same field, so no rule change is needed when that happens.
+     */
+    function validProfile() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['email', 'name', 'body', 'rank', 'branch', 'createdAt', 'updatedAt'])
+        && d.email == request.auth.token.email
+        && d.name is string && d.name.size() > 0 && d.name.size() <= 120
+        && d.rank is string && d.rank.size() > 0 && d.rank.size() <= 120
+        && isBody(d.body)
+        /* branch is Commissionerate-only: required there, forbidden elsewhere,
+           because the Akademis have no branches. */
+        && (d.body == 'commissionerate'
+              ? ('branch' in d && d.branch in ['culture', 'celebration', 'adventure', 'youthBoard'])
+              : !('branch' in d));
+    }
+
+    /*
+     * admins/{email} — presence of the doc grants admin. Console-managed.
+     *
+     * A signed-in officer may read ONLY their own doc, which is how the app
+     * answers "am I an admin?" without a permission error on every sign-in.
+     * Reading it tells them nothing they do not already know, and listing the
+     * collection (i.e. enumerating who the admins are) stays admin-only.
+     */
+    match /admins/{email} {
+      allow get: if isSignedIn() && (email == request.auth.token.email || isAdmin());
+      allow list: if isAdmin();
+      allow write: if false;
+    }
+
+    /* ---- allowlist: console-managed; same self-read shape as admins ---- */
+    match /allowlist/{email} {
+      allow get: if isSignedIn() && (email == request.auth.token.email || isAdmin());
+      allow list: if isAdmin();
+      allow write: if false;
+    }
+
+    /*
+     * users/{uid} — the officer profile set on first login.
+     * name/rank/body/branch are what every audit entry is attributed to, so the
+     * email is pinned to the token and the doc id to the caller's uid: an
+     * officer cannot write a profile into someone else's slot.
+     */
+    match /users/{uid} {
+      allow read: if isSignedIn() && (request.auth.uid == uid || isAdmin());
+
+      allow create: if isAllowed()
+        && request.auth.uid == uid
+        && validProfile();
+
+      /* An officer may correct their own profile — needed once the official
+         rank lists land, so a typed designation can be replaced by the listed
+         one. createdAt is pinned so the original sign-up time cannot be
+         rewritten to disguise when an account started acting. */
+      allow update: if isAllowed()
+        && request.auth.uid == uid
+        && validProfile()
+        && request.resource.data.createdAt == resource.data.createdAt;
+
+      allow delete: if false;
+    }
+
+    /*
+     * schemes/{schemeId} — CORRECTIONS ONLY, not the scheme list itself.
+     *
+     * The list ships in js/schemes.js. A document here overrides the body or
+     * branch of one scheme, and the app layers it on top of the seeded list.
+     * Only an admin may write one: moving a scheme to another body removes it
+     * from one set of officers and hands it to another, so it is not something
+     * a single officer should be able to do unilaterally.
+     */
+    match /schemes/{schemeId} {
+      allow read: if isSignedIn();
+
+      /* An admin may move a scheme AND confirm its branch. */
+      allow create, update: if isAdmin()
+        && request.resource.data.keys().hasOnly(
+             ['body', 'branch', 'branchConfirmed', 'updatedBy', 'updatedByEmail', 'updatedAt'])
+        && (!('body' in request.resource.data) || isBody(request.resource.data.body))
+        && (!('branch' in request.resource.data)
+            || request.resource.data.branch in ['culture', 'celebration', 'adventure', 'youthBoard'])
+        && request.resource.data.updatedByEmail == request.auth.token.email;
+
+      /*
+       * An officer may CONFIRM a branch tag, and nothing else.
+       *
+       * Approved by the user: branch officers confirm the tags for their own
+       * schemes, because they are the people who actually know. The dangerous
+       * half is kept away from them — confirming leaves the scheme exactly
+       * where it is, while MOVING it would make it vanish from their own list
+       * with no way to find it again (the trap Feature 12 was built to avoid).
+       * To move a scheme an officer still files a report and an admin applies it.
+       *
+       * `branchConfirmed` is the only value they may write, and on an update
+       * only these keys may change — so body and branch can never be touched
+       * even though a merge write carries them along.
+       *
+       * ⚠️ HONEST LIMIT: these rules cannot check that the scheme really is in
+       * the officer's own branch. A scheme's branch lives in js/schemes.js, not
+       * in Firestore, so there is nothing here to compare against. The client
+       * only offers the button for the officer's own branch; server-side, the
+       * worst case is an officer confirming a tag that is not theirs — which
+       * moves nothing, hides nothing, is stamped with their email, and an admin
+       * can overrule.
+       */
+      allow create: if isAllowed()
+        && request.resource.data.keys().hasOnly(
+             ['branchConfirmed', 'updatedBy', 'updatedByEmail', 'updatedAt'])
+        && request.resource.data.branchConfirmed == true
+        && request.resource.data.updatedByEmail == request.auth.token.email;
+
+      allow update: if isAllowed()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(
+             ['branchConfirmed', 'updatedBy', 'updatedByEmail', 'updatedAt'])
+        && request.resource.data.branchConfirmed == true
+        && request.resource.data.updatedByEmail == request.auth.token.email;
+
+      allow delete: if isAdmin();
+    }
+
+    /*
+     * schemeFixes/{autoId} — an officer reporting that a scheme is filed under
+     * the wrong body or branch.
+     *
+     * A report does NOT move the scheme. If an officer could reassign directly
+     * and got it wrong, the scheme would disappear from their own list and they
+     * would have no way to find it again to undo it. An admin applies it.
+     *
+     * Officers may read their own reports so the screen can say "already
+     * reported"; listing everyone's is admin-only.
+     */
+    match /schemeFixes/{fixId} {
+      allow create: if isAllowed()
+        && request.resource.data.keys().hasOnly(
+             ['schemeId', 'currentBody', 'currentBranch', 'suggestedBody', 'suggestedBranch',
+              'note', 'status', 'byUid', 'byEmail', 'byName', 'byRank', 'byBody', 'byBranch', 'ts'])
+        && request.resource.data.byUid == request.auth.uid
+        && request.resource.data.byEmail == request.auth.token.email
+        && request.resource.data.status == 'open'
+        && request.resource.data.schemeId is string
+        && request.resource.data.schemeId.size() > 0
+        && (!('note' in request.resource.data) || request.resource.data.note.size() <= 500)
+        && (!('suggestedBody' in request.resource.data) || isBody(request.resource.data.suggestedBody));
+
+      allow get: if isSignedIn()
+        && (resource.data.byUid == request.auth.uid || isAdmin());
+      allow list: if isAdmin();
+
+      /* An admin resolves a report; the original wording is never rewritten. */
+      allow update: if isAdmin()
+        && request.resource.data.diff(resource.data)
+             .affectedKeys().hasOnly(['status', 'resolvedBy', 'resolvedAt'])
+        && request.resource.data.status in ['applied', 'dismissed'];
+
+      allow delete: if false;
+    }
+
+    /*
+     * A saved answer sheet. The shape is enforced here rather than trusted from
+     * the client, because the "who last edited this" line is shown to other
+     * officers and must not be forgeable.
+     *
+     * The 400-key cap is a backstop, not the real protection: Firestore's own
+     * hard 1 MiB document limit is what no client can exceed. Per-field length
+     * caps cannot be enforced here at all — rules cannot iterate a map with
+     * unknown keys — so those live in the client (CONST.TEXT_CAP).
+     */
+    function validResponse() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['body', 'branch', 'scheme', 'answers', 'naSections', 'status',
+                               'lastEditedBy', 'lastEditedByEmail', 'lastEditedByUid', 'lastEditedAt',
+                               'lastEditedByBranch',
+                               'submittedBy', 'submittedByEmail', 'submittedAt', 'createdAt'])
+        && d.lastEditedByEmail == request.auth.token.email
+        && d.status in ['draft', 'submitted']
+        && (!('answers' in d) || d.answers.size() <= 400)
+        /* One entry per section at most, and there are only eleven sections. */
+        && (!('naSections' in d) || (d.naSections is list && d.naSections.size() <= 11));
+    }
+
+    /*
+     * responsesA/{bodyId} — Part A, ONE shared document per body.
+     *
+     * Approved concurrency model (option a): officers of the same body write to
+     * the same document with merge, so answers to different questions never
+     * collide, and a contested field keeps whichever save landed last. The
+     * audit trail is what makes an overwrite recoverable.
+     */
+    match /responsesA/{bodyId} {
+      allow read: if isSignedIn();
+
+      allow create, update: if isAllowed()
+        && isBody(bodyId)
+        && request.resource.data.body == bodyId
+        && validResponse();
+
+      allow delete: if false;
+    }
+
+    /*
+     * responsesB/{schemeId} — Part B, ONE document per scheme.
+     *
+     * Approved model: a scheme's sheet is shared by everyone in the SAME office
+     * (isMyBody), on the same field-level merge as Part A — answers to different
+     * questions never collide, a contested field keeps whichever save landed
+     * last, and the audit trail makes an overwrite recoverable.
+     *
+     * The document id is the scheme id, and `scheme` must agree with it: without
+     * that check a client could file one scheme's answers under another's id.
+     */
+    match /responsesB/{schemeId} {
+      allow read: if isSignedIn();
+
+      allow create, update: if isAllowed()
+        && isMyBody(request.resource.data.body)
+        && request.resource.data.scheme == schemeId
+        && validResponse();
+
+      allow delete: if false;
+    }
+
+    /*
+     * audit/{entryId} — append-only, one document per committed field change.
+     *
+     * No update and no delete, by anyone including admins: an audit trail that
+     * can be rewritten is not an audit trail. The actor identity is pinned to
+     * the caller's own token, so an officer cannot log an edit as someone else.
+     */
+    match /audit/{entryId} {
+      allow create: if isAllowed()
+        && request.resource.data.keys().hasOnly(['ts', 'actorUid', 'actorEmail', 'actorName',
+             'actorRank', 'actorBody', 'actorBranch', 'docType', 'docId', 'qid',
+             'oldValue', 'newValue', 'action'])
+        && request.resource.data.actorUid == request.auth.uid
+        && request.resource.data.actorEmail == request.auth.token.email
+        /* 'S' = a change to a scheme's own record (its branch tag), which is
+           neither a Part A nor a Part B answer but must still be attributable. */
+        && request.resource.data.docType in ['A', 'B', 'S']
+        && request.resource.data.action in ['edit', 'submit']
+        /* Values are stored truncated (see CONST.AUDIT_VALUE_CAP). The cap here
+           is a backstop against an oversized entry, not the primary limit. */
+        && request.resource.data.oldValue is string
+        && request.resource.data.newValue is string
+        && request.resource.data.oldValue.size() <= 400
+        && request.resource.data.newValue.size() <= 400;
+
+      allow read: if isAdmin();
+      allow update, delete: if false;
+    }
+  }
+}

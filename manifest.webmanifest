@@ -1,0 +1,14 @@
+{
+  "name": "Cultural Schemes Questionnaire — SYCAD",
+  "short_name": "Scheme Q",
+  "description": "Bilingual questionnaire for cultural and youth scheme officers, Government of Gujarat.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#eef1f5",
+  "theme_color": "#2557a7",
+  "lang": "en",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

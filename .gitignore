@@ -1,0 +1,12 @@
+# Local test harness — generated during development, never deployed.
+_test.html
+_mock-firebase.js
+_app.html
+_appcheck.js
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
