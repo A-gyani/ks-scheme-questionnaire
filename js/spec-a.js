@@ -10,8 +10,15 @@
  * A5 and A9 were dissolved into Part B and are deliberately absent; the numbers
  * A1, A2, A3, A6, A7, A8, A10 are kept as they are what the department knows.
  *
+ * ⛔ NO PRE-FILLED ANSWERS. 19 questions used to carry a `prefill` — our own
+ * guess from the GR and the pipeline interview, drawn above the answer box.
+ * Removed 2026-08-25 on the user's instruction: the exercise is to find out
+ * what officers actually do, and an answer already on the page is an answer
+ * suggested. The research itself is kept in `Portal/Pipeline - As Is.md`.
+ * Do not add the field back without the user saying so.
+ *
  * SHAPE
- *   question = { id, section, blocking, en, gu, helpEN, helpGU, prefill, parts:[…] }
+ *   question = { id, section, blocking, en, gu, helpEN, helpGU, parts:[…] }
  *   part     = { key, type, en, gu, opts:[…], rows/cols for tables }
  *   option   = [id, English, ગુજરાતી]                  — plain option
  *              [id, English, ગુજરાતી, fillEN, fillGU]  — option with a write-in box
@@ -81,7 +88,6 @@ window.SPEC_A = {
     id: 'A1.2', section: 'A1', blocking: false,
     en: 'Across all schemes, is there a single standard rhythm for when applications open, or does it vary scheme to scheme?',
     gu: 'તમામ યોજનાઓમાં અરજી ક્યારે શરૂ થાય તેની એક જ નિયત પધ્ધતિ છે, કે યોજના પ્રમાણે અલગ-અલગ છે?',
-    prefill: 'Opened per round; districts invite only after the State office releases grant/information, then proceed at their own pace.',
     parts: [
       { key: 'model', type: 'single', opts: [
         ['standard', 'One standard model for (almost) all schemes',
@@ -149,7 +155,6 @@ window.SPEC_A = {
     gu: 'અરજી કોઈપણ કાર્યવાહી પહેલાં સૌપ્રથમ ક્યાં મળે છે?',
     helpEN: 'Tick all that happen; ★ the most common.',
     helpGU: 'જે થાય તે બધા પર ✔ કરો; સૌથી સામાન્ય પર ★ કરો.',
-    prefill: 'Central registry / inward desk of the State office; some via district; some by post.',
     parts: [
       { key: 'points', type: 'multi', star: true, opts: [
         ['registry', 'Central registry / inward desk of the State office', 'રાજ્ય કચેરીની મધ્યસ્થ આવક શાખા / ઇનવર્ડ ડેસ્ક'],
@@ -170,7 +175,6 @@ window.SPEC_A = {
     id: 'A2.2', section: 'A2', blocking: false,
     en: 'What does the applicant get back as proof of submission, and can they use it to track the file?',
     gu: 'અરજી જમા કરાવ્યાના પુરાવા તરીકે અરજદારને શું મળે છે, અને એનાથી તે ફાઈલ ટ્રેક કરી શકે?',
-    prefill: 'A stamped receiving copy with a receiving number; not usable by the applicant to track status.',
     parts: [
       { key: 'receives', type: 'multi',
         en: 'What does the applicant receive?',
@@ -209,7 +213,6 @@ window.SPEC_A = {
     gu: 'અરજી સૌપ્રથમ મળે ત્યારે આવક નોંધ કઈ સિસ્ટમમાં થાય છે?',
     helpEN: 'Tick all that are used; ★ the main one.',
     helpGU: 'જે વપરાય તે બધા પર ✔ કરો; મુખ્ય પર ★ કરો.',
-    prefill: 'Manual register / Excel; e-file opened only later (see next question).',
     parts: [
       { key: 'systems', type: 'multi', star: true, opts: [
         ['register', 'Manual paper register (inward book)', 'હાથે લખેલ કાગળનું આવક રજિસ્ટર (ઇનવર્ડ બુક)'],
@@ -236,7 +239,6 @@ window.SPEC_A = {
     id: 'A2.4', section: 'A2', blocking: true,
     en: 'At exactly what point does an application become a formal e-file in e-Sarkar?',
     gu: 'અરજી ઈ-સરકારમાં ઔપચારિક ઈ-ફાઈલ ક્યારે બને છે?',
-    prefill: 'Only after the AD / officer decides to proceed — not at inward; applications dropped before that point leave no e-file.',
     parts: [
       { key: 'whenOpened', type: 'single',
         en: 'When is the e-file opened?', gu: 'ઈ-ફાઈલ ક્યારે ખૂલે છે?',
@@ -285,7 +287,6 @@ window.SPEC_A = {
     id: 'A2.5', section: 'A2', blocking: false,
     en: 'Who decides which branch / body an application belongs to, and on what basis?',
     gu: 'અરજી કઈ શાખા / કચેરીની છે તે કોણ નક્કી કરે છે, અને શેના આધારે?',
-    prefill: 'Admin / establishment section decides the branch and forwards it; routing by custom, not written.',
     parts: [
       { key: 'whoAssigns', type: 'single',
         en: 'Who assigns the application to the owning branch / body?',
@@ -333,7 +334,6 @@ window.SPEC_A = {
     id: 'A3.1', section: 'A3', blocking: false,
     en: 'Confirm the approval chain a file travels, in order, for this office.',
     gu: 'આ કચેરી માટે ફાઈલ કઈ મંજૂરી-શૃંખલામાંથી, કયા ક્રમે પસાર થાય છે તે જણાવો.',
-    prefill: 'Commissionerate (UNVERIFIED): clerk → Assistant Director (AD) → OSD → Commissioner → Secretary → Minister. Akademi / Board: state your own chain, e.g. dealing clerk → Registrar/Secretary → Director → Chairman / Governing Council.',
     parts: [
       { key: 'chain', type: 'text',
         en: 'List the desks in order, from first handling to final sanction (use → between them).',
@@ -426,7 +426,6 @@ window.SPEC_A = {
     id: 'A3.4', section: 'A3', blocking: false,
     en: 'When an application comes with an MLA / MP (or other senior) reference, is it handled any differently?',
     gu: 'જ્યારે અરજી સાથે ધારાસભ્ય / સાંસદ (કે અન્ય ઉચ્ચ કક્ષા)ની ભલામણ હોય, ત્યારે તેની કાર્યવાહી કંઈ અલગ રીતે થાય છે?',
-    prefill: 'Same chain, but with priority and near-certain approval; sometimes accepted with no documents.',
     parts: [
       { key: 'faster', type: 'single',
         en: 'Does it move faster / with priority?', gu: 'એ ઝડપથી / અગ્રતાથી આગળ વધે છે?',
@@ -457,7 +456,6 @@ window.SPEC_A = {
     id: 'A3.5', section: 'A3', blocking: true,
     en: 'When an application is rejected or dropped, is the applicant informed, and is a reason given?',
     gu: 'અરજી નામંજૂર / પડતી મૂકાય ત્યારે અરજદારને જાણ કરાય છે, અને કારણ અપાય છે?',
-    prefill: 'No — the application dies silently at the informal in-principle stage, with no record; the applicant learns only if they phone.',
     parts: [
       { key: 'told', type: 'single',
         en: 'Is the applicant told today?', gu: 'આજે અરજદારને જાણ કરાય છે?',
@@ -498,7 +496,6 @@ window.SPEC_A = {
     id: 'A6.1', section: 'A6', blocking: true,
     en: 'Does every payment pass one audit / pre-audit check before money is released? Are there any exceptions at all?',
     gu: 'પૈસા છૂટા થાય તે પહેલાં દરેક ચૂકવણું એક ઓડિટ / પૂર્વ-ઓડિટ ચકાસણીમાંથી પસાર થાય છે? કોઈ પણ અપવાદ છે?',
-    prefill: 'Believed yes — bills cannot go to treasury until audit clears; exceptions (advances, Akademi own-account, district-treasury) not confirmed.',
     parts: [
       { key: 'mustClear', type: 'single',
         en: 'Before any bill is paid, must it clear the office’s audit / pre-audit stage?',
@@ -544,7 +541,6 @@ window.SPEC_A = {
     en: 'Beyond the office’s own audit, does any external audit examine these payments?',
     gu: 'કચેરીના પોતાના ઓડિટ ઉપરાંત, આ ચૂકવણાંની કોઈ બાહ્ય ઓડિટ તપાસ થાય છે?',
     helpEN: 'Tick all that apply.', helpGU: 'જે લાગુ પડે તે બધા પર ✔ કરો.',
-    prefill: 'Unknown.',
     parts: [
       { key: 'external', type: 'multi', opts: [
         ['ag',        'Accountant General (AG) audit', 'મહાલેખાકાર (AG) ઓડિટ'],
@@ -568,7 +564,6 @@ window.SPEC_A = {
     id: 'A6.3', section: 'A6', blocking: true,
     en: 'The GR (condition 12) requires social audit + third-party verification to be done periodically and the result submitted to Government. Is this actually happening?',
     gu: 'ઠરાવ (શરત ૧૨) મુજબ સામાજિક ઓડિટ + ત્રાહિત-પક્ષ ચકાસણી સમયાંતરે કરવી અને પરિણામ સરકારને રજૂ કરવું જરૂરી છે. શું આ ખરેખર થાય છે?',
-    prefill: 'No evidence it has ever been done; pipeline finding = no ground verification, ever.',
     parts: [
       { key: 'done', type: 'single',
         en: 'Is any social audit / third-party verification of these grants carried out periodically, as the condition requires?',
@@ -621,7 +616,6 @@ window.SPEC_A = {
     gu: 'વિભાગ રાજ્ય DBT પોર્ટલ પર બિલકુલ નોંધાયેલ છે, અને એ કોણ સંભાળે છે? (ઠરાવ શરત ૩૦)',
     helpEN: 'Per-scheme registration status and scheme codes are recorded scheme-by-scheme; here we need only the office-level picture.',
     helpGU: 'દરેક યોજનાની નોંધણી-સ્થિતિ અને સ્કીમ કોડ યોજનાવાર અલગ નોંધાય છે; અહીં ફક્ત કચેરી-કક્ષાનું ચિત્ર જોઈએ.',
-    prefill: 'Unknown — compliance status not confirmed.',
     parts: [
       { key: 'onboarded', type: 'single',
         en: 'Is the department / office onboarded to the State DBT Portal?',
@@ -658,7 +652,6 @@ window.SPEC_A = {
     id: 'A7.2', section: 'A7', blocking: true,
     en: 'Does any scheme’s data feed the CM Dashboard today? (GR condition 14)',
     gu: 'આજે કોઈ યોજનાનો ડેટા CM ડેશબોર્ડમાં જાય છે? (ઠરાવ શરત ૧૪)',
-    prefill: 'Unknown; pipeline suggests no structured data exists to feed from.',
     parts: [
       { key: 'reports', type: 'single',
         en: 'Does any scheme currently report to the CM Dashboard?',
@@ -702,7 +695,6 @@ window.SPEC_A = {
     id: 'A7.3', section: 'A7', blocking: false,
     en: 'Beyond DBT and the CM Dashboard, does beneficiary or payment data get uploaded into any central or online system today?',
     gu: 'DBT અને CM ડેશબોર્ડ ઉપરાંત, આજે લાભાર્થી કે ચૂકવણી માહિતી કોઈ કેન્દ્રીય કે ઓનલાઇન સિસ્ટમમાં અપલોડ થાય છે?',
-    prefill: 'Pipeline finding = no central database; data held per branch, per clerk.',
     parts: [
       { key: 'lands', type: 'single',
         en: 'Does beneficiary / payment data land in any central system?',
@@ -750,7 +742,6 @@ window.SPEC_A = {
     id: 'A8.1', section: 'A8', blocking: true,
     en: 'Where is the record of every past sanction and grant order kept, and is there any register that spans all branches?',
     gu: 'દરેક ભૂતકાળની મંજૂરી અને અનુદાન હુકમનો રેકોર્ડ ક્યાં રખાય છે, અને બધી શાખાઓને આવરી લેતું કોઈ રજિસ્ટર છે?',
-    prefill: 'Per branch, per clerk, in varied formats; no central register.',
     parts: [
       { key: 'where', type: 'multi',
         en: 'Where are past sanctions / grant orders kept?',
@@ -795,7 +786,6 @@ window.SPEC_A = {
     id: 'A8.2', section: 'A8', blocking: true,
     en: 'Before sanctioning, can an officer see what another branch — or another body — has already sanctioned to the same applicant or event? By what means?',
     gu: 'મંજૂરી આપતાં પહેલાં, અધિકારી જોઈ શકે કે એ જ અરજદાર કે કાર્યક્રમને બીજી શાખા — કે બીજી સંસ્થા — એ પહેલેથી શું મંજૂર કર્યું છે? કઈ રીતે?',
-    prefill: 'Only by informally asking another officer; “depends on the officer”; no shared system.',
     parts: [
       { key: 'withinOffice', type: 'single',
         en: 'Across branches / sections within your own office, can one officer see another’s sanctions?',
@@ -840,7 +830,6 @@ window.SPEC_A = {
     id: 'A8.4', section: 'A8', blocking: false,
     en: 'Has a double-funded event or applicant ever come to light? What was the pattern, and what happened next?',
     gu: 'એ જ અરજદાર કે કાર્યક્રમને બે વાર સહાય મળી હોય એવો કિસ્સો ક્યારેય ધ્યાનમાં આવ્યો છે? શું ઢબ હતી, અને પછી શું થયું?',
-    prefill: 'Instances known; who caught them unknown; all quietly dropped — no recovery, no blacklisting. Patterns seen: same troupe under a different leader; family members re-applying.',
     parts: [
       { key: 'everCameToLight', type: 'single',
         en: 'Has a case of the same applicant/event being funded twice ever come to light?',
@@ -891,7 +880,6 @@ window.SPEC_A = {
     id: 'A8.5', section: 'A8', blocking: true,
     en: 'Can the past few years’ beneficiary lists be obtained and assembled across all branches / bodies, to seed the portal?',
     gu: 'પોર્ટલ શરૂ કરવા માટે, છેલ્લા થોડા વર્ષોની લાભાર્થી યાદીઓ બધી શાખાઓ / સંસ્થાઓમાંથી મેળવીને એકઠી કરી શકાય?',
-    prefill: 'Likely per-branch compilation needed; central assembly untested.',
     parts: [
       { key: 'canPull', type: 'single',
         en: 'Can beneficiary lists for the last 3 years be pulled together?',

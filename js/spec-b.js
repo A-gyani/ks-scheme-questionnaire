@@ -139,8 +139,17 @@ window.SPEC_B = {
     id: 'B0.5', section: 'B0', blocking: true,
     en: 'What does this scheme give, and to whom? Tick every option that applies — a scheme may do several.',
     gu: 'આ યોજના શું આપે છે અને કોને આપે છે? લાગુ પડતા દરેક વિકલ્પ પર ✓ કરો — એક યોજના એક કરતાં વધુ કરી શકે.',
-    helpEN: 'This answer decides the rest of the questionnaire for this scheme. NOT a scheme type — do not tick here: staff salaries / office running (establishment, excluded from the portal), and finance mechanics like honorarium & sitting fees, TA/DA, per diem, boarding-lodging (these are captured later in B8 Payment). Rare / future — just note it below if you see it: youth culture pass or voucher, commissioning a new work, free-venue in-kind support, subsidised training.',
-    helpGU: 'આ જવાબના આધારે આ યોજનાના બાકીના પ્રશ્નો નક્કી થશે. યોજનાનો પ્રકાર નથી — અહીં ✓ ન કરો: સ્ટાફ પગાર / કચેરી ખર્ચ (સ્થાપના — પોર્ટલમાં નથી), તથા માનદ વેતન અને બેઠક ફી, TA/DA, રોજમેળ, રહેવા-જમવા (આ B8 ચૂકવણીમાં પુછાય છે). ભાગ્યે જ / ભવિષ્યમાં — દેખાય તો નીચે નોંધો: યુવા સાંસ્કૃતિક પાસ કે વાઉચર, નવી કૃતિનું સર્જન સોંપવું, વિનામૂલ્યે સ્થળ સહાય, રાહતદરે તાલીમ.',
+    /*
+     * The longest help note in the app (465 characters) and it sits on the one
+     * question every officer must answer. The third sentence — the rare/future
+     * list — is MOVED behind a link, word for word. Nothing is reworded, and
+     * nothing is lost: it is one click away on all 148 schemes.
+     */
+    helpEN: 'This answer decides the rest of the questionnaire for this scheme. NOT a scheme type — do not tick here: staff salaries / office running (establishment, excluded from the portal), and finance mechanics like honorarium & sitting fees, TA/DA, per diem, boarding-lodging (these are captured later in B8 Payment).',
+    helpGU: 'આ જવાબના આધારે આ યોજનાના બાકીના પ્રશ્નો નક્કી થશે. યોજનાનો પ્રકાર નથી — અહીં ✓ ન કરો: સ્ટાફ પગાર / કચેરી ખર્ચ (સ્થાપના — પોર્ટલમાં નથી), તથા માનદ વેતન અને બેઠક ફી, TA/DA, રોજમેળ, રહેવા-જમવા (આ B8 ચૂકવણીમાં પુછાય છે).',
+    helpMoreEN: 'Rare / future — just note it below if you see it: youth culture pass or voucher, commissioning a new work, free-venue in-kind support, subsidised training.',
+    helpMoreGU: 'ભાગ્યે જ / ભવિષ્યમાં — દેખાય તો નીચે નોંધો: યુવા સાંસ્કૃતિક પાસ કે વાઉચર, નવી કૃતિનું સર્જન સોંપવું, વિનામૂલ્યે સ્થળ સહાય, રાહતદરે તાલીમ.',
+    helpMoreLabelEN: 'rare cases', helpMoreLabelGU: 'ભાગ્યે જ બનતા કિસ્સા',
     parts: [
       { key: 'mechanism', type: 'multi', opts: [
         ['grant',       '1. Grant on application — applicant applies for help for their own programme; the office sanctions & pays.',
@@ -1815,8 +1824,13 @@ window.SPEC_B = {
     id: 'B11.1', section: 'B11', blocking: false,
     en: 'In your experience, what are the 3 biggest problems or difficulties in running this scheme?',
     gu: 'તમારા અનુભવે, આ યોજના ચલાવવામાં સૌથી મોટી ૩ સમસ્યાઓ / મુશ્કેલીઓ કઈ છે?',
-    helpEN: 'Your candid view — this is not attributed to you. If it helps, problems might be about: delays · paperwork · unclear rules · fund shortage · applicant behaviour · duplication · reporting · anything else.',
-    helpGU: 'તમારો નિખાલસ અભિપ્રાય — આ તમારા નામે નોંધાશે નહીં. મદદ માટે — સમસ્યાઓ આ અંગે હોઈ શકે: વિલંબ · કાગળિયાં · અસ્પષ્ટ નિયમો · ભંડોળની અછત · અરજદારનું વર્તન · બેવડાપણું · અહેવાલ · અન્ય કંઈપણ.',
+    /* Example list MOVED behind a link, word for word — an open question should
+       open with a box to write in, not three lines of prompts. */
+    helpEN: 'Your candid view — this is not attributed to you.',
+    helpGU: 'તમારો નિખાલસ અભિપ્રાય — આ તમારા નામે નોંધાશે નહીં.',
+    helpMoreEN: 'If it helps, problems might be about: delays · paperwork · unclear rules · fund shortage · applicant behaviour · duplication · reporting · anything else.',
+    helpMoreGU: 'મદદ માટે — સમસ્યાઓ આ અંગે હોઈ શકે: વિલંબ · કાગળિયાં · અસ્પષ્ટ નિયમો · ભંડોળની અછત · અરજદારનું વર્તન · બેવડાપણું · અહેવાલ · અન્ય કંઈપણ.',
+    helpMoreLabelEN: 'examples', helpMoreLabelGU: 'ઉદાહરણ',
     parts: [
       { key: 'p1', type: 'longtext', en: '1.', gu: '૧.' },
       { key: 'p2', type: 'longtext', en: '2.', gu: '૨.' },
@@ -1857,8 +1871,11 @@ window.SPEC_B = {
     id: 'B11.3', section: 'B11', blocking: false,
     en: 'If the portal could do one or two things to make running this scheme easier for you, what should they be?',
     gu: 'આ યોજના ચલાવવી તમારા માટે સહેલી બનાવવા પોર્ટલ એક-બે શું કરી શકે?',
-    helpEN: 'Your view — not attributed. If it helps, it could be things like: a ready application form · automatic checking for duplicates · online bills so no one comes in person · status updates the applicant can see themselves · ready reports / lists · reminders for pending bills · fewer paper copies · anything else.',
-    helpGU: 'તમારો અભિપ્રાય — નામે નોંધાશે નહીં. મદદ માટે — આ જેવું હોઈ શકે: તૈયાર અરજી ફોર્મ · બેવડી અરજીની આપોઆપ તપાસ · ઓનલાઈન બિલ જેથી કોઈને રૂબરૂ ન આવવું પડે · અરજદાર પોતે જોઈ શકે તેવા સ્ટેટસ અપડેટ · તૈયાર અહેવાલ / યાદી · બાકી બિલ માટે રિમાઇન્ડર · ઓછી કાગળની નકલ · અન્ય કંઈપણ.',
+    helpEN: 'Your view — not attributed.',
+    helpGU: 'તમારો અભિપ્રાય — નામે નોંધાશે નહીં.',
+    helpMoreEN: 'If it helps, it could be things like: a ready application form · automatic checking for duplicates · online bills so no one comes in person · status updates the applicant can see themselves · ready reports / lists · reminders for pending bills · fewer paper copies · anything else.',
+    helpMoreGU: 'મદદ માટે — આ જેવું હોઈ શકે: તૈયાર અરજી ફોર્મ · બેવડી અરજીની આપોઆપ તપાસ · ઓનલાઈન બિલ જેથી કોઈને રૂબરૂ ન આવવું પડે · અરજદાર પોતે જોઈ શકે તેવા સ્ટેટસ અપડેટ · તૈયાર અહેવાલ / યાદી · બાકી બિલ માટે રિમાઇન્ડર · ઓછી કાગળની નકલ · અન્ય કંઈપણ.',
+    helpMoreLabelEN: 'examples', helpMoreLabelGU: 'ઉદાહરણ',
     parts: [
       { key: 'w1', type: 'longtext', en: '1.', gu: '૧.' },
       { key: 'w2', type: 'longtext', en: '2.', gu: '૨.' }
@@ -1869,8 +1886,11 @@ window.SPEC_B = {
     id: 'B11.4', section: 'B11', blocking: false,
     en: 'Is there anything the portal should NOT do — something that could get in the way of your work, or block genuine cases?',
     gu: 'પોર્ટલે એવું શું ન કરવું જોઈએ — જે તમારા કામમાં અડચણ કરે કે સાચા કેસ અટકાવે?',
-    helpEN: 'Your honest view — not attributed. For example: steps that would slow down payments · rules so rigid that genuine applicants get blocked · extra data entry with no staff to do it · trouble where internet / staff are limited (districts) · removing flexibility you need for special cases · anything else.',
-    helpGU: 'તમારો પ્રામાણિક અભિપ્રાય — નામે નોંધાશે નહીં. દા.ત.: ચૂકવણું ધીમું કરે તેવા તબક્કા · એટલા કડક નિયમ કે સાચા અરજદાર અટકી જાય · સ્ટાફ વગર વધારાની ડેટા એન્ટ્રી · જ્યાં ઇન્ટરનેટ / સ્ટાફ મર્યાદિત હોય (જિલ્લા) ત્યાં મુશ્કેલી · ખાસ કેસ માટે જરૂરી છૂટ છીનવી લે · અન્ય કંઈપણ.',
+    helpEN: 'Your honest view — not attributed.',
+    helpGU: 'તમારો પ્રામાણિક અભિપ્રાય — નામે નોંધાશે નહીં.',
+    helpMoreEN: 'For example: steps that would slow down payments · rules so rigid that genuine applicants get blocked · extra data entry with no staff to do it · trouble where internet / staff are limited (districts) · removing flexibility you need for special cases · anything else.',
+    helpMoreGU: 'દા.ત.: ચૂકવણું ધીમું કરે તેવા તબક્કા · એટલા કડક નિયમ કે સાચા અરજદાર અટકી જાય · સ્ટાફ વગર વધારાની ડેટા એન્ટ્રી · જ્યાં ઇન્ટરનેટ / સ્ટાફ મર્યાદિત હોય (જિલ્લા) ત્યાં મુશ્કેલી · ખાસ કેસ માટે જરૂરી છૂટ છીનવી લે · અન્ય કંઈપણ.',
+    helpMoreLabelEN: 'examples', helpMoreLabelGU: 'ઉદાહરણ',
     parts: [
       { key: 'n1', type: 'longtext', en: '1.', gu: '૧.' },
       { key: 'n2', type: 'longtext', en: '2.', gu: '૨.' }

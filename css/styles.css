@@ -9,14 +9,34 @@
 html,body{height:100%}
 body{
   margin:0;
-  font-family:"Inter","Segoe UI",Roboto,"Noto Sans","Noto Sans Gujarati",system-ui,sans-serif;
+  /* Gujarati leads the stack. It used to sit LAST, which meant most Windows
+     machines never drew the Gujarati in the font we chose for it — the system
+     quietly substituted whatever it had. */
+  font-family:"Noto Sans Gujarati","Inter","Segoe UI",Roboto,"Noto Sans",system-ui,sans-serif;
   background:var(--bg); color:var(--ink); line-height:1.5;
   -webkit-font-smoothing:antialiased;
 }
 
-/* Gujarati runs alongside every English string — never as a separate screen. */
-.guj{font-family:"Noto Sans Gujarati","Nirmala UI","Segoe UI",sans-serif;color:var(--muted);font-size:.92em}
-.guj.block{display:block}
+/* ---------- bilingual pairs ----------
+ * Gujarati is the text; English supports it. Both are always on screen —
+ * never one language per screen (Phase 0 rule).
+ *
+ * ⭐ THE HIERARCHY IS SET IN EXACTLY TWO PLACES: these rules, and `Bi` in
+ * js/i18n.js. Nothing else may set a colour or size on either class. */
+.guj{font-family:"Noto Sans Gujarati","Nirmala UI","Segoe UI",sans-serif;
+     color:inherit;font-size:1em}
+.eng{font-family:"Inter","Segoe UI",Roboto,system-ui,sans-serif;
+     color:var(--muted);font-size:.88em;font-weight:400}
+.guj.block,.eng.block{display:block}
+
+/* ---------- "શા માટે? / why?" disclosures ----------
+ * A note that is true and worth keeping, but not worth showing on 148 screens,
+ * lives behind one of these. */
+.why{background:none;border:none;padding:0;margin-left:6px;font:inherit;
+     font-size:.85em;color:var(--accent);text-decoration:underline;cursor:pointer}
+.why:hover{color:#1e4c93}
+.why-body{margin-top:7px;padding:9px 11px;background:var(--grey-soft);
+          border-radius:8px;font-size:12.5px;color:var(--muted);line-height:1.5}
 
 h1,h2,h3{margin:0;font-weight:650;letter-spacing:-.01em}
 h1{font-size:20px} h2{font-size:18px} h3{font-size:16px}
@@ -69,10 +89,6 @@ label.fl{display:block;font-size:13px;font-weight:600;margin:14px 0 5px}
 .pill.block{background:var(--danger-soft);color:var(--danger)}
 .tag{padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700;background:var(--accent-soft);color:var(--accent)}
 
-/* ---------- Feature-1 placeholders (removed as each feature lands) ---------- */
-.placeholder{margin-top:14px;padding:20px;border:1px dashed var(--line);border-radius:10px;
-  text-align:center;color:var(--muted);font-size:13px;background:#fafbfc}
-
 /* ---------- spinner ---------- */
 .spinner{width:28px;height:28px;margin:0 auto 12px;border:3px solid var(--line);
   border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
@@ -120,11 +136,12 @@ label.fl{display:block;font-size:13px;font-weight:600;margin:14px 0 5px}
 .qid-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
 .qid{font-size:11.5px;font-weight:700;color:var(--accent);background:var(--accent-soft);
   padding:2px 8px;border-radius:6px;letter-spacing:.02em}
-.qtext{font-weight:600;font-size:15px;line-height:1.45}
-.qtext-gu{font-size:14px;margin-top:3px}
+/* The question itself: Gujarati is the question, English restates it. */
+.qtext{font-weight:600;font-size:15.5px;line-height:1.5}
+.qtext-en{font-size:13px;margin-top:3px;line-height:1.45}
 .qhelp{font-size:12.5px;color:var(--muted);margin-top:8px;font-style:italic}
-.prefill{margin-top:11px;padding:9px 12px;background:var(--amber-soft);color:#7a5310;
-  border-radius:8px;font-size:12.5px;line-height:1.45}
+/* `.prefill` (the amber "not verified — confirm or correct" box) is gone:
+   pre-filled guesses were removed so as not to lead the answer. */
 
 .qpart{margin-top:16px}
 .plabel{font-size:13.5px;font-weight:600;line-height:1.4}
@@ -187,7 +204,7 @@ textarea.qinput{resize:vertical;min-height:70px}
 
 .sec-head{margin:26px 2px 2px;padding-top:8px;border-top:2px solid var(--line)}
 .sec-head h3{font-size:15px;color:var(--accent)}
-.sec-head .guj{font-size:13px}
+.sec-head .eng{font-size:12.5px;margin-top:1px}
 .sec-head:first-child{margin-top:14px;border-top:none}
 
 /* ---------- home ---------- */
@@ -233,12 +250,20 @@ textarea.qinput{resize:vertical;min-height:70px}
   border-bottom:1px solid var(--line);padding:10px 12px;cursor:pointer;border-radius:0}
 .scheme-row:last-child{border-bottom:none}
 .scheme-row:hover{background:var(--grey-soft)}
-.scheme-row .nm{font-size:13.5px;font-weight:600;line-height:1.35}
-.scheme-row .nm-gu{font-size:12.5px;line-height:1.4}
+/* Scheme rows: the Gujarati name is the one an officer recognises from the GR. */
+.scheme-row .nm{font-size:13.5px;font-weight:600;line-height:1.4}
+.scheme-row .nm-en{font-size:12px;line-height:1.4;color:var(--muted)}
 .scheme-row .meta{font-size:11.5px;color:var(--muted);margin-top:3px;
   display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .scheme-row .pill{font-size:10.5px;padding:1px 7px}
 .scheme-empty{padding:20px;text-align:center;color:var(--muted);font-size:13px}
+
+/* ---------- Part B: the branch line ----------
+   Was a card with a heading, two notes and two buttons. One line now, with
+   both notes behind the "શા માટે?" link. */
+.fixline{font-size:13px;line-height:1.5}
+.fixline-acts{margin-top:10px}
+.fixline-acts .btn{margin-right:8px}
 
 /* ---------- scheme corrections ---------- */
 .fixrow{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:10px}
@@ -261,7 +286,7 @@ textarea.qinput{resize:vertical;min-height:70px}
 .fold-row{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
 .fold-what{font-size:13.5px;font-weight:600}
 .fold-why{font-size:12.5px;color:var(--muted);margin-top:5px}
-.fold-why .guj{display:block}
+.fold-why .guj,.fold-why .eng{display:block}
 .fold-kept{font-size:12px;color:var(--amber);font-weight:600;margin-top:7px}
 .fold .btn{flex:0 0 auto}
 
@@ -274,7 +299,7 @@ textarea.qinput{resize:vertical;min-height:70px}
 /* ---------- admin: branch tags awaiting confirmation ---------- */
 .tagrow{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:10px}
 .tagrow .nm{font-weight:600;font-size:14px}
-.tagrow .nm-gu{font-size:12.5px}
+.tagrow .nm-gu{font-size:12.5px;color:var(--muted)}
 .tagrow .meta{font-size:12px;color:var(--muted);margin-top:4px}
 .tagrow .evidence{font-size:12px;color:var(--accent);margin-top:5px;font-weight:600}
 .tagrow .acts{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
@@ -290,7 +315,6 @@ textarea.qinput{resize:vertical;min-height:70px}
 .brow{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:10px}
 .brow-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
 .brow-name{font-weight:600;font-size:14px}
-.brow-name .guj{font-weight:400}
 .brow-counts{font-size:12.5px;color:var(--muted)}
 .brow-counts b{color:var(--ink)}
 .brow .prog{margin-top:9px}

@@ -26,3 +26,76 @@
 - **✅ DEMO MODE + LOCAL RUN (2026-08-19)** — the user asked to try the app before deploying, which was fair: nothing could be seen without a Firebase project. **`js/demo.js` — OFF unless the address ends in `?demo=1`.** Without the flag the file returns on its first line and the real Firebase path is completely untouched (verified: plain `localhost:8000` still shows "Setup pending", no demo bar, `window.FB.demo` undefined). With it, `window.FB` is replaced wholesale — fake signed-in officer, in-memory database with Firestore-accurate merge semantics, a pre-made Culture-branch AD profile, admin rights, and seeded work (part of Part A, one submitted scheme, one draft, a colleague as last editor) so the progress screens are not empty. Loaded **after `firebase.js` and before `app.js`**, so it needs no change to either. **The risk this file exists to manage:** someone handed a demo link could fill in a whole scheme and lose it — so there is a red bar fixed to the bottom, bilingual, that cannot be dismissed. **⭐ THREE BUGS IN THE BAR, ALL FOUND BY MEASURING RATHER THAN LOOKING:** (1) a hard-coded `padding-bottom:76px` was not enough at 375px, where the warning wraps to **111px** — the bar sat on top of the last card; now the page reserves the bar's **measured** height. (2) Measuring only inside `requestAnimationFrame` left the padding at **zero in a hidden/background tab**, because rAF does not run there — a demo link opened in a background tab would have had no spacing at all; it now applies immediately **and** again next frame. (3) Measuring immediately on `resize` kept the **old** height when a narrow window was widened, leaving a large empty gap — hence the second, deferred pass. Verified at 375px (bar 111px, page bottom clear, Part B's Submit button reachable) and 1280px (bar 56px, padding 68px, footer clear). **Full click-through in demo mode passed:** Home → open a scheme → 58 questions → B0.5 = "engaged" folds B4 to 53 → type an answer → "Saved ✓" → Save & exit → list shows "2 of 53 answered · In progress" → branch line updates → reopen → answer restored → Admin shows six branch rows totalling 148, 43 tags to confirm, and audit entries. **New `RUN-LOCALLY.md`** — plain-language, two ways: demo mode (`python -m http.server 8000` then `?demo=1`, no setup at all) and the real app locally against Firebase (steps 1–6 of DEPLOY.md only; **Google sign-in allows `localhost` by default, so the Authorized-domains step is not needed until the site is on a real address**). Both `python` and `py` verified present on this machine. `DEPLOY.md` also brought up to date — its check list covered only Part A and predated Features 10–17; it now has 10 Part B checks, the correct cache-version number, per-scheme write costs, a "republish the rules if saving fails" note, and wording to send officers. `CACHE` bumped v9 → v10.
 - **🚀 DEPLOYED & LIVE (2026-08-20).** Live at **https://a-gyani.github.io/ks-scheme-questionnaire/** · repo **https://github.com/A-gyani/ks-scheme-questionnaire** (public) · Firebase project **`kalasetuquestion`**, Firestore in **asia-south1 (Mumbai)**, **Spark (free) plan**. Deployed step by step with the user doing everything that touches their own accounts and Claude doing everything else. **⭐ THE ONE UNKNOWN SINCE FEATURE 1 IS RESOLVED: the service worker registers and activates on the live site** (`activated`, cache `csq-shell-v11`) — it could never be verified in any of F1–F17 because the dev browser blocks it. Offline use and installing the app both work. **Live verification (Claude, unauthenticated):** every file serves over HTTPS, **zero console errors**, boots to the sign-in screen (not "Setup pending"), connected to the right project, all content present (25 Part A · 58 Part B · 162 schemes · 6 routing rules). **Full flow exercised on the deployed code via `?demo=1`:** scheme opens with 58 questions → B0.5 "engaged" folds it to 53 with the correct "5 set aside" line → answer saves ("Saved ✓") → returning Home shows "2 of 53 answered · In progress" → admin branch table totals **148 schemes across 6 rows**, 43 tags listed, audit entries recorded. **Mobile at 375px: nothing overflows and Sign out is reachable**, so the app-bar fix holds up live. **Verified by the user (signed in, which Claude cannot do):** lands straight on Home rather than the profile screen, the Part A answers made on `localhost` are present on the live site — proving both point at the same database — and the audit log shows their changes under their own name. **⚠️ TWO THINGS THAT BIT DURING DEPLOYMENT, both worth remembering.** (1) **"Setup pending" on localhost after the config was pasted in** — the service worker was serving the *cached* `firebase-config.js` from demo-mode testing, still carrying the `PASTE_…` placeholders. Fixed by bumping `CACHE` and clearing site data. This is exactly the failure `DEPLOY.md` warns about, and it will recur for officers on every future change unless the cache version is bumped. (2) **`DEPLOY.md` was wrong about private repositories** — GitHub Pages serves from a private repo only on a paid plan, so a free account needs a **public** repo; corrected, and the personal email address was removed from `DEPLOY.md`/`README.md` since they are now public. **⚠️ ACCESS IS DELIBERATELY OPEN (user's decision, asked and answered):** `isAllowed()` is still `isSignedIn()`, so anyone with any Google account who finds the URL can sign in and answer. Every change is stamped with their name and email and is auditable. The allowlist gate is written and commented out in `firestore.rules`; switching it on is a rules edit plus one `allowlist/{email}` doc per officer, and needs no code change.
 
+
+---
+
+## Text pass — Gujarati-first + chrome clean-up (2026-08-25)
+
+Approved from `Portal/TEXT-CLEANUP-PLAN.md`, sections 4, 5, 6.1, 6.2, 6.7 and 7 (Option A).
+Wording and presentation only. Answer keys, routing, saving and the audit log are untouched.
+
+### What was built
+1. **`js/i18n.js` — new.** `Bi.into / inline / set / txt / why`. One place decides order,
+   separator and styling for every bilingual pair outside the instrument.
+2. **CSS.** `Noto Sans Gujarati` moved to the FRONT of the body stack; `.guj` became primary
+   (inherit colour, 1em), new `.eng` secondary (muted, .88em). `.why` / `.why-body` added.
+   Dead `.placeholder` block deleted.
+3. **`render.js`.** Four `⭐ order` edits flip all 83 questions, 291 parts, every option,
+   help note and table heading. Plus: the badge, `helpMore*` support, and `prefillGU`.
+4. **`index.html`** rewritten pair by pair; **`app.js`** ~40 pairs; `route-b.js` reasons
+   trimmed; `demo.js` bar shortened.
+
+### Bugs this pass found by running it
+1. **The `\uXXXX` / literal mix made `app.js` unsearchable.** Some strings held escapes
+   (`—`, `✓`) while the Gujarati beside them was literal, so neither a plain search
+   nor an escape-aware one matched the same line. Normalised all 297 escapes to characters
+   first (`node --check` after), then edited. **Do this before any future text pass.**
+2. **`closeFixForm()` threw on every Part B open.** `paintFixCurrent` now *builds*
+   `#fix-open` and `#fix-confirm`, but `openPartB` calls `closeFixForm()` **before** it —
+   so `$('fix-open')` was null and the whole scheme failed to open. An officer would have
+   clicked a scheme and got nothing at all. Both functions now null-check.
+   The two `on('fix-open'…)` / `on('fix-confirm'…)` lines in `boot()` were removed with it.
+3. **Part A's section headings were missed.** `drawQuestions` builds its own heading and was
+   still English-first, so Part A had Gujarati-first questions under English-first headings.
+   Only caught by reading the running page — `sectionHead()` (Part B) had been done.
+4. **The two Parts disagreed about the save chip.** Part B carried its own copies of the same
+   four strings, so after the edit Part A read "સચવાયું ✓ Saved" and Part B "સચવાયું Saved ✓".
+   Fixed properly: one `CHIP` table, `paintChip(id, kind)`, six call sites.
+
+### Decisions worth not re-litigating
+- **"Part A" stays "ભાગ A", not ભાગ-૧.** The letter is the identifier used in DEPLOY.md, the
+  admin screen and everything we tell officers. The word "Part" is translated; the letter is not.
+- **Digits are English everywhere.** The screen previously mixed "૫૮ માંથી 5" in one sentence.
+- **`describeProfile` stays English.** It is an attribution string written into `submittedBy`,
+  `lastEditedBy` and every audit row — not a label.
+- **Admin stays English**, deliberately. Its Gujarati tails were removed, not translated.
+- **The "all 58 questions apply" line is gone** when nothing is set aside. It told the officer
+  nothing.
+
+### Verified in demo mode after the pass
+25 Part A questions · 58 Part B · routing still folds 5 on `engaged`-only B0.5 (53 asked) ·
+officer's own section-NA still folds B2 and names who did it · submit warning bilingual ·
+save chips agree · 3 admin body rows · no horizontal overflow at 375px (the B1.1 table still
+scrolls inside its own box, by design) · Gujarati computes to `Noto Sans Gujarati` at full
+colour, English to Inter at .88em muted.
+
+### Follow-up, same day — PRE-FILLED ANSWERS REMOVED ENTIRELY
+
+The user, on seeing them: *"i want you to remove these 'Not verified — please confirm or
+correct:'. these are just confusing. we are trying to gather authentic data. dont lead the
+questions anywhere."*
+
+Deleted: the `prefill` / `prefillGU` fields on all 19 Part A questions, the render block in
+`render.js`, and the `.prefill` CSS. Nothing else references them.
+
+**This reverses a Phase 0 decision** ("pre-fill from the GR compendium so staff verify rather
+than write blank"). It is the right call: a guess printed above the answer box is a suggested
+answer. A busy clerk confirms it and a junior one will not contradict it, so the guess returns
+with a department stamp on it and cannot be told apart from a real finding — in the one dataset
+the whole exercise exists to create.
+
+Note this also made the 19 Gujarati translations added an hour earlier redundant. They are gone
+with the rest. **The research behind them is in `Portal/Pipeline - As Is.md`** — that is where
+it belongs, not in front of the person being asked the question.
+
+**Do not reintroduce pre-fills without the user saying so explicitly.**

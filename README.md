@@ -143,6 +143,7 @@ number of answer keys per document at 400.
 | `css/styles.css` | Design tokens and components from the approved flow mockup. |
 | `js/firebase-config.js` | **You paste your Firebase config here.** Not a secret. |
 | `js/firebase.js` | Initialises Firebase, enables the offline cache, exposes `window.FB`. |
+| `js/i18n.js` | `Bi` — the one place that decides how a bilingual pair is drawn. |
 | `js/spec-a.js` | The 25 Part A questions, bilingual. Mirrors the locked instrument. |
 | `js/spec-b.js` | The 58 Part B questions, bilingual. Mirrors the locked instrument. |
 | `js/render.js` | Turns either spec into a form; knows nothing about Firebase. |
@@ -706,3 +707,50 @@ disagreed on screen.
 **A failed read is reported as incomplete**, never as "0 submitted" — that is the one wrong
 number that would send someone chasing work already done.
 
+
+---
+
+### Text pass — Gujarati-first, and half the chrome cut (Aug 2026)
+
+Wording and presentation only. **No answer key, routing rule, saved field or audit entry
+changed.** The instrument itself is untouched apart from two approved moves (below).
+
+**The hierarchy now lives in exactly three places.** `.guj` / `.eng` in `css/styles.css`,
+`Bi` in `js/i18n.js`, and the four call sites marked `⭐ order` in `js/render.js`. Before this
+pass, "English then Gujarati, separated by a slash" was written out by hand in about a hundred
+places. Reversing it again — or adding a ગુજરાતી/English switch — is now an edit to those three,
+not a rewrite. **`Bi(gu, en)` always takes Gujarati first; a swapped pair renders silently.**
+
+**The font list was the real bug.** `Noto Sans Gujarati` sat *last* in the body stack, so on most
+Windows machines the Gujarati was never drawn in the font it was chosen in — the system
+substituted. It leads the stack now.
+
+**What was cut, and why.** Duplicated reassurances (the "your name is recorded" sentence appeared
+on two consecutive screens; "nothing disappears by mistake" appeared twice on one card); text
+that argued a design decision at the reader ("there is no 'confirm all' because…" — that belongs
+in `BUILD-LOG.md`); our own to-do items told to officers ("a list of ranks will be added later");
+and the stale "Setup pending → paste your Firebase config" screen, which on a live site is only
+ever reached by an officer whose connection dropped.
+
+**`blocking` is gone as a user-facing word.** It came out of our build notes, was English-only,
+and its meaning lived in hover text that does not exist on a phone. It reads **જરૂરી / important**.
+
+**Digits are English throughout.** The screen used to mix "૫૮ માંથી 5" in one sentence. Officers
+read file numbers and budget figures in English digits all day.
+
+**Two instrument moves, approved individually.** B0.5's rare/future sentence and the B11.1 /
+B11.3 / B11.4 example lists sit behind a link (`helpMoreEN` / `helpMoreGU` on the question).
+**Not one word was rewritten** — the text is moved, not changed.
+
+**⛔ The 19 Part A pre-fills are GONE.** They were our own guesses, drawn in an amber box above
+the answer box under "Not verified — please confirm or correct". Removed on the user's
+instruction: an answer already on the page is an answer suggested, and a confirmed guess is
+indistinguishable from a real finding. The `prefill` field, the render block and the `.prefill`
+CSS are all deleted; the research is kept in `Portal/Pipeline - As Is.md`. **Do not reintroduce
+them.**
+
+**Admin stays English.** One reader, who reads English. Translating it would be work with no
+beneficiary.
+
+**Watch out:** `paintFixCurrent` now *builds* `#fix-confirm` and `#fix-open`, so those two are not
+in `index.html` and are not wired in `boot()`. Anything touching them must null-check.

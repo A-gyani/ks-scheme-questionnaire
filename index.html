@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="gu">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#2557a7" />
-  <title>Cultural Schemes Questionnaire — SYCAD</title>
+  <title>સાંસ્કૃતિક યોજના પ્રશ્નાવલિ — SYCAD</title>
 
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
@@ -15,6 +15,12 @@
 </head>
 <body>
 
+  <!--
+    GUJARATI FIRST, ENGLISH SECOND, everywhere on this page. The Gujarati is
+    the text; the English carries class `eng` and is drawn smaller and grey.
+    The hierarchy itself is set in css/styles.css and js/i18n.js — not here.
+  -->
+
   <!-- ============ App bar (hidden until signed in — Feature 2) ============ -->
   <header id="appbar" class="topbar hidden">
     <div class="app">
@@ -22,16 +28,16 @@
         <div class="brand">
           <div class="logo">સા</div>
           <div>
-            <b>Cultural Schemes Questionnaire</b>
-            <small class="guj">સાંસ્કૃતિક યોજના પ્રશ્નાવલિ</small>
+            <b>સાંસ્કૃતિક યોજના પ્રશ્નાવલિ</b>
+            <small class="eng">Cultural Schemes Questionnaire</small>
           </div>
         </div>
         <div class="whoami" id="whoami">
           <span id="who-text"></span>
-          <button id="btn-home" class="btn ghost sm hidden">Home <span class="guj">/ મુખ્ય</span></button>
-          <button id="btn-profile" class="btn ghost sm hidden">Profile <span class="guj">/ પ્રોફાઇલ</span></button>
-          <button id="btn-admin" class="btn ghost sm hidden">Admin <span class="guj">/ વહીવટ</span></button>
-          <button id="btn-signout" class="btn ghost sm">Sign out <span class="guj">/ સાઇન આઉટ</span></button>
+          <button id="btn-home" class="btn ghost sm hidden">મુખ્ય <span class="eng">Home</span></button>
+          <button id="btn-profile" class="btn ghost sm hidden">પ્રોફાઇલ <span class="eng">Profile</span></button>
+          <button id="btn-admin" class="btn ghost sm hidden">વહીવટ <span class="eng">Admin</span></button>
+          <button id="btn-signout" class="btn ghost sm">સાઇન આઉટ <span class="eng">Sign out</span></button>
         </div>
       </div>
     </div>
@@ -43,22 +49,28 @@
     <section id="view-loading" class="view center-wrap">
       <div>
         <div class="spinner"></div>
-        <p class="muted" style="text-align:center">Loading… <span class="guj">લોડ થઈ રહ્યું છે…</span></p>
+        <p class="muted" style="text-align:center">લોડ થઈ રહ્યું છે…
+          <span class="eng">Loading…</span></p>
       </div>
     </section>
 
-    <!-- ============ Setup pending (no Firebase config yet) ============ -->
+    <!--
+      ============ The app could not start ============
+      This screen used to read "Setup pending — open js/firebase-config.js and
+      paste the config … see README.md for the full 8-step setup". That is
+      developer text, and the site is live: the person who actually reaches this
+      screen is an officer whose connection dropped. They are addressed first;
+      the administrator's line sits underneath in small type.
+    -->
     <section id="view-setup" class="view center-wrap hidden">
       <div class="card pad" style="max-width:560px">
-        <h2><span id="setup-title">Setup pending</span>
-            <span class="guj" id="setup-title-gu">/ સેટઅપ બાકી</span></h2>
+        <h2><span id="setup-title">એપ્લિકેશન શરૂ થઈ શકી નથી</span>
+            <span class="eng" id="setup-title-gu">The app could not start</span></h2>
         <p class="muted" style="margin-top:8px" id="setup-body">
-          Open js/firebase-config.js and paste the config from your Firebase
-          project (Project settings → Your apps → Web app).
-          See README.md for the full 8-step setup.
+          થોડી વારે ફરી પ્રયાસ કરો. વારંવાર થાય તો વહીવટકર્તાને જાણ કરો.
         </p>
-        <p class="note">These values are not secrets — they ship to every browser. Your data is
-        protected by Authentication + <code>firestore.rules</code>, not by hiding this config.</p>
+        <p class="note">વહીવટકર્તા માટે: <code>js/firebase-config.js</code> ની વિગત Firebase કન્સોલ સામે ચકાસો.
+          <span class="eng block">Administrator: check <code>js/firebase-config.js</code> against the Firebase console.</span></p>
       </div>
     </section>
 
@@ -66,55 +78,56 @@
     <section id="view-login" class="view center-wrap hidden">
       <div class="card pad auth-card">
         <div class="logo lg">સા</div>
-        <h1>Cultural Schemes Questionnaire</h1>
-        <p class="guj sub">સાંસ્કૃતિક યોજના પ્રશ્નાવલિ</p>
+        <h1>સાંસ્કૃતિક યોજના પ્રશ્નાવલિ</h1>
+        <p class="eng sub">Cultural Schemes Questionnaire</p>
         <p class="muted sub2">
-          Sports, Youth &amp; Cultural Activities Department, Government of Gujarat
-          <span class="guj block">રમતગમત, યુવા અને સાંસ્કૃતિક પ્રવૃત્તિઓ વિભાગ, ગુજરાત સરકાર</span>
+          રમતગમત, યુવા અને સાંસ્કૃતિક પ્રવૃત્તિઓ વિભાગ, ગુજરાત સરકાર
+          <span class="eng block">Sports, Youth &amp; Cultural Activities Department, Government of Gujarat</span>
         </p>
         <button id="btn-google" class="gbtn">
           <svg class="gmark" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.6l6.7-6.7C35.6 2.6 30.2 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.8 6.1C12.2 13.2 17.6 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.5 3-2.2 5.5-4.7 7.2l7.3 5.7c4.3-4 6.2-9.9 6.2-17.4z"/><path fill="#FBBC05" d="M10.4 28.3c-.5-1.5-.8-3-.8-4.8s.3-3.3.8-4.8l-7.8-6.1C.9 16 0 19.9 0 24s.9 8 2.6 11.4l7.8-6.1z"/><path fill="#34A853" d="M24 48c6.2 0 11.4-2 15.2-5.5l-7.3-5.7c-2 1.4-4.7 2.3-7.9 2.3-6.4 0-11.8-3.7-13.6-9.1l-7.8 6.1C6.5 42.6 14.6 48 24 48z"/></svg>
-          <span>Sign in with Google <span class="guj">/ Google થી સાઇન ઇન</span></span>
+          <span>Google થી સાઇન ઇન <span class="eng">Sign in with Google</span></span>
         </button>
         <div id="login-error" class="banner err hidden"></div>
-        <p class="note">Use your official Google account. Your name, rank and office are
-          recorded with every answer you save.
-          <span class="guj block">આપના સત્તાવાર Google ખાતાથી પ્રવેશ કરો. આપ સાચવો તે દરેક જવાબ સાથે
-          આપનું નામ, હોદ્દો અને કચેરી નોંધાય છે.</span></p>
+        <!-- The "your name is recorded with every answer" sentence used to be
+             here AND, in the same words, on the profile screen you land on
+             immediately afterwards. It is said once now, on the profile. -->
+        <p class="note">આપના સત્તાવાર Google ખાતાથી પ્રવેશ કરો.
+          <span class="eng block">Sign in with your official Google account.</span></p>
       </div>
     </section>
 
     <!-- ============ Profile setup ============ -->
     <section id="view-profile" class="view hidden">
       <div class="card pad form-card">
-        <h2 id="pf-title">Set up your profile <span class="guj">/ પ્રોફાઇલ સેટ કરો</span></h2>
+        <h2 id="pf-title">પ્રોફાઇલ સેટ કરો <span class="eng">Set up your profile</span></h2>
         <p class="muted" style="font-size:13px;margin-top:6px">
-          Asked once. Your name, rank and office are recorded with every answer you save.
-          <span class="guj block">એક જ વાર પૂછવામાં આવે છે. આપ સાચવો તે દરેક જવાબ સાથે આપનું નામ,
-          હોદ્દો અને કચેરી નોંધાય છે.</span>
+          આપ સાચવો તે દરેક જવાબ સાથે આપનું નામ, હોદ્દો અને કચેરી નોંધાય છે.
+          <span class="eng block">Your name, rank and office are saved with every answer.</span>
         </p>
 
-        <label class="fl" for="pf-body">Office / body <span class="guj">/ કચેરી</span></label>
+        <label class="fl" for="pf-body">કચેરી <span class="eng">Office / body</span></label>
         <select id="pf-body"></select>
 
-        <label class="fl" for="pf-name">Full name <span class="guj">/ પૂરું નામ</span></label>
+        <label class="fl" for="pf-name">પૂરું નામ <span class="eng">Full name</span></label>
         <input id="pf-name" type="text" maxlength="120" autocomplete="name"
-               placeholder="e.g. Kushal M. Dixit" />
+               placeholder="દા.ત. કુશલ એમ. દિક્ષિત" />
 
-        <label class="fl" for="pf-rank">Rank / designation <span class="guj">/ હોદ્દો</span></label>
+        <label class="fl" for="pf-rank">હોદ્દો <span class="eng">Rank / designation</span></label>
         <div id="pf-rank-wrap"></div>
 
+        <!-- The note "Branches apply to the Commissionerate only" is gone: this
+             whole block is hidden for the Akademis, so it was explaining
+             something the reader could not see happening. -->
         <div id="pf-branch-wrap" class="hidden">
-          <label class="fl" for="pf-branch">Branch / unit <span class="guj">/ શાખા</span></label>
+          <label class="fl" for="pf-branch">શાખા <span class="eng">Branch / unit</span></label>
           <select id="pf-branch"></select>
-          <p class="note">Branches apply to the Commissionerate only.
-            <span class="guj block">શાખા ફક્ત કચેરીને લાગુ પડે છે.</span></p>
         </div>
 
         <div id="pf-error" class="banner err hidden"></div>
 
         <button id="pf-save" class="btn block" style="margin-top:22px">
-          Save and continue <span class="guj">/ સાચવીને આગળ વધો</span>
+          સાચવીને આગળ વધો <span class="eng">Save and continue</span>
         </button>
       </div>
     </section>
@@ -124,9 +137,11 @@
       <div class="home-top">
         <h2 id="home-greet"></h2>
         <p class="muted" id="home-who"></p>
+        <!-- Was: "Everything you type is saved automatically. You can stop and
+             come back any time." The green "સચવાયું ✓" chip inside the form
+             proves this better than a sentence on the screen before it. -->
         <p class="muted home-note">
-          Everything you type is saved automatically. You can stop and come back any time.
-          <span class="guj block">આપ લખો તે આપોઆપ સચવાય છે. વચ્ચે બંધ કરીને પછી ફરી ચાલુ કરી શકો છો.</span>
+          આપોઆપ સચવાય છે <span class="eng">Saved automatically</span>
         </p>
       </div>
 
@@ -134,30 +149,30 @@
         <!-- Part A -->
         <div class="card pad homecard">
           <div class="homecard-head">
-            <h3>Part A — Universal <span class="guj">/ સામાન્ય પ્રશ્નાવલિ</span></h3>
+            <h3>ભાગ A — સામાન્ય પ્રશ્નાવલિ <span class="eng">Part A — Universal</span></h3>
             <span id="home-a-status" class="pill todo">—</span>
           </div>
           <p class="muted homecard-sub">
-            Answered once for your office. 25 questions.
-            <span class="guj block">આપની કચેરી માટે એક જ વાર. ૨૫ પ્રશ્નો.</span>
+            કચેરી દીઠ એક જ વાર · 25 પ્રશ્ન
+            <span class="eng block">Once per office · 25 questions</span>
           </p>
           <div class="prog"><i id="home-a-bar" style="width:0%"></i></div>
           <p class="mini" id="home-a-progress"></p>
           <p class="mini" id="home-a-edited"></p>
           <button id="home-parta" class="btn block" style="margin-top:16px">
-            <span id="home-a-btn">Open</span> <span class="guj">/ ખોલો</span>
+            <span id="home-a-btn">ખોલો</span>
           </button>
         </div>
 
         <!-- Part B -->
         <div class="card pad homecard">
           <div class="homecard-head">
-            <h3>Part B — Per scheme <span class="guj">/ યોજના દીઠ</span></h3>
+            <h3>ભાગ B — યોજના દીઠ <span class="eng">Part B — Per scheme</span></h3>
             <span id="home-b-count" class="pill todo">—</span>
           </div>
           <p class="muted homecard-sub">
-            One questionnaire for each scheme, up to 58 questions. Pick a scheme to begin.
-            <span class="guj block">દરેક યોજના માટે અલગ પ્રશ્નાવલિ, વધુમાં વધુ ૫૮ પ્રશ્નો. શરૂ કરવા યોજના પસંદ કરો.</span>
+            યોજના દીઠ અલગ · વધુમાં વધુ 58 પ્રશ્ન
+            <span class="eng block">Per scheme · up to 58 questions</span>
           </p>
 
           <div id="home-b-mine" class="minebox hidden">
@@ -170,12 +185,12 @@
           </div>
 
           <div id="sp-branchwrap" class="hidden" style="margin-top:14px">
-            <label class="fl" for="sp-branch">Branch <span class="guj">/ શાખા</span></label>
+            <label class="fl" for="sp-branch">શાખા <span class="eng">Branch</span></label>
             <select id="sp-branch"></select>
           </div>
 
           <input id="sp-search" type="text" style="margin-top:12px"
-                 placeholder="Search scheme name / યોજનાનું નામ શોધો" />
+                 placeholder="યોજનાનું નામ શોધો · Search scheme name" />
 
           <p class="mini" id="sp-note"></p>
           <div id="sp-list" class="scheme-list"></div>
@@ -185,12 +200,12 @@
 
     <!-- ============ Part A form ============ -->
     <section id="view-parta" class="view hidden">
-      <div class="crumb"><a id="pa-back">Home</a> › Part A — Universal</div>
+      <div class="crumb"><a id="pa-back">મુખ્ય</a> › ભાગ A — સામાન્ય પ્રશ્નાવલિ</div>
 
       <div class="card">
         <div class="pad formhead">
           <div class="formhead-row">
-            <h2>Part A — Universal <span class="guj">/ સામાન્ય પ્રશ્નાવલિ</span></h2>
+            <h2>ભાગ A — સામાન્ય પ્રશ્નાવલિ <span class="eng">Part A — Universal</span></h2>
             <span id="pa-savechip" class="savechip hidden"></span>
           </div>
           <p class="muted" style="font-size:13px" id="pa-body-label"></p>
@@ -203,75 +218,65 @@
       <div id="pa-loading" class="center-wrap hidden" style="min-height:200px">
         <div>
           <div class="spinner"></div>
-          <p class="muted" style="text-align:center">Loading your saved answers…
-            <span class="guj block">સાચવેલા જવાબો લવાય છે…</span></p>
+          <p class="muted" style="text-align:center">સાચવેલા જવાબો લવાય છે…
+            <span class="eng block">Loading your saved answers…</span></p>
         </div>
       </div>
 
       <div id="pa-questions"></div>
 
       <div class="card pad formfoot">
-        <button id="pa-exit" class="btn ghost sm">Save &amp; exit <span class="guj">/ સાચવીને બહાર</span></button>
-        <button id="pa-submit" class="btn sm">Submit Part A <span class="guj">/ સબમિટ</span></button>
+        <button id="pa-exit" class="btn ghost sm">સાચવીને બહાર <span class="eng">Save &amp; exit</span></button>
+        <button id="pa-submit" class="btn sm">ભાગ A રજૂ કરો <span class="eng">Submit Part A</span></button>
       </div>
     </section>
 
     <!-- ============ Part B form ============ -->
     <section id="view-partb" class="view hidden">
-      <div class="crumb"><a id="pb-back">Home</a> › Part B</div>
+      <div class="crumb"><a id="pb-back">મુખ્ય</a> › ભાગ B</div>
       <div class="card">
         <div class="pad formhead">
           <div class="formhead-row">
             <h2 id="pb-title"></h2>
             <span id="pb-savechip" class="savechip hidden"></span>
           </div>
-          <p class="muted guj" id="pb-title-gu" style="font-size:13.5px"></p>
+          <p class="eng" id="pb-title-gu" style="font-size:13px"></p>
           <p class="mini" id="pb-meta"></p>
         </div>
       </div>
-      <!-- wrong body / branch -->
+
+      <!--
+        Branch line. This card used to carry a heading, two buttons, a
+        "currently filed under…" line, a 476-character confirm note and a
+        261-character report note — up to ~1,090 characters standing between the
+        officer and question B0.1, on every one of 148 schemes, with the same
+        reassurance printed twice on the same card.
+
+        It is one line now, built in app.js (`paintFixCurrent`). Both notes are
+        kept word for word behind the "શા માટે?" link. Nothing about the
+        behaviour changed: same confirm button, same report form, same
+        report-then-an-admin-applies rule.
+      -->
       <div class="card pad" style="margin-top:14px">
-        <div class="formhead-row">
-          <h3 style="font-size:14.5px">Is this scheme filed correctly?
-            <span class="guj">/ શું આ યોજના સાચી જગ્યાએ છે?</span></h3>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button id="fix-confirm" class="btn ghost sm hidden">Yes — confirm this branch
-              <span class="guj">/ હા — આ શાખા ખરી છે</span></button>
-            <button id="fix-open" class="btn ghost sm">Report a correction
-              <span class="guj">/ સુધારો સૂચવો</span></button>
-          </div>
-        </div>
-        <p class="muted" style="font-size:12.5px;margin-top:8px" id="fix-current"></p>
-        <p class="note hidden" id="fix-confirm-note">This scheme's branch was our guess. If it is
-          right, confirming it here removes the "(to confirm)" mark for everyone. If it is wrong,
-          report it instead — the scheme only moves once an administrator applies it, so it can
-          never disappear from your list by mistake.
-          <span class="guj block">આ યોજનાની શાખા અમારું અનુમાન છે. ખરી હોય તો અહીં ખાતરી કરો,
-          જેથી બધા માટે "(ખાતરી બાકી)" નિશાન દૂર થશે. ખોટી હોય તો સુધારો સૂચવો — વહીવટકર્તા
-          મંજૂર કરે ત્યારે જ યોજના ખસે છે, તેથી ભૂલથી આપની યાદીમાંથી ગુમ નહીં થાય.</span></p>
+        <div class="fixline" id="fix-current"></div>
 
         <div id="fix-form" class="hidden" style="margin-top:14px">
-          <label class="fl" for="fix-body">Correct office <span class="guj">/ સાચી કચેરી</span></label>
+          <label class="fl" for="fix-body">સાચી કચેરી <span class="eng">Correct office</span></label>
           <select id="fix-body"></select>
 
           <div id="fix-branchwrap" class="hidden">
-            <label class="fl" for="fix-branch">Correct branch <span class="guj">/ સાચી શાખા</span></label>
+            <label class="fl" for="fix-branch">સાચી શાખા <span class="eng">Correct branch</span></label>
             <select id="fix-branch"></select>
           </div>
 
-          <label class="fl" for="fix-note">Anything to add? <span class="guj">/ કંઈ ઉમેરવું છે?</span></label>
+          <label class="fl" for="fix-note">કંઈ ઉમેરવું છે? <span class="eng">Anything to add?</span></label>
           <textarea id="fix-note" rows="2" maxlength="500"
-                    placeholder="Optional / મરજિયાત"></textarea>
-
-          <p class="note">Your report goes to the administrator. The scheme stays where it is
-            until they apply it, so nothing disappears from anyone's list by mistake.
-            <span class="guj block">આપની જાણ વહીવટકર્તાને જશે. તેઓ મંજૂર કરે ત્યાં સુધી યોજના
-            જ્યાં છે ત્યાં જ રહેશે, જેથી કોઈની યાદીમાંથી ભૂલથી ગુમ ન થાય.</span></p>
+                    placeholder="મરજિયાત · Optional"></textarea>
 
           <div id="fix-msg" class="banner err hidden"></div>
           <div style="display:flex;gap:10px;margin-top:14px">
-            <button id="fix-send" class="btn sm">Send <span class="guj">/ મોકલો</span></button>
-            <button id="fix-cancel" class="btn ghost sm">Cancel <span class="guj">/ રદ</span></button>
+            <button id="fix-send" class="btn sm">મોકલો <span class="eng">Send</span></button>
+            <button id="fix-cancel" class="btn ghost sm">રદ <span class="eng">Cancel</span></button>
           </div>
         </div>
       </div>
@@ -289,37 +294,40 @@
       <div id="pb-loading" class="center-wrap hidden" style="min-height:200px">
         <div>
           <div class="spinner"></div>
-          <p class="muted" style="text-align:center">Loading saved answers for this scheme…
-            <span class="guj block">આ યોજનાના સાચવેલા જવાબો લવાય છે…</span></p>
+          <p class="muted" style="text-align:center">આ યોજનાના સાચવેલા જવાબો લવાય છે…
+            <span class="eng block">Loading saved answers for this scheme…</span></p>
         </div>
       </div>
 
       <div id="pb-questions"></div>
 
       <div class="card pad formfoot">
-        <button id="pb-exit" class="btn ghost sm">Save &amp; exit
-          <span class="guj">/ સાચવીને બહાર</span></button>
-        <button id="pb-showall" class="btn ghost sm">Show every question
-          <span class="guj">/ બધા પ્રશ્નો બતાવો</span></button>
-        <button id="pb-submit" class="btn sm">Submit this scheme
-          <span class="guj">/ સબમિટ</span></button>
+        <button id="pb-exit" class="btn ghost sm">સાચવીને બહાર
+          <span class="eng">Save &amp; exit</span></button>
+        <button id="pb-showall" class="btn ghost sm">બધા પ્રશ્નો બતાવો
+          <span class="eng">Show every question</span></button>
+        <button id="pb-submit" class="btn sm">આ યોજના રજૂ કરો
+          <span class="eng">Submit this scheme</span></button>
       </div>
     </section>
 
-    <!-- ============ Admin ============ -->
+    <!--
+      ============ Admin ============
+      Deliberately English-first: it has one reader, who reads English. The
+      Gujarati that remains is on names and labels shared with the officer
+      screens. Translating this screen would be work with no beneficiary.
+    -->
     <section id="view-admin" class="view hidden">
 
       <!-- ---- progress tracker ---- -->
       <div class="home-top">
-        <h2>Progress tracker <span class="guj">/ પ્રગતિ</span></h2>
-        <p class="muted home-note">Part A is answered once per body.
-          <span class="guj block">દરેક કચેરી માટે Part A એક જ વાર ભરાય છે.</span></p>
+        <h2>Progress tracker</h2>
       </div>
 
       <div class="card pad">
         <div class="formhead-row">
-          <h3>Part A — by body <span class="guj">/ Part A — કચેરી પ્રમાણે</span></h3>
-          <button id="adm-refresh" class="btn ghost sm">Refresh <span class="guj">/ તાજું કરો</span></button>
+          <h3>Part A — by body</h3>
+          <button id="adm-refresh" class="btn ghost sm">Refresh</button>
         </div>
         <div id="adm-tracker" class="tracker"></div>
       </div>
@@ -327,23 +335,19 @@
       <!-- ---- Part B progress, branch by branch ---- -->
       <div class="card pad" style="margin-top:18px">
         <div class="formhead-row">
-          <h3>Part B — by branch <span class="guj">/ Part B — શાખા પ્રમાણે</span></h3>
+          <h3>Part B — by branch</h3>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button id="adm-b-copy" class="btn ghost sm">Copy summary
-              <span class="guj">/ સારાંશ કોપી કરો</span></button>
-            <button id="adm-b-refresh" class="btn ghost sm">Refresh
-              <span class="guj">/ તાજું કરો</span></button>
+            <button id="adm-b-copy" class="btn ghost sm">Copy summary</button>
+            <button id="adm-b-refresh" class="btn ghost sm">Refresh</button>
           </div>
         </div>
         <p class="mini" id="adm-b-note"></p>
         <div id="adm-b-tracker" class="tracker"></div>
 
         <!-- Fallback for when the browser refuses clipboard access: the text is
-             shown and selected so it can be copied by hand. -->
+             shown so it can be copied by hand. -->
         <div id="adm-b-copybox" class="hidden" style="margin-top:12px">
-          <p class="note">Your browser would not let the app copy for you. The summary is below —
-            select it and copy.
-            <span class="guj block">બ્રાઉઝરે કોપી કરવા દીધું નથી. નીચેનો સારાંશ પસંદ કરીને કોપી કરો.</span></p>
+          <p class="note">The browser blocked copying. Select the summary below and copy it.</p>
           <textarea id="adm-b-copytext" rows="10" readonly></textarea>
         </div>
       </div>
@@ -351,15 +355,13 @@
       <!-- ---- branch tags still unconfirmed ---- -->
       <div class="card pad" style="margin-top:18px">
         <div class="formhead-row">
-          <h3>Branch tags to confirm <span class="guj">/ ખાતરી બાકી શાખા</span></h3>
-          <button id="adm-tags-refresh" class="btn ghost sm">Refresh
-            <span class="guj">/ તાજું કરો</span></button>
+          <h3>Branch tags to confirm</h3>
+          <button id="adm-tags-refresh" class="btn ghost sm">Refresh</button>
         </div>
-        <p class="note">These schemes carry a branch we guessed. Confirm each one, or change it to
-          the right branch. There is no "confirm all" — the point of asking is lost if the whole
-          list is cleared in one click.
-          <span class="guj block">આ યોજનાઓની શાખા અમારું અનુમાન છે. દરેકની ખાતરી કરો, અથવા સાચી
-          શાખામાં બદલો. "બધા સ્વીકારો" નથી — એક ક્લિકે આખી યાદી પતાવવાથી પૂછવાનો અર્થ જ રહેતો નથી.</span></p>
+        <!-- The argument for why there is no "confirm all" lived here, 342
+             characters of it. It is recorded in BUILD-LOG.md instead. -->
+        <p class="note">These schemes carry a branch we guessed. Confirm each one, or change it
+          to the right branch.</p>
         <p class="mini" id="adm-tags-note"></p>
         <div id="adm-tags"></div>
       </div>
@@ -367,33 +369,24 @@
       <!-- ---- scheme corrections reported by officers ---- -->
       <div class="card pad" style="margin-top:18px">
         <div class="formhead-row">
-          <h3>Scheme corrections <span class="guj">/ યોજના સુધારા</span></h3>
-          <button id="adm-fix-refresh" class="btn ghost sm">Refresh <span class="guj">/ તાજું કરો</span></button>
+          <h3>Scheme corrections</h3>
+          <button id="adm-fix-refresh" class="btn ghost sm">Refresh</button>
         </div>
-        <p class="muted" style="font-size:12.5px;margin-top:8px">
-          Officers reporting a scheme filed under the wrong office or branch. Applying one moves
-          the scheme for everybody.
-          <span class="guj block">ખોટી કચેરી કે શાખામાં મુકાયેલ યોજના અંગે અધિકારીઓની જાણ.
-          મંજૂર કરવાથી યોજના બધા માટે ખસેડાય છે.</span>
-        </p>
+        <p class="note">Applying a correction moves the scheme for everybody.</p>
         <div id="adm-fixes"></div>
       </div>
 
       <!-- ---- audit log ---- -->
       <div class="card pad" style="margin-top:18px">
         <div class="formhead-row">
-          <h3>Audit log <span class="guj">/ ઓડિટ લોગ</span></h3>
-          <button id="adm-audit-refresh" class="btn ghost sm">Refresh <span class="guj">/ તાજું કરો</span></button>
+          <h3>Audit log</h3>
+          <button id="adm-audit-refresh" class="btn ghost sm">Refresh</button>
         </div>
-        <p class="muted" style="font-size:12.5px;margin-top:8px">
-          Every change ever made, newest first. Entries can never be edited or deleted.
-          <span class="guj block">દરેક ફેરફારની કાયમી નોંધ, નવીથી જૂની. આ નોંધ કદી બદલી કે ભૂંસી શકાતી નથી.</span>
-        </p>
+        <p class="note">Every change ever made, newest first. Entries cannot be edited or deleted.</p>
 
         <div class="filters">
           <select id="adm-f-body"></select>
-          <input id="adm-f-text" type="text"
-                 placeholder="Search name, question or value / નામ, પ્રશ્ન કે જવાબ શોધો" />
+          <input id="adm-f-text" type="text" placeholder="Search name, question or value" />
         </div>
         <p class="mini" id="adm-audit-note"></p>
 
@@ -401,10 +394,10 @@
           <table class="qtable audit-table">
             <thead>
               <tr>
-                <th>When <span class="guj">/ ક્યારે</span></th>
-                <th>Who <span class="guj">/ કોણે</span></th>
-                <th>Question <span class="guj">/ પ્રશ્ન</span></th>
-                <th>Change <span class="guj">/ ફેરફાર</span></th>
+                <th>When</th>
+                <th>Who</th>
+                <th>Question</th>
+                <th>Change</th>
               </tr>
             </thead>
             <tbody id="adm-audit-rows"></tbody>
@@ -412,7 +405,7 @@
         </div>
 
         <button id="adm-audit-more" class="btn ghost sm hidden" style="margin-top:14px">
-          Load more <span class="guj">/ વધુ લાવો</span>
+          Load more
         </button>
       </div>
     </section>
@@ -424,6 +417,8 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
+  <!-- i18n.js first: render.js and app.js both draw bilingual pairs through it. -->
+  <script src="js/i18n.js"></script>
   <script src="js/schemes.js"></script>
   <script src="js/spec-a.js"></script>
   <script src="js/spec-b.js"></script>

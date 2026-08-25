@@ -30,10 +30,18 @@ window.Render = (function () {
     return n;
   }
 
-  /* English then Gujarati, always together — never one language per screen. */
+  /*
+   * ⭐ GUJARATI FIRST, ENGLISH SECOND — always together, never one language per
+   * screen (Phase 0 rule). This function and the three call sites marked
+   * "⭐ order" below carry the entire instrument's language hierarchy: 83
+   * questions, 291 parts, every option, help note and table heading.
+   *
+   * The argument order stays (en, gu) because the spec files are keyed en/gu.
+   * What changed is which one is appended first, and which class it carries.
+   */
   function bilingual(parent, en, gu, cls) {
-    if (en) parent.appendChild(el('div', cls, en));
     if (gu) parent.appendChild(el('div', (cls ? cls + ' guj' : 'guj'), gu));
+    if (en) parent.appendChild(el('div', (cls ? cls + ' eng' : 'eng'), en));
   }
 
   function optionOf(o) {
@@ -62,28 +70,54 @@ window.Render = (function () {
     var idRow = el('div', 'qid-row');
     idRow.appendChild(el('span', 'qid', q.id));
     if (q.blocking) {
-      var b = el('span', 'pill block', 'blocking');
-      b.title = 'This answer blocks the portal design — please try not to leave it empty.';
+      /*
+       * This badge used to read "blocking" — a word out of our own build notes,
+       * English only, with the explanation hidden in hover text that does not
+       * exist on a phone. A badge that needs explaining is the wrong badge.
+       */
+      var b = el('span', 'pill block');
+      window.Bi.inline(b, 'જરૂરી', 'important');
       idRow.appendChild(b);
     }
     head.appendChild(idRow);
-    head.appendChild(el('div', 'qtext', q.en));
-    head.appendChild(el('div', 'guj qtext-gu', q.gu));
-    if (q.helpEN) bilingual(head, q.helpEN, q.helpGU, 'qhelp');
 
-    if (q.prefill) {
+    /* ⭐ order — the question itself. */
+    head.appendChild(el('div', 'qtext guj', q.gu));
+    head.appendChild(el('div', 'qtext-en eng', q.en));
+
+    if (q.helpEN) {
+      var help = el('div', 'qhelp');
+      window.Bi.into(help, q.helpGU, q.helpEN, null, true);   /* ⭐ order */
       /*
-       * Pre-filled answers are our guesses from the GR and the pipeline
-       * interview. They are shown as a hint, never written into the field:
-       * the officer must actively confirm, or the guess would launder itself
-       * into a verified answer.
+       * Some help notes carry a long tail — a list of examples, or a note about
+       * rare cases. NOT ONE WORD OF THE INSTRUMENT IS REWRITTEN: the tail is
+       * moved behind a link so it stops walling off the answer box. Approved
+       * for B0.5 and B11.1/B11.3/B11.4 only.
        */
-      var pf = el('div', 'prefill');
-      pf.appendChild(el('b', null, 'Not verified — please confirm or correct: '));
-      pf.appendChild(document.createTextNode(q.prefill));
-      pf.appendChild(el('div', 'guj', 'ચકાસાયેલ નથી — ખરાઈ કરો અથવા સુધારો.'));
-      head.appendChild(pf);
+      if (q.helpMoreEN) {
+        help.appendChild(window.Bi.why(q.helpMoreGU, q.helpMoreEN,
+                                       q.helpMoreLabelGU, q.helpMoreLabelEN));
+      }
+      head.appendChild(help);
     }
+
+    /*
+     * ⛔ NO PRE-FILLED ANSWERS. 19 Part A questions used to carry our own guess
+     * from the GR and the pipeline interview, in an amber box headed "not
+     * verified — please confirm or correct".
+     *
+     * Removed on the user's instruction, 2026-08-25: the point of the exercise
+     * is to find out what officers actually do, and an answer already written
+     * on the page is an answer suggested. A tired clerk confirms it; a junior
+     * one does not contradict it. Either way we get our own guess back with a
+     * department stamp on it, and no way to tell that from a real finding.
+     *
+     * The research itself is not lost — it is recorded in
+     * `Portal/Pipeline - As Is.md`. It just does not go in front of the person
+     * being asked the question.
+     *
+     * Do NOT reintroduce this without the user saying so explicitly.
+     */
     card.appendChild(head);
 
     q.parts.forEach(function (p) {
@@ -131,9 +165,10 @@ window.Render = (function () {
       input.checked = isMulti ? chosen.indexOf(o.id) !== -1 : chosen === o.id;
       row.appendChild(input);
 
+      /* ⭐ order — every option of every tick-list and choose-one. */
       var textWrap = el('span', 'opt-text');
-      textWrap.appendChild(document.createTextNode(o.en + ' '));
-      textWrap.appendChild(el('span', 'guj', '/ ' + o.gu));
+      textWrap.appendChild(el('span', 'guj', o.gu + ' '));
+      textWrap.appendChild(el('span', 'eng block', o.en));
       row.appendChild(textWrap);
 
       /* A write-in box belongs to its option, and only matters when that
@@ -144,7 +179,7 @@ window.Render = (function () {
         fill.type = 'text';
         fill.className = 'opt-fill';
         fill.maxLength = caps.text;
-        fill.placeholder = o.fillEN + ' / ' + o.fillGU;
+        fill.placeholder = window.Bi.txt(o.fillGU, o.fillEN);
         fill.value = answers[key + SEP + o.id] || '';
         fill.classList.toggle('hidden', !input.checked);
         commitOnBlur(fill, key + SEP + o.id, onCommit);
@@ -177,7 +212,7 @@ window.Render = (function () {
       if (p.star) {
         var star = el('button', 'star', '★');
         star.type = 'button';
-        star.title = 'Mark as the most common / સૌથી સામાન્ય પર ★ કરો';
+        star.title = window.Bi.txt('સૌથી સામાન્ય પર ★ કરો', 'Mark as the most common');
         star.setAttribute('aria-label', 'Mark ' + o.en + ' as most common');
         if (answers[starKey] === o.id) star.classList.add('on');
         star.addEventListener('click', function () {
@@ -212,10 +247,11 @@ window.Render = (function () {
     var thead = el('thead');
     var hr = el('tr');
     hr.appendChild(el('th', null, ''));
+    /* ⭐ order — column headings. */
     p.cols.forEach(function (c) {
       var th = el('th');
-      th.appendChild(el('div', null, c.en));
       th.appendChild(el('div', 'guj', c.gu));
+      th.appendChild(el('div', 'eng', c.en));
       hr.appendChild(th);
     });
     thead.appendChild(hr);
@@ -224,9 +260,10 @@ window.Render = (function () {
     var tbody = el('tbody');
     p.rows.forEach(function (r, ri) {
       var tr = el('tr');
+      /* ⭐ order — row headings. */
       var th = el('th', 'rowhead');
-      th.appendChild(el('div', null, r.en));
       th.appendChild(el('div', 'guj', r.gu));
+      th.appendChild(el('div', 'eng', r.en));
       tr.appendChild(th);
 
       p.cols.forEach(function (c, ci) {

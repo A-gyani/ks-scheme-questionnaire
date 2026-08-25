@@ -24,6 +24,10 @@
  * Anything beyond these six needs the department's sign-off before it goes in.
  * A rule added here silently removes a question from 148 questionnaires.
  *
+ * The on-screen reasons used to end with "(The instrument says: …)" — us
+ * proving to the officer that we had not invented the rule. That is a note to
+ * ourselves; it is recorded here instead, and the officer gets the reason.
+ *
  * NOT ROUTED, ON PURPOSE:
  *   B5.2 — "culture / performing-arts schemes only; skip for youth, sports,
  *          yoga or adventure". That depends on the art form, which the app does
@@ -72,10 +76,9 @@ window.RouteB = (function () {
       source: 'B2.1',
       watch: 'B2.1.whoApplies',
       reasonEN: 'Set aside: B2.1 says only individuals apply, so there is no group or '
-              + 'institution registration to check. (The instrument says: skip if only '
-              + 'individuals apply.)',
+              + 'institution registration to check.',
       reasonGU: 'બાજુ પર: B2.1 મુજબ ફક્ત વ્યક્તિ અરજી કરે છે, તેથી જૂથ કે સંસ્થાની નોંધણી '
-              + 'તપાસવાની રહેતી નથી. (પ્રશ્નાવલિ કહે છે: ફક્ત વ્યક્તિ અરજી કરે તો છોડો.)',
+              + 'તપાસવાની રહેતી નથી.',
       test: onlyIndividuals
     },
     {
@@ -84,9 +87,8 @@ window.RouteB = (function () {
       source: 'B2.1',
       watch: 'B2.1.whoApplies',
       reasonEN: 'Set aside: B2.1 says only individuals apply, so there is no group member '
-              + 'roster. (The instrument says: skip for individual-only schemes.)',
-      reasonGU: 'બાજુ પર: B2.1 મુજબ ફક્ત વ્યક્તિ અરજી કરે છે, તેથી જૂથની સભ્ય યાદી નથી. '
-              + '(પ્રશ્નાવલિ કહે છે: ફક્ત વ્યક્તિગત યોજના હોય તો છોડો.)',
+              + 'roster.',
+      reasonGU: 'બાજુ પર: B2.1 મુજબ ફક્ત વ્યક્તિ અરજી કરે છે, તેથી જૂથની સભ્ય યાદી નથી.',
       test: onlyIndividuals
     },
     {
@@ -94,10 +96,8 @@ window.RouteB = (function () {
       questions: ['B7.5'],
       source: 'B7.4',
       watch: 'B7.4.involvement',
-      reasonEN: 'Set aside: B7.4 says an officer decides, with no committee. '
-              + '(The instrument says: only if a committee exists.)',
-      reasonGU: 'બાજુ પર: B7.4 મુજબ અધિકારી નક્કી કરે છે, સમિતિ નથી. '
-              + '(પ્રશ્નાવલિ કહે છે: ફક્ત સમિતિ હોય તો.)',
+      reasonEN: 'Set aside: B7.4 says an officer decides, with no committee.',
+      reasonGU: 'બાજુ પર: B7.4 મુજબ અધિકારી નક્કી કરે છે, સમિતિ નથી.',
       test: function (a) { return a['B7.4.involvement'] === 'none'; }
     },
     {
@@ -106,10 +106,9 @@ window.RouteB = (function () {
       source: 'B10.1',
       watch: 'B10.1.decidedWhere',
       reasonEN: 'Set aside: B10.1 says the scheme runs entirely at the State office, so '
-              + 'there is no district share to fix. (The instrument says: answer only if '
-              + 'run at district level.)',
+              + 'there is no district share to fix.',
       reasonGU: 'બાજુ પર: B10.1 મુજબ યોજના સંપૂર્ણ રાજ્ય કચેરીએ ચાલે છે, તેથી જિલ્લાનો ભાગ '
-              + 'નક્કી કરવાનો રહેતો નથી. (પ્રશ્નાવલિ કહે છે: જિલ્લા કક્ષાએ ચાલતી હોય તો જ.)',
+              + 'નક્કી કરવાનો રહેતો નથી.',
       test: notDistrictRun
     },
     {
@@ -118,10 +117,9 @@ window.RouteB = (function () {
       source: 'B10.1',
       watch: 'B10.1.decidedWhere',
       reasonEN: 'Set aside: B10.1 says the scheme runs entirely at the State office, so no '
-              + 'district sends anything back. (The instrument says: answer only if run at '
-              + 'district level.)',
+              + 'district sends anything back.',
       reasonGU: 'બાજુ પર: B10.1 મુજબ યોજના સંપૂર્ણ રાજ્ય કચેરીએ ચાલે છે, તેથી કોઈ જિલ્લો કંઈ '
-              + 'પરત મોકલતો નથી. (પ્રશ્નાવલિ કહે છે: જિલ્લા કક્ષાએ ચાલતી હોય તો જ.)',
+              + 'પરત મોકલતો નથી.',
       test: notDistrictRun
     }
   ];

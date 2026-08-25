@@ -217,16 +217,16 @@
       '#demo-bar span{display:block;font-size:12px;opacity:.92}';
     document.head.appendChild(css);
 
+    /* Gujarati leads, and it is shorter than it was — but it still has to say
+       the one thing that matters: nothing here is kept. */
     var bar = document.createElement('div');
     bar.id = 'demo-bar';
-    var en = document.createElement('b');
-    en.textContent = 'DEMO — nothing here is saved. Everything disappears when you close or '
-                   + 'refresh this page. Do not use it for real work.';
-    var gu = document.createElement('span');
-    gu.textContent = 'ડેમો — અહીંનું કંઈ સચવાતું નથી. પાનું બંધ કરતાં કે રિફ્રેશ કરતાં બધું ભૂંસાઈ જશે. '
-                   + 'ખરા કામ માટે વાપરશો નહીં.';
-    bar.appendChild(en);
+    var gu = document.createElement('b');
+    gu.textContent = 'ડેમો — અહીંનું કંઈ સચવાતું નથી. ખરા કામ માટે વાપરશો નહીં.';
+    var en = document.createElement('span');
+    en.textContent = 'DEMO — nothing here is saved. Do not use it for real work.';
     bar.appendChild(gu);
+    bar.appendChild(en);
     document.body.appendChild(bar);
 
     /*

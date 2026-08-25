@@ -7,12 +7,13 @@
  *
  * Bump CACHE when any shell file changes, or officers keep the stale version.
  */
-var CACHE = 'csq-shell-v11';
+var CACHE = 'csq-shell-v13';
 
 var SHELL = [
   './',
   './index.html',
   './css/styles.css',
+  './js/i18n.js',
   './js/schemes.js',
   './js/spec-a.js',
   './js/spec-b.js',

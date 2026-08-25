@@ -135,7 +135,7 @@
       if (branch) label += ' (' + branch.en + ')';
       bits.push(label);
     }
-    return bits.join(' \u00b7 ');
+    return bits.join(' · ');
   }
 
   function paintAppBar() {
@@ -177,35 +177,41 @@
        a fragment rather than equality. Like unauthorized-domain, it is a setup
        mistake rather than anything the officer did. */
     if (code && code.indexOf('api-key-not-valid') !== -1) {
-      return 'The Firebase configuration on this site is not valid. The administrator must '
-           + 'check the values in js/firebase-config.js against the Firebase console. '
-           + 'આ સાઇટનું Firebase રૂપરેખાંકન માન્ય નથી. વહીવટકર્તાએ તે ફરી ચકાસવું પડશે.';
+      return ['આ સાઇટનું Firebase રૂપરેખાંકન માન્ય નથી. વહીવટકર્તાએ તે ફરી ચકાસવું પડશે.',
+              'The Firebase configuration on this site is not valid. The administrator must '
+            + 'check js/firebase-config.js against the Firebase console.'];
     }
 
     switch (code) {
       case 'auth/unauthorized-domain':
-        /* The single most common deployment mistake - see README step 8. */
-        return 'This site is not yet authorised for sign-in. The administrator must add '
-             + 'this domain under Firebase \u2192 Authentication \u2192 Settings \u2192 Authorized domains. '
-             + 'આ સાઇટ પરથી સાઇન ઇન કરવાની મંજૂરી હજુ અપાઈ નથી. વહીવટકર્તાએ Firebase માં આ ડોમેન ઉમેરવું પડશે.';
+        /* The single most common deployment mistake - see DEPLOY.md step 9. */
+        return ['આ સાઇટ પરથી સાઇન ઇન કરવાની મંજૂરી હજુ અપાઈ નથી. વહીવટકર્તાએ Firebase માં આ ડોમેન ઉમેરવું પડશે.',
+                'This site is not yet authorised for sign-in. The administrator must add this '
+              + 'domain under Firebase → Authentication → Settings → Authorized domains.'];
       case 'auth/network-request-failed':
-        return 'No internet connection. Please check the connection and try again. '
-             + 'ઇન્ટરનેટ જોડાણ નથી. જોડાણ ચકાસીને ફરી પ્રયાસ કરો.';
+        return ['ઇન્ટરનેટ જોડાણ નથી. જોડાણ ચકાસીને ફરી પ્રયાસ કરો.',
+                'No internet connection. Check the connection and try again.'];
       case 'auth/popup-blocked':
-        return 'The sign-in window was blocked by the browser. Please allow pop-ups and try again. '
-             + 'બ્રાઉઝરે સાઇન ઇન વિન્ડો રોકી છે. પોપ-અપને મંજૂરી આપી ફરી પ્રયાસ કરો.';
+        return ['બ્રાઉઝરે સાઇન ઇન વિન્ડો રોકી છે. પોપ-અપને મંજૂરી આપી ફરી પ્રયાસ કરો.',
+                'The browser blocked the sign-in window. Allow pop-ups and try again.'];
       case 'auth/operation-not-allowed':
-        return 'Google sign-in is not enabled on this Firebase project yet. '
-             + 'આ પ્રોજેક્ટમાં Google સાઇન ઇન હજુ ચાલુ કરાયું નથી.';
+        return ['આ પ્રોજેક્ટમાં Google સાઇન ઇન હજુ ચાલુ કરાયું નથી.',
+                'Google sign-in is not enabled on this Firebase project yet.'];
       default:
-        return 'Sign-in failed. Please try again. '
-             + 'સાઇન ઇન થઈ શક્યું નહીં. ફરી પ્રયાસ કરો.';
+        return ['સાઇન ઇન થઈ શક્યું નહીં. ફરી પ્રયાસ કરો.',
+                'Sign-in failed. Please try again.'];
     }
   }
 
-  function showLoginError(msg) {
+  /*
+   * Takes the [gu, en] pair above and draws it as TWO LINES. These banners used
+   * to run both languages together in one unbroken paragraph, which is exactly
+   * where a worried officer stops reading.
+   */
+  function showLoginError(pair) {
     var el = $('login-error');
-    el.textContent = msg;
+    el.innerHTML = '';
+    Bi.into(el, pair[0], pair[1], null, true);
     el.classList.remove('hidden');
   }
   function clearLoginError() { $('login-error').classList.add('hidden'); }
@@ -257,11 +263,11 @@
     signInWatchdog = setTimeout(function () {
       popupFailed = true;
       endSignInAttempt();
-      showLoginError(
+      showLoginError([
+        'જો Google વિન્ડો ખૂલી ન હોય, તો આ બ્રાઉઝર પોપ-અપ રોકે છે. '
+      + 'આ જ પાના પર સાઇન ઇન કરવા બટન ફરી દબાવો.',
         'If no Google window opened, this browser is blocking pop-ups. '
-      + 'Press the button again to sign in on this page instead. '
-      + 'જો Google વિન્ડો ખૂલી ન હોય, તો આ બ્રાઉઝર પોપ-અપ રોકે છે. '
-      + 'આ જ પાના પર સાઇન ઇન કરવા બટન ફરી દબાવો.');
+      + 'Press the button again to sign in on this page instead.']);
     }, 20000);
 
     window.FB.auth.signInWithPopup(provider)
@@ -297,8 +303,15 @@
    *  what is captured here, so the same shape is enforced in firestore.rules.
    * ---------------------------------------------------------------- */
 
-  /* Bilingual option label, e.g. "Culture / સાંસ્કૃતિક શાખા". */
-  function optionLabel(item) { return item.en + ' / ' + item.gu; }
+  /*
+   * A dropdown option is one plain string — there is no styling inside a
+   * <select>, so the hierarchy has to be carried by the order and a separator.
+   * Gujarati first, like everywhere else.
+   */
+  function optionLabel(item) { return Bi.txt(item.gu, item.en); }
+
+  /* Used by every dropdown in the app, so it is written once. */
+  var SELECT_PLACEHOLDER = '— પસંદ કરો · Select —';
 
   function fillSelect(el, items, placeholder) {
     el.innerHTML = '';
@@ -337,25 +350,22 @@
       input.id = 'pf-rank';
       input.type = 'text';
       input.maxLength = 120;
-      input.placeholder = 'e.g. Assistant Director / મદદનીશ નિયામક';
+      input.placeholder = Bi.txt('દા.ત. મદદનીશ નિયામક', 'e.g. Assistant Director');
       input.value = current || '';
       wrap.appendChild(input);
-
-      var note = document.createElement('p');
-      note.className = 'note';
-      note.textContent = 'Type your official designation. A list of ranks will be added later. '
-                       + 'આપનો સત્તાવાર હોદ્દો લખો. હોદ્દાની યાદી પછીથી ઉમેરાશે.';
-      wrap.appendChild(note);
+      /* The note that used to sit here — "type your official designation, a
+         list of ranks will be added later" — was our own to-do told to an
+         officer. The example inside the box already says what to type. */
       return;
     }
 
     var sel = document.createElement('select');
     sel.id = 'pf-rank';
-    fillSelect(sel, list, '\u2014 Select / પસંદ કરો \u2014');
+    fillSelect(sel, list, SELECT_PLACEHOLDER);
 
     var other = document.createElement('option');
     other.value = '__other__';
-    other.textContent = 'Other / અન્ય';
+    other.textContent = 'અન્ય · Other';
     sel.appendChild(other);
     wrap.appendChild(sel);
 
@@ -363,7 +373,7 @@
     free.id = 'pf-rank-other';
     free.type = 'text';
     free.maxLength = 120;
-    free.placeholder = 'Your designation / આપનો હોદ્દો';
+    free.placeholder = Bi.txt('આપનો હોદ્દો', 'Your designation');
     free.className = 'hidden';
     free.style.marginTop = '8px';
     wrap.appendChild(free);
@@ -398,7 +408,7 @@
        to whoever reviews the log later. */
     var list = (CONST.RANKS && CONST.RANKS[$('pf-body').value]) || [];
     var picked = '';
-    list.forEach(function (r) { if (r.id === el.value) picked = r.en + ' / ' + r.gu; });
+    list.forEach(function (r) { if (r.id === el.value) picked = Bi.txt(r.gu, r.en); });
     return picked;
   }
 
@@ -417,8 +427,8 @@
   function openProfileForm() {
     var p = session.profile;
 
-    fillSelect($('pf-body'), CONST.BODIES, '\u2014 Select / પસંદ કરો \u2014');
-    fillSelect($('pf-branch'), CONST.BRANCHES, '\u2014 Select / પસંદ કરો \u2014');
+    fillSelect($('pf-body'), CONST.BODIES, SELECT_PLACEHOLDER);
+    fillSelect($('pf-branch'), CONST.BRANCHES, SELECT_PLACEHOLDER);
     $('pf-error').classList.add('hidden');
 
     $('pf-body').value = p ? p.body : '';
@@ -432,16 +442,21 @@
 
     renderRankField($('pf-body').value, p ? p.rank : '');
 
-    $('pf-title').innerHTML = p
-      ? 'Edit your profile <span class="guj">/ પ્રોફાઇલ સુધારો</span>'
-      : 'Set up your profile <span class="guj">/ પ્રોફાઇલ સેટ કરો</span>';
+    if (p) Bi.set('pf-title', 'પ્રોફાઇલ સુધારો', 'Edit your profile');
+    else   Bi.set('pf-title', 'પ્રોફાઇલ સેટ કરો', 'Set up your profile');
 
     showView('view-profile');
   }
 
-  function showProfileError(msg) {
+  /*
+   * Error banners used to run the two languages together in one unbroken
+   * paragraph. They are two lines now — Gujarati, then English underneath —
+   * which is the only thing that makes a long one readable at a glance.
+   */
+  function showProfileError(gu, en) {
     var el = $('pf-error');
-    el.textContent = msg;
+    el.innerHTML = '';
+    Bi.into(el, gu, en, null, true);
     el.classList.remove('hidden');
   }
 
@@ -452,11 +467,11 @@
     var body = bodyById(bodyId);
     var branch = (body && body.hasBranches) ? $('pf-branch').value : '';
 
-    if (!bodyId) return showProfileError('Please select your office. કૃપા કરી આપની કચેરી પસંદ કરો.');
-    if (!name)   return showProfileError('Please enter your full name. કૃપા કરી આપનું પૂરું નામ લખો.');
-    if (!rank)   return showProfileError('Please enter your rank or designation. કૃપા કરી આપનો હોદ્દો લખો.');
+    if (!bodyId) return showProfileError('કૃપા કરી આપની કચેરી પસંદ કરો.', 'Please select your office.');
+    if (!name)   return showProfileError('કૃપા કરી આપનું પૂરું નામ લખો.', 'Please enter your full name.');
+    if (!rank)   return showProfileError('કૃપા કરી આપનો હોદ્દો લખો.', 'Please enter your rank or designation.');
     if (body && body.hasBranches && !branch) {
-      return showProfileError('Please select your branch. કૃપા કરી આપની શાખા પસંદ કરો.');
+      return showProfileError('કૃપા કરી આપની શાખા પસંદ કરો.', 'Please select your branch.');
     }
 
     var btn = $('pf-save');
@@ -505,11 +520,13 @@
       })
       .catch(function (err) {
         console.warn('[profile] save failed -', (err && err.code) || err);
-        showProfileError(err && err.code === 'permission-denied'
-          ? 'This profile was rejected by the server. Please check the office and rank, then try again. '
-          + 'આ પ્રોફાઇલ સર્વરે સ્વીકારી નથી. કચેરી અને હોદ્દો ચકાસીને ફરી પ્રયાસ કરો.'
-          : 'Could not save. Please check your connection and try again. '
-          + 'સાચવી શકાયું નહીં. જોડાણ ચકાસીને ફરી પ્રયાસ કરો.');
+        if (err && err.code === 'permission-denied') {
+          showProfileError('આ પ્રોફાઇલ સર્વરે સ્વીકારી નથી. કચેરી અને હોદ્દો ચકાસીને ફરી પ્રયાસ કરો.',
+                           'This profile was rejected by the server. Check the office and rank, then try again.');
+        } else {
+          showProfileError('સાચવી શકાયું નહીં. જોડાણ ચકાસીને ફરી પ્રયાસ કરો.',
+                           'Could not save. Check your connection and try again.');
+        }
       })
       .then(function () { btn.disabled = false; });
   }
@@ -544,25 +561,47 @@
   function setChip(id, state, textEN, textGU) {
     var el = $(id);
     el.className = 'savechip' + (state ? ' ' + state : '');
-    el.textContent = textGU ? textEN + ' / ' + textGU : textEN;
+    el.innerHTML = '';
+    Bi.inline(el, textGU, textEN);
     el.classList.remove('hidden');
   }
-  function chip(state, textEN, textGU) { setChip('pa-savechip', state, textEN, textGU); }
-  function chipSaved()   { chip('', 'Saved \u2713', 'સચવાયું'); }
-  function chipSaving()  { chip('saving', 'Saving\u2026', 'સાચવાય છે'); }
-  function chipFailed()  { chip('failed', 'Not saved \u2014 will retry', 'સચવાયું નથી \u2014 ફરી પ્રયાસ થશે'); }
+  /*
+   * The five things a chip can say, written ONCE. Part B used to carry its own
+   * copies of the same four strings, which is how "Saved ✓" and "સચવાયું ✓"
+   * ended up disagreeing about where the tick goes.
+   */
+  var CHIP = {
+    saved:     ['', 'Saved', 'સચવાયું ✓'],
+    saving:    ['saving', 'Saving', 'સાચવાય છે…'],
+    failed:    ['failed', 'Not saved — will retry', 'સચવાયું નથી — ફરી પ્રયાસ થશે'],
+    offline:   ['saving', 'Saved on this device — will sync', 'આ ઉપકરણ પર સચવાયું — પછી સિંક થશે'],
+    submitted: ['', 'Submitted', 'રજૂ થયું ✓']
+  };
+  function paintChip(id, kind) {
+    var c = CHIP[kind];
+    setChip(id, c[0], c[1], c[2]);
+  }
+
+  function chipSaved()   { paintChip('pa-savechip', 'saved'); }
+  function chipSaving()  { paintChip('pa-savechip', 'saving'); }
+  function chipFailed()  { paintChip('pa-savechip', 'failed'); }
   /*
    * Offline is a success, not a failure: the write is already in the local
    * store and Firestore flushes it on reconnect. Saying "saving..." forever
    * would read as broken to an officer on a district connection.
    */
-  function chipOffline() { chip('saving', 'Saved on this device \u2014 will sync', 'આ ઉપકરણ પર સચવાયું \u2014 પછી સિંક થશે'); }
+  function chipOffline() { paintChip('pa-savechip', 'offline'); }
 
+  /*
+   * Dates used to print as "21 Aug 2026, 3:45 pm" — an English month name
+   * sitting inside a Gujarati sentence. Numeric is the same length, reads the
+   * same in both languages, and is the form officers see on files anyway.
+   */
   function fmtWhen(ts) {
     if (!ts || !ts.toDate) return '';
     try {
-      return ts.toDate().toLocaleString('en-IN',
-        { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit' });
+      return ts.toDate().toLocaleString('en-GB',
+        { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
     } catch (e) { return ''; }
   }
 
@@ -577,8 +616,7 @@
          copy carries a pending timestamp, so testing the raw field would
          print a dangling "on " with nothing after it. */
       var subWhen = fmtWhen(m.submittedAt);
-      bits.push('Submitted by ' + m.submittedBy + (subWhen ? ' on ' + subWhen : '') +
-                ' \u00b7 સબમિટ થયેલ');
+      bits.push('રજૂ કરનાર: ' + m.submittedBy + (subWhen ? ', ' + subWhen : ''));
     }
 
     /*
@@ -588,32 +626,39 @@
      */
     if (m.lastEditedByEmail && session.user && m.lastEditedByEmail !== session.user.email) {
       var editWhen = fmtWhen(m.lastEditedAt);
-      bits.push('Last edited by ' + (m.lastEditedBy || m.lastEditedByEmail) +
-                (editWhen ? ' on ' + editWhen : '') +
-                ' \u00b7 છેલ્લે સુધારનાર');
+      bits.push('છેલ્લે સુધારનાર: ' + (m.lastEditedBy || m.lastEditedByEmail) +
+                (editWhen ? ', ' + editWhen : ''));
     }
 
-    el.textContent = bits.join('  \u2014  ');
+    el.textContent = bits.join('  —  ');
     el.classList.toggle('hidden', bits.length === 0);
+  }
+
+  /*
+   * "N of M answered", plus the count of important questions still empty.
+   *
+   * The red badge used to read "N blocking left" — English only, and
+   * "blocking" is a word out of our own build notes. Both halves are said in
+   * both languages now, and digits stay in English throughout: officers read
+   * budget figures and file numbers in English digits all day, and the screen
+   * used to mix "૫૮ માંથી 5" in a single sentence.
+   */
+  function paintCount(node, st) {
+    node.innerHTML = '';
+    Bi.inline(node, st.total + ' માંથી ' + st.done + ' જવાબ અપાયા',
+                    st.done + ' of ' + st.total + ' answered');
+    if (!st.blockingLeft) return;
+    var pill = document.createElement('span');
+    pill.className = 'pill block';
+    pill.style.marginLeft = '8px';
+    Bi.inline(pill, st.blockingLeft + ' જરૂરી બાકી', st.blockingLeft + ' important left');
+    node.appendChild(pill);
   }
 
   function paintProgress() {
     var st = window.Render.progress(window.SPEC_A.questions, partA.answers);
     $('pa-progbar').style.width = st.percent + '%';
-
-    var node = $('pa-progtext');
-    node.innerHTML = '';
-    node.appendChild(document.createTextNode(
-      st.done + ' of ' + st.total + ' answered \u00b7 ' +
-      st.done + ' માંથી ' + st.total + ' જવાબ અપાયા'));
-
-    if (st.blockingLeft) {
-      var pill = document.createElement('span');
-      pill.className = 'pill block';
-      pill.style.marginLeft = '8px';
-      pill.textContent = st.blockingLeft + ' blocking left';
-      node.appendChild(pill);
-    }
+    paintCount($('pa-progtext'), st);
     return st;
   }
 
@@ -633,7 +678,7 @@
     if (Array.isArray(v)) v = v.join(', ');
     v = String(v);
     return v.length > CONST.AUDIT_VALUE_CAP
-      ? v.slice(0, CONST.AUDIT_VALUE_CAP) + '\u2026'
+      ? v.slice(0, CONST.AUDIT_VALUE_CAP) + '…'
       : v;
   }
 
@@ -800,7 +845,7 @@
 
     var bodyId = session.profile.body;
     var body = bodyById(bodyId);
-    $('pa-body-label').textContent = body ? body.en + ' / ' + body.gu : '';
+    Bi.set('pa-body-label', body ? body.gu : '', body ? body.en : '');
 
     partA.bodyId = bodyId;
     partA.pendingAudit = partA.pendingAudit || {};
@@ -870,10 +915,11 @@
           var h = document.createElement('div');
           h.className = 'sec-head';
           var t = document.createElement('h3');
-          t.textContent = sec.id + '. ' + sec.en;
+          t.className = 'guj';
+          t.textContent = sec.id + '. ' + sec.gu;
           var g = document.createElement('div');
-          g.className = 'guj';
-          g.textContent = sec.gu;
+          g.className = 'eng';
+          g.textContent = sec.en;
           h.appendChild(t); h.appendChild(g);
           host.appendChild(h);
         }
@@ -890,6 +936,18 @@
   }
 
   /* ---------------- exit & submit ---------------- */
+
+  /*
+   * A browser confirm box has no styling, so the hierarchy is the order alone.
+   * Both parts use this, so the wording is written once.
+   */
+  function confirmSubmit(n) {
+    return window.confirm(
+      n + ' જરૂરી પ્રશ્નોના જવાબ બાકી છે.\n'
+    + n + ' important question(s) are still unanswered.\n\n'
+    + 'તો પણ રજૂ કરવું?  ·  Submit anyway?');
+  }
+
   function leavePartA() {
     flushPartA();
     openHome(false);
@@ -904,11 +962,7 @@
      * exactly how many are missing and has to choose to go ahead.
      */
     if (st.blockingLeft) {
-      var ok = window.confirm(
-        st.blockingLeft + ' important question(s) are still unanswered.\n'
-      + st.blockingLeft + ' અગત્યના પ્રશ્નોના જવાબ બાકી છે.\n\n'
-      + 'Submit anyway? / તો પણ સબમિટ કરવું?');
-      if (!ok) return;
+      if (!confirmSubmit(st.blockingLeft)) return;
     }
 
     var btn = $('pa-submit');
@@ -924,7 +978,7 @@
       partA.meta.status = 'submitted';
       partA.meta.submittedBy = describeProfile(session.profile);
       paintBanner();
-      chip('', 'Submitted \u2713', 'સબમિટ થયું');
+      paintChip('pa-savechip', 'submitted');
     });
   }
 
@@ -958,9 +1012,11 @@
    *  are still missing, and whether a colleague has been in it since.
    * ---------------------------------------------------------------- */
 
+  /* Status pills were English only. Gujarati first, English after. */
   function setStatusPill(el, kind, en, gu) {
     el.className = 'pill ' + kind;
-    el.textContent = en + ' / ' + gu;
+    el.innerHTML = '';
+    Bi.inline(el, gu, en);
   }
 
   function paintHome(summary) {
@@ -968,20 +1024,15 @@
     var body = bodyById(pr.body);
     var branch = pr.branch ? branchById(pr.branch) : null;
 
-    var greet = $('home-greet');
-    greet.innerHTML = '';
-    greet.appendChild(document.createTextNode('Namaste, ' + (pr.name || '') + ' '));
-    var g = document.createElement('span');
-    g.className = 'guj';
-    g.textContent = '/ નમસ્તે';
-    greet.appendChild(g);
+    /* Was "Namaste, X / નમસ્તે" — the same word twice, once transliterated. */
+    $('home-greet').textContent = 'નમસ્કાર, ' + (pr.name || '');
 
-    $('home-who').textContent = [pr.rank, body ? body.en : '', branch ? branch.en : '']
-      .filter(Boolean).join(' \u00b7 ');
+    $('home-who').textContent = [pr.rank, body ? body.gu : '', branch ? branch.gu : '']
+      .filter(Boolean).join(' · ');
 
     /* Until the read comes back, say so rather than showing a confident zero. */
     if (!summary) {
-      setStatusPill($('home-a-status'), 'todo', 'Checking\u2026', 'તપાસાય છે');
+      setStatusPill($('home-a-status'), 'todo', 'Checking', 'તપાસાય છે…');
       $('home-a-progress').textContent = '';
       $('home-a-edited').textContent = '';
       $('home-a-bar').style.width = '0%';
@@ -992,29 +1043,19 @@
     $('home-a-bar').style.width = st.percent + '%';
 
     var pill = $('home-a-status');
+    var btn = $('home-a-btn');
     if (summary.status === 'submitted') {
-      setStatusPill(pill, 'done', 'Submitted', 'સબમિટ થયું');
-      $('home-a-btn').textContent = 'Review or edit';
+      setStatusPill(pill, 'done', 'Submitted', 'રજૂ થયું');
+      Bi.set(btn, 'જુઓ કે સુધારો', 'Review or edit');
     } else if (st.done > 0) {
       setStatusPill(pill, 'draft', 'In progress', 'ચાલુ છે');
-      $('home-a-btn').textContent = 'Continue';
+      Bi.set(btn, 'ચાલુ રાખો', 'Continue');
     } else {
       setStatusPill(pill, 'todo', 'Not started', 'શરૂ થયું નથી');
-      $('home-a-btn').textContent = 'Start';
+      Bi.set(btn, 'શરૂ કરો', 'Start');
     }
 
-    var prog = $('home-a-progress');
-    prog.innerHTML = '';
-    prog.appendChild(document.createTextNode(
-      st.done + ' of ' + st.total + ' answered \u00b7 ' +
-      st.done + ' માંથી ' + st.total + ' જવાબ અપાયા'));
-    if (st.blockingLeft) {
-      var b = document.createElement('span');
-      b.className = 'pill block';
-      b.style.marginLeft = '8px';
-      b.textContent = st.blockingLeft + ' blocking left';
-      prog.appendChild(b);
-    }
+    paintCount($('home-a-progress'), st);
 
     /* Same rule as inside the form: only worth saying when it was somebody
        else, so officers are not told about their own edits. */
@@ -1022,9 +1063,9 @@
     if (summary.lastEditedByEmail && session.user &&
         summary.lastEditedByEmail !== session.user.email) {
       var when = fmtWhen(summary.lastEditedAt);
-      edited.textContent = 'Last edited by ' +
+      edited.textContent = 'છેલ્લે સુધારનાર: ' +
         (summary.lastEditedBy || summary.lastEditedByEmail) +
-        (when ? ' on ' + when : '');
+        (when ? ', ' + when : '');
     } else {
       edited.textContent = '';
     }
@@ -1074,10 +1115,10 @@
         /* A failed read must not look like an empty questionnaire, or an
            officer could reasonably think their work had vanished. */
         setStatusPill($('home-a-status'), 'todo', 'Status unavailable', 'સ્થિતિ મળી નથી');
-        $('home-a-progress').textContent =
-          'Could not check progress. Open Part A to see your answers. '
-        + 'પ્રગતિ તપાસી શકાઈ નથી. જવાબો જોવા Part A ખોલો.';
-        $('home-a-btn').textContent = 'Open';
+        Bi.set($('home-a-progress'),
+          'પ્રગતિ તપાસી શકાઈ નથી. જવાબો જોવા ભાગ A ખોલો.',
+          'Could not check progress. Open Part A to see your answers.');
+        Bi.set($('home-a-btn'), 'ખોલો', 'Open');
       });
   }
 
@@ -1240,7 +1281,8 @@
     var shown = all.filter(function (x) { return matchesScheme(x, branch, text); });
 
     $('home-b-count').className = 'pill todo';
-    $('home-b-count').textContent = all.length + ' schemes';
+    $('home-b-count').innerHTML = '';
+    Bi.inline($('home-b-count'), all.length + ' યોજના', 'schemes');
 
     var host = $('sp-list');
     host.innerHTML = '';
@@ -1248,9 +1290,8 @@
     if (!shown.length) {
       var e = document.createElement('div');
       e.className = 'scheme-empty';
-      e.textContent = text
-        ? 'No scheme matches that search. / આ શોધ સાથે કોઈ યોજના મળી નથી.'
-        : 'No schemes listed for this selection. / આ પસંદગી માટે કોઈ યોજના નથી.';
+      if (text) Bi.into(e, 'આ શોધ સાથે કોઈ યોજના મળી નથી.', 'No scheme matches that search.', null, true);
+      else      Bi.into(e, 'આ પસંદગી માટે કોઈ યોજના નથી.', 'No schemes listed for this selection.', null, true);
       host.appendChild(e);
     }
 
@@ -1261,31 +1302,36 @@
       row.className = 'scheme-row';
       row.dataset.id = x.id;
 
+      /* The Gujarati name is the one printed in the GR, so it leads. */
       var nm = document.createElement('div');
-      nm.className = 'nm';
-      nm.textContent = x.nameEN;
-      var gu = document.createElement('div');
-      gu.className = 'nm-gu guj';
-      gu.textContent = x.nameGU;
-      row.appendChild(nm); row.appendChild(gu);
+      nm.className = 'nm guj';
+      nm.textContent = x.nameGU;
+      var en = document.createElement('div');
+      en.className = 'nm-en eng';
+      en.textContent = x.nameEN;
+      row.appendChild(nm); row.appendChild(en);
 
       var meta = document.createElement('div');
       meta.className = 'meta';
       var bits = [];
-      if (x.patrak) bits.push('Patrak-' + x.patrak);
-      if (typeof x.allocationCr === 'number') bits.push('\u20b9 ' + x.allocationCr.toFixed(2) + ' cr');
+      if (x.patrak) bits.push('પત્રક-' + x.patrak);
+      if (typeof x.allocationCr === 'number') bits.push('₹ ' + x.allocationCr.toFixed(2) + ' કરોડ');
       var br = x.branch ? branchById(x.branch) : null;
-      if (br) bits.push(br.en + (x.branchGuess ? ' (to confirm)' : ''));
-      meta.appendChild(document.createTextNode(bits.join('  \u00b7  ')));
+      if (br) bits.push(br.gu + (x.branchGuess ? ' (ખાતરી બાકી)' : ''));
+      if (st && typeof st.answered === 'number' && st.asked) {
+        bits.push(st.asked + ' માંથી ' + st.answered + ' જવાબ');
+      }
+      meta.appendChild(document.createTextNode(bits.join('  ·  ')));
 
       if (st) {
-        if (typeof st.answered === 'number' && st.asked) {
-          bits.push(st.answered + ' of ' + st.asked + ' answered');
-          meta.textContent = bits.join('  \u00b7  ');
-        }
         var pill = document.createElement('span');
-        if (st.status === 'submitted') { pill.className = 'pill done'; pill.textContent = 'Submitted'; }
-        else { pill.className = 'pill draft'; pill.textContent = 'In progress'; }
+        if (st.status === 'submitted') {
+          pill.className = 'pill done';
+          Bi.inline(pill, 'રજૂ થયું', 'Submitted');
+        } else {
+          pill.className = 'pill draft';
+          Bi.inline(pill, 'ચાલુ છે', 'In progress');
+        }
         meta.appendChild(pill);
       }
       row.appendChild(meta);
@@ -1294,10 +1340,24 @@
       host.appendChild(row);
     });
 
+    /*
+     * Was one English sentence ending in a parenthetical explanation of what an
+     * establishment line is. The count stays on screen; the explanation is one
+     * click away.
+     */
     var note = $('sp-note');
-    note.textContent = 'Showing ' + shown.length + ' of ' + all.length
-      + (branch ? ' in this branch' : '')
-      + (hiddenAdmin ? ' \u00b7 ' + hiddenAdmin + ' establishment lines hidden (salaries, advertising and similar)' : '');
+    note.innerHTML = '';
+    Bi.inline(note, all.length + ' માંથી ' + shown.length + ' બતાવ્યા',
+                    'showing ' + shown.length + ' of ' + all.length);
+    if (hiddenAdmin) {
+      note.appendChild(document.createTextNode(' · ' + hiddenAdmin + ' '));
+      Bi.inline(note, 'સ્થાપના બાબતો છુપાવેલ', 'establishment lines hidden');
+      note.appendChild(Bi.why(
+        'સ્થાપના બાબતો એટલે પગાર, કચેરી ખર્ચ, જાહેરાત જેવી બાબતો. તેમાં કોઈ અરજી કરતું નથી, '
+      + 'તેથી તે યાદીમાં બતાવાતી નથી.',
+        'Establishment lines are salaries, office running costs, advertising and the like. '
+      + 'Nobody applies for these, so they are left out of the list.'));
+    }
   }
 
   function initSchemePicker() {
@@ -1306,7 +1366,7 @@
     var wrap = $('sp-branchwrap');
 
     if (!$('sp-branch').options.length) {
-      fillSelect($('sp-branch'), CONST.BRANCHES, 'All branches / બધી શાખા');
+      fillSelect($('sp-branch'), CONST.BRANCHES, 'બધી શાખા · All branches');
     }
 
     /*
@@ -1345,13 +1405,6 @@
       && x.body === pr.body;
   }
 
-  function paintConfirmBranch(x) {
-    var show = canConfirmBranch(x);
-    $('fix-confirm').classList.toggle('hidden', !show);
-    $('fix-confirm-note').classList.toggle('hidden', !show);
-    $('fix-confirm').disabled = false;
-  }
-
   function confirmBranch() {
     var x = schemeById(picker.current);
     if (!canConfirmBranch(x)) return;
@@ -1361,9 +1414,7 @@
 
     writeBranchTag(x.id, null, x.branch)
       .then(function () {
-        var fresh = schemeById(picker.current);
-        paintFixCurrent(fresh);
-        paintConfirmBranch(fresh);
+        paintFixCurrent(schemeById(picker.current));
         renderSchemeList();
       })
       .catch(function (err) {
@@ -1411,13 +1462,68 @@
 
   /* ---------------- reporting a wrong body / branch ---------------- */
 
+  /*
+   * The whole explanation the old card printed on screen, kept word for word —
+   * and said ONCE. It used to appear as two separate notes, 476 and 261
+   * characters, both visible at the same time on any scheme with a guessed
+   * branch, each ending with the same promise that nothing disappears by
+   * mistake.
+   */
+  var FIX_WHY_GU = 'આ યોજનાની શાખા અમારું અનુમાન છે. ખરી હોય તો અહીં ખાતરી કરો, '
+                 + 'જેથી બધા માટે "(ખાતરી બાકી)" નિશાન દૂર થશે. ખોટી હોય તો સુધારો સૂચવો — '
+                 + 'આપની જાણ વહીવટકર્તાને જશે, અને તેઓ મંજૂર કરે ત્યારે જ યોજના ખસે છે, '
+                 + 'તેથી ભૂલથી કોઈની યાદીમાંથી ગુમ નહીં થાય.';
+  var FIX_WHY_EN = 'This scheme’s branch was our guess. If it is right, confirming it here '
+                 + 'removes the "(to confirm)" mark for everyone. If it is wrong, report it '
+                 + 'instead — your report goes to the administrator, and the scheme only '
+                 + 'moves once they apply it, so it can never disappear from anyone’s list '
+                 + 'by mistake.';
+
+  /*
+   * The branch line — ONE line, built here rather than written into index.html,
+   * because what it says depends on the scheme: which office and branch,
+   * whether the branch is still a guess, and whether THIS officer is the person
+   * who could confirm it (their own branch, their own body).
+   */
   function paintFixCurrent(x) {
+    var host = $('fix-current');
+    host.innerHTML = '';
+
     var body = bodyById(x.body);
     var br = x.branch ? branchById(x.branch) : null;
-    $('fix-current').textContent = 'Currently filed under: '
-      + (body ? body.en : x.body)
-      + (br ? ' \u2192 ' + br.en : '')
-      + (x.branchGuess ? '  (branch not confirmed)' : '');
+
+    host.appendChild(Bi.el('span', 'guj',
+      'નોંધાયેલ: ' + (body ? body.gu : x.body)
+      + (br ? ' → ' + br.gu : '')
+      + (x.branchGuess ? '  (ખાતરી બાકી)' : '')));
+    host.appendChild(Bi.el('span', 'eng block',
+      'Filed under: ' + (body ? body.en : x.body)
+      + (br ? ' → ' + br.en : '')
+      + (x.branchGuess ? '  (to confirm)' : '')));
+
+    var acts = Bi.el('div', 'fixline-acts');
+
+    /* Confirm is offered only to the officer whose own branch this is. */
+    if (canConfirmBranch(x)) {
+      var yes = document.createElement('button');
+      yes.type = 'button';
+      yes.id = 'fix-confirm';
+      yes.className = 'btn ghost sm';
+      Bi.inline(yes, 'ખરી છે', 'Correct');
+      yes.addEventListener('click', confirmBranch);
+      acts.appendChild(yes);
+    }
+
+    var rep = document.createElement('button');
+    rep.type = 'button';
+    rep.id = 'fix-open';
+    rep.className = 'btn ghost sm';
+    Bi.inline(rep, 'સુધારો સૂચવો', 'Report a correction');
+    rep.addEventListener('click', openFixForm);
+    acts.appendChild(rep);
+
+    acts.appendChild(Bi.why(FIX_WHY_GU, FIX_WHY_EN));
+    host.appendChild(acts);
   }
 
   function openFixForm() {
@@ -1425,8 +1531,8 @@
     if (!x) return;
 
     if (!$('fix-body').options.length) {
-      fillSelect($('fix-body'), CONST.BODIES, '\u2014 Select / પસંદ કરો \u2014');
-      fillSelect($('fix-branch'), CONST.BRANCHES, '\u2014 Select / પસંદ કરો \u2014');
+      fillSelect($('fix-body'), CONST.BODIES, SELECT_PLACEHOLDER);
+      fillSelect($('fix-branch'), CONST.BRANCHES, SELECT_PLACEHOLDER);
     }
     $('fix-body').value = x.body || '';
     $('fix-branch').value = x.branch || '';
@@ -1434,12 +1540,14 @@
     $('fix-msg').classList.add('hidden');
     onFixBodyChange();
     $('fix-form').classList.remove('hidden');
-    $('fix-open').classList.add('hidden');
+    /* The two buttons are built by paintFixCurrent, so they may not exist
+       yet — the form can be opened before the line has been drawn. */
+    if ($('fix-open')) $('fix-open').classList.add('hidden');
   }
 
   function closeFixForm() {
     $('fix-form').classList.add('hidden');
-    $('fix-open').classList.remove('hidden');
+    if ($('fix-open')) $('fix-open').classList.remove('hidden');
   }
 
   function onFixBodyChange() {
@@ -1459,20 +1567,22 @@
     var note = ($('fix-note').value || '').trim();
 
     var msg = $('fix-msg');
-    if (!body) {
-      msg.textContent = 'Please choose the correct office. કૃપા કરી સાચી કચેરી પસંદ કરો.';
+    function fail(gu, en) {
+      msg.innerHTML = '';
+      Bi.into(msg, gu, en, null, true);
       msg.classList.remove('hidden');
+    }
+    if (!body) {
+      fail('કૃપા કરી સાચી કચેરી પસંદ કરો.', 'Please choose the correct office.');
       return;
     }
     if (b && b.hasBranches && !branch) {
-      msg.textContent = 'Please choose the correct branch. કૃપા કરી સાચી શાખા પસંદ કરો.';
-      msg.classList.remove('hidden');
+      fail('કૃપા કરી સાચી શાખા પસંદ કરો.', 'Please choose the correct branch.');
       return;
     }
     if (body === x.body && branch === (x.branch || '') && !note) {
-      msg.textContent = 'That is where it is already — change the office or branch, or add a note. '
-                      + 'એ તો અત્યારે જ્યાં છે ત્યાં જ છે — કચેરી કે શાખા બદલો, અથવા નોંધ લખો.';
-      msg.classList.remove('hidden');
+      fail('એ તો અત્યારે જ્યાં છે ત્યાં જ છે — કચેરી કે શાખા બદલો, અથવા નોંધ લખો.',
+           'That is where it is already — change the office or branch, or add a note.');
       return;
     }
     msg.classList.add('hidden');
@@ -1500,13 +1610,14 @@
     window.FB.db.collection('schemeFixes').doc().set(rec)
       .then(function () {
         closeFixForm();
-        $('fix-current').textContent =
-          'Reported \u2713 The administrator will review it. / જાણ કરાઈ \u2713 વહીવટકર્તા ચકાસશે.';
+        Bi.set('fix-current', 'જાણ કરાઈ ✓ વહીવટકર્તા ચકાસશે.',
+                              'Reported. The administrator will review it.');
       })
       .catch(function (err) {
         console.warn('[fix] send failed -', (err && err.code) || err);
-        msg.textContent = 'Could not send. Please check your connection and try again. '
-                        + 'મોકલી શકાયું નથી. જોડાણ ચકાસીને ફરી પ્રયાસ કરો.';
+        msg.innerHTML = '';
+        Bi.into(msg, 'મોકલી શકાયું નથી. જોડાણ ચકાસીને ફરી પ્રયાસ કરો.',
+                     'Could not send. Check your connection and try again.', null, true);
         msg.classList.remove('hidden');
       })
       .then(function () { btn.disabled = false; });
@@ -1517,17 +1628,19 @@
     if (!x) return;
     picker.current = schemeId;
 
-    $('pb-title').textContent = x.nameEN;
-    $('pb-title-gu').textContent = x.nameGU;
+    /* The Gujarati name is the one an officer recognises from the GR. */
+    $('pb-title').textContent = x.nameGU;
+    $('pb-title-gu').textContent = x.nameEN;
 
+    /* Same wording as the row the officer just clicked, so the scheme reads as
+       the same scheme on both screens. */
     var bits = [x.id];
-    if (x.patrak) bits.push('Patrak-' + x.patrak);
+    if (x.patrak) bits.push('પત્રક-' + x.patrak);
     if (x.budgetHead) bits.push(x.budgetHead);
-    if (typeof x.allocationCr === 'number') bits.push('\u20b9 ' + x.allocationCr.toFixed(2) + ' crore');
-    $('pb-meta').textContent = bits.join('  \u00b7  ');
+    if (typeof x.allocationCr === 'number') bits.push('₹ ' + x.allocationCr.toFixed(2) + ' કરોડ');
+    $('pb-meta').textContent = bits.join('  ·  ');
     closeFixForm();
     paintFixCurrent(x);
-    paintConfirmBranch(x);
 
     /*
      * Anything typed on the PREVIOUS scheme is flushed under that scheme's own
@@ -1605,17 +1718,16 @@
 
     if (m.status === 'submitted' && m.submittedBy) {
       var subWhen = fmtWhen(m.submittedAt);
-      bits.push('Submitted by ' + m.submittedBy + (subWhen ? ' on ' + subWhen : '') +
-                ' \u00b7 સબમિટ થયેલ');
+      bits.push('રજૂ કરનાર: ' + m.submittedBy + (subWhen ? ', ' + subWhen : ''));
     }
     if (m.lastEditedByEmail && session.user && m.lastEditedByEmail !== session.user.email) {
       var editWhen = fmtWhen(m.lastEditedAt);
-      bits.push('Last edited by ' + (m.lastEditedBy || m.lastEditedByEmail) +
-                (editWhen ? ' on ' + editWhen : '') + ' \u00b7 છેલ્લે સુધારનાર');
+      bits.push('છેલ્લે સુધારનાર: ' + (m.lastEditedBy || m.lastEditedByEmail) +
+                (editWhen ? ', ' + editWhen : ''));
     }
 
     el.className = 'banner info';
-    el.textContent = bits.join('  \u2014  ');
+    el.textContent = bits.join('  —  ');
     el.classList.toggle('hidden', bits.length === 0);
   }
 
@@ -1653,13 +1765,7 @@
     var st = window.Render.progress(routeB().shown, partB.answers);
 
     /* A blocking question left empty is allowed but never silent. */
-    if (st.blockingLeft) {
-      var go = window.confirm(
-        st.blockingLeft + ' important question(s) are still unanswered.\n'
-      + st.blockingLeft + ' અગત્યના પ્રશ્નોના જવાબ બાકી છે.\n\n'
-      + 'Submit anyway? / તો પણ સબમિટ કરવું?');
-      if (!go) return;
-    }
+    if (st.blockingLeft && !confirmSubmit(st.blockingLeft)) return;
 
     var btn = $('pb-submit');
     btn.disabled = true;
@@ -1674,7 +1780,7 @@
       partB.meta.status = 'submitted';
       partB.meta.submittedBy = describeProfile(session.profile);
       paintPartBBanner();
-      setChip('pb-savechip', '', 'Submitted \u2713', 'સબમિટ થયું');
+      paintChip('pb-savechip', 'submitted');
     });
   }
 
@@ -1694,10 +1800,6 @@
    *     officer has already filled in. Those answers stay in memory (and, from
    *     Feature 15, on the server), and the fold says how many are in there, so
    *     work never disappears quietly.
-   *
-   *  ⚠️ NOTHING SAVES YET. Answers live in memory until Feature 15. The amber
-   *  banner on the screen says so — an officer must not fill in a whole scheme
-   *  and then lose it.
    * ---------------------------------------------------------------- */
 
   var partB = {
@@ -1768,7 +1870,7 @@
     partB.answers[key] = value;
     partB.pending[key] = value;
 
-    setChip('pb-savechip', 'saving', 'Saving\u2026', 'સાચવાય છે');
+    paintChip('pb-savechip', 'saving');
     schedulePartBSave();
 
     if (window.RouteB.affectsRouting(key)) redrawPartB();
@@ -1853,8 +1955,7 @@
 
     /* Offline is a success: the write is already in the local store. */
     if (!navigator.onLine) {
-      setChip('pb-savechip', 'saving', 'Saved on this device \u2014 will sync',
-              'આ ઉપકરણ પર સચવાયું \u2014 પછી સિંક થશે');
+      paintChip('pb-savechip', 'offline');
     }
 
     /*
@@ -1873,7 +1974,7 @@
       partB.saving = false;
       if (extra && extra.status) partB.meta.status = extra.status;
       if (!Object.keys(partB.pending).length) {
-        setChip('pb-savechip', '', 'Saved \u2713', 'સચવાયું');
+        paintChip('pb-savechip', 'saved');
       }
     }).catch(function (err) {
       console.warn('[partB] save failed -', (err && err.code) || err);
@@ -1891,8 +1992,7 @@
         if (partB.pendingAudit[k]) partB.pendingAudit[k].old = auditTaken[k].old;
         else partB.pendingAudit[k] = auditTaken[k];
       });
-      setChip('pb-savechip', 'failed', 'Not saved \u2014 will retry',
-              'સચવાયું નથી \u2014 ફરી પ્રયાસ થશે');
+      paintChip('pb-savechip', 'failed');
     });
   }
 
@@ -1909,7 +2009,7 @@
       old: was ? 'does not apply' : 'applies',
       new: on ? 'does not apply' : 'applies'
     };
-    setChip('pb-savechip', 'saving', 'Saving\u2026', 'સાચવાય છે');
+    paintChip('pb-savechip', 'saving');
     flushPartB(null, partB.schemeId, naToList(partB.na));
   }
 
@@ -1944,7 +2044,7 @@
       host.appendChild(sectionHead(sec, whole));
 
       if (whole) {
-        host.appendChild(foldCard(sec.en + ' / ' + sec.gu, route.sections[sec.id],
+        host.appendChild(foldCard(sec.id + '. ' + sec.gu, sec.en, route.sections[sec.id],
                                   window.RouteB.answersInside(qs, partB.answers),
                                   sec.id, true));
         return;
@@ -1952,7 +2052,7 @@
 
       qs.forEach(function (q) {
         if (route.isAside(q)) {
-          host.appendChild(foldCard(q.id + ' — ' + q.en, route.reasonFor(q),
+          host.appendChild(foldCard(q.id + ' — ' + q.gu, q.en, route.reasonFor(q),
                                     window.RouteB.answersInside([q], partB.answers),
                                     q.id, false));
           return;
@@ -1975,10 +2075,11 @@
 
     var left = document.createElement('div');
     var t = document.createElement('h3');
-    t.textContent = sec.id + '. ' + sec.en;
+    t.className = 'guj';
+    t.textContent = sec.id + '. ' + sec.gu;
     var g = document.createElement('div');
-    g.className = 'guj';
-    g.textContent = sec.gu;
+    g.className = 'eng';
+    g.textContent = sec.en;
     left.appendChild(t); left.appendChild(g);
     row.appendChild(left);
 
@@ -1992,7 +2093,7 @@
       var na = document.createElement('button');
       na.type = 'button';
       na.className = 'sec-na';
-      na.textContent = 'This section does not apply / આ વિભાગ લાગુ પડતો નથી';
+      Bi.inline(na, 'આ વિભાગ લાગુ પડતો નથી', 'This section does not apply');
       na.addEventListener('click', function () {
         setSectionNA(sec.id, true);
         delete partB.opened[sec.id];
@@ -2009,7 +2110,7 @@
    * One folded question or one folded section. Always carries three things:
    * what was set aside, why, and the way back.
    */
-  function foldCard(title, reason, keptCount, openKey, isSection) {
+  function foldCard(titleGU, titleEN, reason, keptCount, openKey, isSection) {
     var card = document.createElement('div');
     card.className = 'fold' + (isSection ? ' sec' : '');
     card.dataset.foldKey = openKey;
@@ -2020,23 +2121,21 @@
     var left = document.createElement('div');
     var what = document.createElement('div');
     what.className = 'fold-what';
-    what.textContent = title;
+    Bi.into(what, titleGU, titleEN, null, true);
     left.appendChild(what);
 
     var why = document.createElement('div');
     why.className = 'fold-why';
     var reasonEN = reason.reasonEN;
+    var reasonGU = reason.reasonGU;
     /* An officer opening a colleague's sheet must see WHOSE decision this was,
        or "you marked this section" would be plainly wrong for them. */
     if (reason.byOfficer && partB.na[openKey] &&
         partB.na[openKey] !== describeProfile(session.profile)) {
+      reasonGU = 'બાજુ પર: આ યોજનાને લાગુ પડતું નથી એમ ' + partB.na[openKey] + ' એ નોંધ્યું છે.';
       reasonEN = 'Set aside by ' + partB.na[openKey] + ', as not applying to this scheme.';
     }
-    why.appendChild(document.createTextNode(reasonEN));
-    var wg = document.createElement('span');
-    wg.className = 'guj';
-    wg.textContent = reason.reasonGU;
-    why.appendChild(wg);
+    Bi.into(why, reasonGU, reasonEN, null, true);
     left.appendChild(why);
 
     /* Folding over existing answers is the one case that could look like data
@@ -2045,11 +2144,10 @@
     if (keptCount) {
       var kept = document.createElement('div');
       kept.className = 'fold-kept';
-      kept.textContent = keptCount + ' answer(s) already recorded here are kept, not deleted';
-      var keptGu = document.createElement('span');
-      keptGu.className = 'guj block';
-      keptGu.textContent = 'અહીં અપાયેલા ' + keptCount + ' જવાબ સચવાયેલા છે, ભૂંસાયા નથી';
-      kept.appendChild(keptGu);
+      Bi.into(kept,
+        'અહીં અપાયેલા ' + keptCount + ' જવાબ સચવાયેલા છે, ભૂંસાયા નથી',
+        keptCount + ' answer(s) already recorded here are kept, not deleted',
+        null, true);
       left.appendChild(kept);
     }
     row.appendChild(left);
@@ -2057,12 +2155,8 @@
     var btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'btn ghost sm';
-    btn.appendChild(document.createTextNode(
-      reason.byOfficer ? 'It does apply — show it ' : 'Show anyway '));
-    var labGu = document.createElement('span');
-    labGu.className = 'guj';
-    labGu.textContent = reason.byOfficer ? '/ લાગુ પડે છે — બતાવો' : '/ તો પણ બતાવો';
-    btn.appendChild(labGu);
+    if (reason.byOfficer) Bi.inline(btn, 'લાગુ પડે છે — બતાવો', 'It does apply — show it');
+    else                  Bi.inline(btn, 'તો પણ બતાવો', 'Show anyway');
     btn.addEventListener('click', function () {
       /* Opening an officer-marked section also clears the mark, so it does not
          silently fold shut again the next time the form is drawn. */
@@ -2086,27 +2180,19 @@
     var st = window.Render.progress(route.shown, partB.answers);
 
     $('pb-progbar').style.width = st.percent + '%';
+    paintCount($('pb-progtext'), st);
 
-    var node = $('pb-progtext');
-    node.innerHTML = '';
-    node.appendChild(document.createTextNode(
-      st.done + ' of ' + st.total + ' answered · ' +
-      st.done + ' માંથી ' + st.total + ' જવાબ અપાયા'));
-
-    if (st.blockingLeft) {
-      var pill = document.createElement('span');
-      pill.className = 'pill block';
-      pill.style.marginLeft = '8px';
-      pill.textContent = st.blockingLeft + ' blocking left';
-      node.appendChild(pill);
-    }
-
+    /*
+     * Shown only when something IS set aside. Saying "all 58 questions apply"
+     * when nothing has been folded is a line that tells the officer nothing.
+     */
     var aside = $('pb-asidetext');
     var n = route.counts.setAside;
-    aside.textContent = n
-      ? n + ' of the 58 questions are set aside for this scheme · આ યોજના માટે ૫૮ માંથી '
-          + n + ' પ્રશ્નો બાજુ પર રખાયા છે'
-      : 'All 58 questions apply to this scheme · આ યોજનાને બધા ૫૮ પ્રશ્નો લાગુ પડે છે';
+    aside.innerHTML = '';
+    if (n) {
+      Bi.inline(aside, route.counts.total + ' માંથી ' + n + ' પ્રશ્ન બાજુ પર',
+                       n + ' of ' + route.counts.total + ' set aside');
+    }
   }
 
   /* The escape hatch for our own rules being wrong: open every fold at once. */
@@ -2193,8 +2279,8 @@
       var line = document.createElement('p');
       line.className = 'mini';
       line.textContent = st.done + ' of ' + st.total + ' answered'
-        + (st.blockingLeft ? ' \u00b7 ' + st.blockingLeft + ' blocking still empty' : '')
-        + (r.lastEditedBy ? ' \u00b7 last edited by ' + r.lastEditedBy : '');
+        + (st.blockingLeft ? ' · ' + st.blockingLeft + ' important still empty' : '')
+        + (r.lastEditedBy ? ' · last edited by ' + r.lastEditedBy : '');
       box.appendChild(line);
 
       /*
@@ -2209,7 +2295,7 @@
         wrap.className = 'branchlist';
         var cap = document.createElement('div');
         cap.className = 'mini';
-        cap.textContent = 'Officers registered, by branch / શાખા પ્રમાણે નોંધાયેલ અધિકારીઓ';
+        cap.textContent = 'Officers registered, by branch';
         wrap.appendChild(cap);
 
         CONST.BRANCHES.forEach(function (br) {
@@ -2219,7 +2305,7 @@
           var row = document.createElement('div');
           row.className = 'branchrow';
           var left = document.createElement('span');
-          left.textContent = br.en + ' / ' + br.gu;
+          left.textContent = br.en;
           var right = document.createElement('span');
           right.className = 'muted';
           right.textContent = list.length
@@ -2252,7 +2338,7 @@
 
   function loadTracker() {
     var host = $('adm-tracker');
-    host.innerHTML = '<p class="mini">Loading\u2026 / લવાય છે…</p>';
+    host.innerHTML = '<p class="mini">Loading…</p>';
 
     var jobs = CONST.BODIES.map(function (b) {
       return window.FB.db.collection('responsesA').doc(b.id).get()
@@ -2315,8 +2401,8 @@
       td.colSpan = 4;
       td.className = 'audit-empty';
       td.textContent = admin.auditRows.length
-        ? 'No entries match this filter. / આ ગાળણી સાથે કોઈ નોંધ મળી નથી.'
-        : 'No changes recorded yet. / હજુ કોઈ ફેરફાર નોંધાયો નથી.';
+        ? 'No entries match this filter.'
+        : 'No changes recorded yet.';
       tr.appendChild(td); tbody.appendChild(tr);
     }
 
@@ -2325,7 +2411,7 @@
 
       var when = document.createElement('td');
       when.className = 'audit-when';
-      when.textContent = fmtWhen(e.ts) || '\u2014';
+      when.textContent = fmtWhen(e.ts) || '—';
       tr.appendChild(when);
 
       var who = document.createElement('td');
@@ -2336,7 +2422,7 @@
       var sub = document.createElement('div');
       sub.className = 'muted';
       sub.textContent = [e.actorRank, bodyObj ? bodyObj.en : e.actorBody, brObj ? brObj.en : '']
-        .filter(Boolean).join(' \u00b7 ');
+        .filter(Boolean).join(' · ');
       who.appendChild(n); who.appendChild(sub);
       tr.appendChild(who);
 
@@ -2346,7 +2432,7 @@
       } else {
         var parts = splitAnswerKey(e.qid);
         var qn = document.createElement('div');
-        qn.textContent = parts.qid + (parts.part ? ' \u00b7 ' + parts.part : '');
+        qn.textContent = parts.qid + (parts.part ? ' · ' + parts.part : '');
         var qt = document.createElement('div');
         qt.className = 'muted';
         qt.textContent = questionText(parts.qid);
@@ -2356,7 +2442,7 @@
 
       var change = document.createElement('td');
       if (e.action === 'submit') {
-        change.textContent = '\u2014';
+        change.textContent = '—';
       } else {
         if (e.oldValue) {
           var o = document.createElement('span');
@@ -2365,7 +2451,7 @@
           change.appendChild(o);
           var ar = document.createElement('span');
           ar.className = 'audit-arrow';
-          ar.textContent = '\u2192';
+          ar.textContent = '→';
           change.appendChild(ar);
         }
         var nv = document.createElement('span');
@@ -2389,7 +2475,7 @@
     note.textContent = 'Showing ' + shown.length + ' of ' + admin.auditRows.length + ' loaded'
       + (admin.exhausted ? ' (all entries loaded)' : '')
       + (filtering && !admin.exhausted
-          ? ' \u00b7 filters apply to loaded entries \u2014 use Load more to search further back'
+          ? ' · filters apply to loaded entries — use Load more to search further back'
           : '');
 
     $('adm-audit-more').classList.toggle('hidden', admin.exhausted);
@@ -2417,7 +2503,7 @@
         admin.loading = false;
         console.warn('[admin] audit read failed -', (err && err.code) || err);
         $('adm-audit-note').textContent =
-          'Could not load the audit log. / ઓડિટ લોગ લાવી શકાયો નથી.';
+          'Could not load the audit log.';
       });
   }
 
@@ -2429,7 +2515,7 @@
     if (!list.length) {
       var n = document.createElement('div');
       n.className = 'fix-none';
-      n.textContent = 'No corrections reported. / કોઈ સુધારો સૂચવાયો નથી.';
+      n.textContent = 'No corrections reported.';
       host.appendChild(n);
       return;
     }
@@ -2442,7 +2528,7 @@
       var t = document.createElement('div');
       t.style.fontWeight = '600';
       t.style.fontSize = '13.5px';
-      t.textContent = f.schemeId + (x ? ' \u00b7 ' + x.nameEN : '');
+      t.textContent = f.schemeId + (x ? ' · ' + x.nameEN : '');
       row.appendChild(t);
 
       var mv = document.createElement('div');
@@ -2451,19 +2537,19 @@
       var fromBr = f.currentBranch ? branchById(f.currentBranch) : null;
       var toBr = f.suggestedBranch ? branchById(f.suggestedBranch) : fromBr;
       mv.appendChild(document.createTextNode(
-        (fromBody ? fromBody.en : f.currentBody) + (fromBr ? ' \u2192 ' + fromBr.en : '')));
+        (fromBody ? fromBody.en : f.currentBody) + (fromBr ? ' → ' + fromBr.en : '')));
       var ar = document.createElement('span');
-      ar.className = 'arrow'; ar.textContent = '\u21d2';
+      ar.className = 'arrow'; ar.textContent = '⇒';
       mv.appendChild(ar);
       var to = document.createElement('b');
-      to.textContent = (toBody ? toBody.en : '') + (toBr ? ' \u2192 ' + toBr.en : '');
+      to.textContent = (toBody ? toBody.en : '') + (toBr ? ' → ' + toBr.en : '');
       mv.appendChild(to);
       row.appendChild(mv);
 
       if (f.note) {
         var nt = document.createElement('div');
         nt.className = 'note-txt';
-        nt.textContent = '\u201c' + f.note + '\u201d';
+        nt.textContent = '“' + f.note + '”';
         row.appendChild(nt);
       }
 
@@ -2471,7 +2557,7 @@
       who.className = 'who';
       var w = fmtWhen(f.ts);
       who.textContent = 'Reported by ' + (f.byName || f.byEmail)
-        + (f.byRank ? ' \u00b7 ' + f.byRank : '') + (w ? ' \u00b7 ' + w : '');
+        + (f.byRank ? ' · ' + f.byRank : '') + (w ? ' · ' + w : '');
       row.appendChild(who);
 
       var acts = document.createElement('div');
@@ -2587,7 +2673,7 @@
       var g = index[groupKeyFor(x)];
       if (!g) {
         g = { key: groupKeyFor(x), body: x.body, branch: x.branch || null,
-              en: 'Other / not yet tagged', gu: 'અન્ય / હજુ શાખા નક્કી નથી',
+              en: 'Not yet tagged', gu: 'હજુ શાખા નક્કી નથી',
               total: 0, notStarted: 0, inProgress: 0, submitted: 0,
               answered: 0, asked: 0, blocking: 0, untouched: [] };
         index[g.key] = g; groups.push(g);
@@ -2647,8 +2733,8 @@
    * time the screen opened, for no gain.
    */
   function loadAdminPartB() {
-    $('adm-b-note').textContent = 'Loading\u2026 / લવાય છે…';
-    $('adm-tags-note').textContent = 'Loading\u2026 / લવાય છે…';
+    $('adm-b-note').textContent = 'Loading…';
+    $('adm-tags-note').textContent = 'Loading…';
 
     return loadSchemeOverrides()
       .then(function () {
@@ -2685,8 +2771,7 @@
      */
     $('adm-b-note').textContent = failed
       ? 'Could not read ' + failed + ' of ' + CONST.BODIES.length
-        + ' offices — the figures below are incomplete. Press Refresh. '
-        + '· અમુક કચેરીની માહિતી મળી નથી — આંકડા અધૂરા છે.'
+        + ' offices — the figures below are incomplete. Press Refresh.'
       : tot.total + ' schemes · ' + tot.submitted + ' submitted · ' + tot.inProgress
         + ' in progress · ' + tot.notStarted + ' not started';
 
@@ -2698,20 +2783,16 @@
       head.className = 'brow-head';
       var nm = document.createElement('div');
       nm.className = 'brow-name';
-      nm.appendChild(document.createTextNode(g.en + ' '));
-      var gu = document.createElement('span');
-      gu.className = 'guj';
-      gu.textContent = '/ ' + g.gu;
-      nm.appendChild(gu);
+      nm.textContent = g.en;
       head.appendChild(nm);
 
       var counts = document.createElement('div');
       counts.className = 'brow-counts';
       counts.innerHTML = '';
-      counts.appendChild(document.createTextNode(g.total + ' schemes \u00b7 '));
+      counts.appendChild(document.createTextNode(g.total + ' schemes · '));
       var b1 = document.createElement('b'); b1.textContent = g.submitted + ' submitted';
       counts.appendChild(b1);
-      counts.appendChild(document.createTextNode(' \u00b7 ' + g.inProgress + ' in progress \u00b7 '
+      counts.appendChild(document.createTextNode(' · ' + g.inProgress + ' in progress · '
                                                  + g.notStarted + ' not started'));
       head.appendChild(counts);
       row.appendChild(head);
@@ -2731,11 +2812,11 @@
         if (g.blocking) {
           var w = document.createElement('span');
           w.className = 'brow-warn';
-          w.textContent = '  \u00b7  ' + g.blocking + ' important questions still blank';
+          w.textContent = '  ·  ' + g.blocking + ' important questions still blank';
           sub.appendChild(w);
         }
       } else {
-        sub.textContent = 'Nothing started yet in this branch \u00b7 આ શાખામાં હજુ કંઈ શરૂ થયું નથી';
+        sub.textContent = 'Nothing started yet in this branch';
       }
       row.appendChild(sub);
 
@@ -2751,7 +2832,7 @@
         list.className = 'brow-list hidden';
         g.untouched.forEach(function (x) {
           var d = document.createElement('div');
-          d.textContent = x.id + '  \u00b7  ' + x.nameEN;
+          d.textContent = x.id + '  ·  ' + x.nameEN;
           list.appendChild(d);
         });
         function label() {
@@ -2820,7 +2901,7 @@
     navigator.clipboard.writeText(text).then(function () {
       box.classList.add('hidden');
       var was = btn.textContent;
-      btn.textContent = 'Copied \u2713';
+      btn.textContent = 'Copied ✓';
       setTimeout(function () { btn.textContent = was; }, 1800);
     }).catch(fallback);
   }
@@ -2853,20 +2934,25 @@
     if (!mine) { box.classList.add('hidden'); return; }
 
     box.classList.remove('hidden');
-    $('home-b-mine-title').textContent = 'Your branch — ' + mine.en;
+    /* This whole box used to be English only. */
+    Bi.set($('home-b-mine-title'), 'આપની શાખા — ' + mine.gu, mine.en);
 
     var pill = $('home-b-mine-pill');
     var doneAll = mine.total && mine.submitted === mine.total;
     pill.className = 'pill ' + (doneAll ? 'done' : (mine.submitted || mine.inProgress ? 'draft' : 'todo'));
-    pill.textContent = doneAll ? 'All submitted' : mine.submitted + ' of ' + mine.total + ' submitted';
+    pill.innerHTML = '';
+    if (doneAll) Bi.inline(pill, 'બધી રજૂ થઈ', 'All submitted');
+    else Bi.inline(pill, mine.total + ' માંથી ' + mine.submitted + ' રજૂ',
+                         mine.submitted + ' of ' + mine.total + ' submitted');
 
     $('home-b-mine-bar').style.width =
       (mine.total ? Math.round((mine.submitted / mine.total) * 100) : 0) + '%';
 
-    $('home-b-mine-text').textContent =
-      mine.total + ' schemes \u00b7 ' + mine.submitted + ' submitted \u00b7 '
-      + mine.inProgress + ' in progress \u00b7 ' + mine.notStarted + ' not started'
-      + '  \u00b7  ' + mine.total + ' યોજના, ' + mine.submitted + ' સબમિટ';
+    Bi.set($('home-b-mine-text'),
+      mine.total + ' યોજના · ' + mine.submitted + ' રજૂ થઈ · '
+      + mine.inProgress + ' ચાલુ · ' + mine.notStarted + ' શરૂ થઈ નથી',
+      mine.submitted + ' submitted · ' + mine.inProgress + ' in progress · '
+      + mine.notStarted + ' not started');
   }
 
   /* ---------------- FEATURE 16 (admin half) — branch tags ---------------- */
@@ -2896,13 +2982,12 @@
     var total = (window.SCHEMES || []).filter(function (x) { return x.branchGuess; }).length;
     var done = total - list.length;
     $('adm-tags-note').textContent =
-      done + ' of ' + total + ' confirmed \u00b7 ' + list.length + ' still to check'
-      + '  \u00b7  ' + total + ' માંથી ' + done + ' ખાતરી થઈ';
+      done + ' of ' + total + ' confirmed · ' + list.length + ' still to check';
 
     if (!list.length) {
       var e = document.createElement('div');
       e.className = 'scheme-empty';
-      e.textContent = 'Every branch tag has been confirmed. / બધી શાખાની ખાતરી થઈ ગઈ છે.';
+      e.textContent = 'Every branch tag has been confirmed.';
       host.appendChild(e);
       return;
     }
@@ -2923,10 +3008,10 @@
       meta.className = 'meta';
       var bits = [x.id];
       if (x.patrak) bits.push('Patrak-' + x.patrak);
-      if (typeof x.allocationCr === 'number') bits.push('\u20b9 ' + x.allocationCr.toFixed(2) + ' cr');
+      if (typeof x.allocationCr === 'number') bits.push('₹ ' + x.allocationCr.toFixed(2) + ' cr');
       var cur = branchById(x.branch);
       bits.push('we guessed: ' + (cur ? cur.en : x.branch));
-      meta.textContent = bits.join('  \u00b7  ');
+      meta.textContent = bits.join('  ·  ');
       row.appendChild(meta);
 
       /*
@@ -2944,8 +3029,7 @@
       if (x.admin) {
         var est = document.createElement('div');
         est.className = 'evidence';
-        est.textContent = 'Establishment line — officers never see this one, so only you can settle it'
-                        + '  ·  સ્થાપના ખર્ચ — અધિકારીઓને દેખાતી નથી, ફક્ત આપ જ નક્કી કરી શકો';
+        est.textContent = 'Establishment line — officers never see this one, so only you can settle it';
         row.appendChild(est);
       }
 
@@ -2954,8 +3038,8 @@
         ev.className = 'evidence';
         var w = branchById(worked[x.id]);
         ev.textContent = 'Being answered by the ' + (w ? w.en : worked[x.id])
-                       + ' branch' + (worked[x.id] === x.branch ? ' \u2014 agrees with the guess'
-                                                                : ' \u2014 DIFFERENT from the guess');
+                       + ' branch' + (worked[x.id] === x.branch ? ' — agrees with the guess'
+                                                                : ' — DIFFERENT from the guess');
         row.appendChild(ev);
       }
 
@@ -2969,7 +3053,7 @@
       acts.appendChild(yes);
 
       var sel = document.createElement('select');
-      fillSelect(sel, CONST.BRANCHES, 'Change to\u2026 / બદલો…');
+      fillSelect(sel, CONST.BRANCHES, 'Change to…');
       acts.appendChild(sel);
 
       var move = document.createElement('button');
@@ -3010,7 +3094,7 @@
         $('adm-fixes').innerHTML = '';
         var n = document.createElement('div');
         n.className = 'fix-none';
-        n.textContent = 'Could not load corrections. / સુધારા લાવી શકાયા નથી.';
+        n.textContent = 'Could not load corrections.';
         $('adm-fixes').appendChild(n);
       });
   }
@@ -3019,7 +3103,7 @@
     if (!session.isAdmin) return;
 
     if (!$('adm-f-body').options.length) {
-      fillSelect($('adm-f-body'), CONST.BODIES, 'All offices / બધી કચેરી');
+      fillSelect($('adm-f-body'), CONST.BODIES, 'All offices');
     }
     showView('view-admin');
     window.scrollTo(0, 0);
@@ -3040,12 +3124,10 @@
       /* Two very different failures land here. Say which one it is, or the
          officer is told "paste your config" when the config is already fine. */
       if (window.FB && window.FB.error) {
-        $('setup-title').textContent = 'Could not reach Firebase';
-        $('setup-title-gu').textContent = '/ ફાયરબેઝ સાથે જોડાણ થયું નહીં';
+        $('setup-title').textContent = 'જોડાણ થઈ શક્યું નથી';
+        $('setup-title-gu').textContent = 'Could not connect';
         $('setup-body').textContent =
-          'The config in js/firebase-config.js was rejected, or the Firebase ' +
-          'SDK could not load. Check the values against the Firebase console, ' +
-          'and check this device’s internet connection.';
+          'ઇન્ટરનેટ જોડાણ ચકાસો અને પાનું ફરી ખોલો.';
       }
       showView('view-setup');
       return;
@@ -3117,7 +3199,8 @@
   on('adm-f-text', 'input', renderAudit);
 
   on('btn-profile', 'click', openProfileForm);
-  on('fix-open', 'click', openFixForm);
+  /* fix-open and fix-confirm are built by paintFixCurrent, so they bind there —
+     they do not exist when this runs. */
   on('fix-cancel', 'click', closeFixForm);
   on('fix-body', 'change', onFixBodyChange);
   on('fix-send', 'click', sendFix);
@@ -3125,7 +3208,6 @@
   on('sp-branch', 'change', renderSchemeList);
   on('sp-search', 'input', renderSchemeList);
   on('pb-back', 'click', leavePartB);
-  on('fix-confirm', 'click', confirmBranch);
   on('adm-tags-refresh', 'click', loadBranchTags);
   on('adm-b-refresh', 'click', loadAdminPartB);
   on('adm-b-copy', 'click', copyBranchSummary);
