@@ -99,3 +99,46 @@ with the rest. **The research behind them is in `Portal/Pipeline - As Is.md`** �
 it belongs, not in front of the person being asked the question.
 
 **Do not reintroduce pre-fills without the user saying so explicitly.**
+
+---
+
+## Language audit applied — the instrument's own wording (2026-08-25)
+
+**The first change to LOCKED Phase 0 question text.** Approved by the user in full — all
+38 findings, including the three "your call" items — after a word-by-word audit of all 83
+questions in both languages.
+
+### What was wrong, in one line
+The English had drifted into management vocabulary while the Gujarati stayed official.
+In roughly half the findings the Gujarati was already correct and only the English changed.
+
+### Applied — 189 replacements
+- **28 "Fix"** — rhythm · ground check · chokepoint · onboarded · cooldown · sunset · gamed ·
+  seed · audit gate · routing · off-system · free-hand · ghost event · pre-filled · triggers ·
+  feed · desks · bands · window · binds · "per" · dak/module · signs off · determined applicant
+- **7 "Tighten"** — ownership · upward reporting · at all · and the rest
+- **3 "Your call"** — <span>ડુપ્લિકેટ</span> replaced; Gujarati digits converted; the
+  deliberately-kept transliterations (સ્લેબ, ડેટા એન્ટ્રી, સ્ટેટસ, રિમાઇન્ડર) left alone
+- **1 genuine spelling error** — <span>પધ્ધતિ</span> → <span>પદ્ધતિ</span>, 3× in A1.2. The
+  instrument already spelt it correctly in four other places.
+- **130 Gujarati digits → English digits** across both specs, so the questions now match the
+  chrome. This includes GR condition numbers: a partial conversion would have recreated the
+  mixed-numerals problem the change exists to fix.
+
+### The safety check that matters
+`scratchpad/verify_any.js` dumps every question id, part key, option id, blocking flag, table
+row/col count and the four routing driver keys, and diffs the pre-edit specs against the
+post-edit ones. **Result: byte-identical.** No saved answer orphans, no fold rule misfires.
+Re-run it after ANY future instrument edit — it is the only cheap proof that a wording pass
+did not silently move an answer key.
+
+### Two things the sweep caught that the audit had missed
+1. **B9.2 also said "Free-hand statement / letter"** — the same problem in a second question.
+   Found by grepping for the phrase after applying, not by reading. Grep after every text pass.
+2. **`onboarded`, `sunset`, `cooldown`, `freehand` survive as PART KEYS** (`A7.1.onboarded`,
+   `B1.5.sunset`, `B2.7.cooldown`, `B9.2.format` option `freehand`). Those are answer keys and
+   must NOT be renamed — the words are gone from what the officer reads, which is the point.
+
+### Not fixed, said plainly to the user
+Vocabulary only. Several questions still ask three things at once (A2.4, B1.1), and Part B is
+still 58 questions. Those are Phase 0 structure, settled with the department.

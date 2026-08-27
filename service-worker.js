@@ -7,7 +7,7 @@
  *
  * Bump CACHE when any shell file changes, or officers keep the stale version.
  */
-var CACHE = 'csq-shell-v13';
+var CACHE = 'csq-shell-v14';
 
 var SHELL = [
   './',

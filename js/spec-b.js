@@ -30,7 +30,7 @@
  * drawn on screen):
  *   1. B8.6's 8×5 timing grid is drawn as EIGHT choose-one rows, one per stage
  *      transition. The engine's `table` type makes typing boxes, not radio
- *      buttons, and "mark the usual band" must be a choice, not free text.
+ *      buttons, and picking the usual time must be a choice, not free text.
  *   2. The M/O marker in B4.3 and B9.1, and the A/P marker in B5.1, are the
  *      small write-in box that belongs to each ticked option — the same
  *      mechanism the paper form uses (tick, then write M or O beside it).
@@ -40,7 +40,7 @@
 window.SPEC_B = {
 
   sections: [
-    { id: 'B0',  en: 'Identity & ownership',
+    { id: 'B0',  en: 'Identity & responsibility',
                  gu: 'ઓળખ અને જવાબદારી' },
     { id: 'B1',  en: 'Legal basis',
                  gu: 'કાયદાકીય આધાર' },
@@ -50,8 +50,8 @@ window.SPEC_B = {
                  gu: 'શેનું ભંડોળ મળે છે અને કેટલું' },
     { id: 'B4',  en: 'How the application is made',
                  gu: 'અરજી કઈ રીતે થાય છે' },
-    { id: 'B5',  en: 'Identity keys — applicant & event',
-                 gu: 'ઓળખ-ચાવીઓ — અરજદાર અને કાર્યક્રમ' },
+    { id: 'B5',  en: 'Identity details — applicant & event',
+                 gu: 'ઓળખની વિગતો — અરજદાર અને કાર્યક્રમ' },
     { id: 'B7',  en: 'Scrutiny & verification',
                  gu: 'ચકાસણી અને ખરાઈ' },
     { id: 'B8',  en: 'Payment specifics',
@@ -153,29 +153,29 @@ window.SPEC_B = {
     parts: [
       { key: 'mechanism', type: 'multi', opts: [
         ['grant',       '1. Grant on application — applicant applies for help for their own programme; the office sanctions & pays.',
-                        '૧. અરજી આધારિત અનુદાન/સહાય — અરજદાર પોતાના કાર્યક્રમ માટે અરજી કરે, કચેરી મંજૂર કરી ચૂકવે.',
+                        '1. અરજી આધારિત અનુદાન/સહાય — અરજદાર પોતાના કાર્યક્રમ માટે અરજી કરે, કચેરી મંજૂર કરી ચૂકવે.',
                         'one-off / project OR recurring institutional grant-in-aid — say which',
                         'એક વખતનું / નિયમિત સંસ્થાકીય — જણાવો'],
         ['engaged',     '2. Artist engaged & paid — the office runs its own event, selects artists/troupes and pays them.',
-                        '૨. કચેરી પોતાનો કાર્યક્રમ યોજે, કલાકારો/મંડળી પસંદ કરી મહેનતાણું ચૂકવે.'],
+                        '2. કચેરી પોતાનો કાર્યક્રમ યોજે, કલાકારો/મંડળી પસંદ કરી મહેનતાણું ચૂકવે.'],
         ['provided',    '3. Artist provided & paid — another body requests performers; the office supplies artists and pays them.',
-                        '૩. બીજી સંસ્થા/કચેરીની માંગણી મુજબ કચેરી કલાકારો પૂરા પાડે અને મહેનતાણું ચૂકવે.'],
+                        '3. બીજી સંસ્થા/કચેરીની માંગણી મુજબ કચેરી કલાકારો પૂરા પાડે અને મહેનતાણું ચૂકવે.'],
         ['award',       '4. Award / honour — recognition (with or without cash) for achievement.',
-                        '૪. સિદ્ધિ બદલ પુરસ્કાર/એવોર્ડ (રોકડ સાથે કે વગર) આપવામાં આવે.'],
+                        '4. સિદ્ધિ બદલ પુરસ્કાર/એવોર્ડ (રોકડ સાથે કે વગર) આપવામાં આવે.'],
         ['pension',     '5. Pension / recurring maintenance — regular support to a category (e.g. destitute/aged artists).',
-                        '૫. નિરાધાર/વૃદ્ધ કલાકારોને નિયમિત નિભાવ સહાય/પેન્શન.'],
+                        '5. નિરાધાર/વૃદ્ધ કલાકારોને નિયમિત નિભાવ સહાય/પેન્શન.'],
         ['scholarship', '6. Scholarship / stipend / fellowship — support a person to train or create.',
-                        '૬. તાલીમ કે સર્જન માટે વ્યક્તિને શિષ્યવૃત્તિ/સ્ટાઇપેન્ડ/ફેલોશિપ.'],
+                        '6. તાલીમ કે સર્જન માટે વ્યક્તિને શિષ્યવૃત્તિ/સ્ટાઇપેન્ડ/ફેલોશિપ.'],
         ['competition', '7. Competition — registration, participation and prizes to winners.',
-                        '૭. સ્પર્ધા/મહોત્સવ — નોંધણી, સહભાગિતા અને વિજેતાઓને ઇનામ.'],
+                        '7. સ્પર્ધા/મહોત્સવ — નોંધણી, સહભાગિતા અને વિજેતાઓને ઇનામ.'],
         ['sponsorship', '8. Participant sponsorship — the office bears participants’ cost for a camp / exchange / adventure programme.',
-                        '૮. શિબિર/આદાનપ્રદાન/સાહસિક કાર્યક્રમમાં ભાગ લેનારનો ખર્ચ કચેરી ઉઠાવે.'],
+                        '8. શિબિર/આદાનપ્રદાન/સાહસિક કાર્યક્રમમાં ભાગ લેનારનો ખર્ચ કચેરી ઉઠાવે.'],
         ['equipment',   '9. Equipment / kit / goods provided — goods given in kind, not cash (instruments, costumes, kits).',
-                        '૯. સાધન/કીટ/વાદ્ય/પોશાક જેવી ચીજવસ્તુ (રોકડ નહીં) આપવામાં આવે.'],
+                        '9. સાધન/કીટ/વાદ્ય/પોશાક જેવી ચીજવસ્તુ (રોકડ નહીં) આપવામાં આવે.'],
         ['capital',     '10. Capital grant to an external institution — money to an outside body to build/renovate its facility.',
-                        '૧૦. બહારની સંસ્થાને ઇમારત/સ્ટુડિયો બાંધવા/સમારકામ માટે મૂડી ગ્રાન્ટ.'],
+                        '10. બહારની સંસ્થાને ઇમારત/સ્ટુડિયો બાંધવા/સમારકામ માટે મૂડી ગ્રાન્ટ.'],
         ['combination', '11. Combination — more than one of the above (say which).',
-                        '૧૧. ઉપરોક્તમાંથી એક કરતાં વધુ (કઈ કઈ તે જણાવો).',
+                        '11. ઉપરોક્તમાંથી એક કરતાં વધુ (કઈ કઈ તે જણાવો).',
                         'which ones', 'કઈ કઈ']
       ]},
       { key: 'notes', type: 'longtext',
@@ -198,8 +198,8 @@ window.SPEC_B = {
         ],
         rows: [
           { en: 'Original GR', gu: 'મૂળ ઠરાવ' },
-          { en: 'Amendment GR (1)', gu: 'સુધારા ઠરાવ (૧)' },
-          { en: 'Amendment GR (2)', gu: 'સુધારા ઠરાવ (૨)' },
+          { en: 'Amendment GR (1)', gu: 'સુધારા ઠરાવ (1)' },
+          { en: 'Amendment GR (2)', gu: 'સુધારા ઠરાવ (2)' },
           { en: 'Latest rate-revision circular', gu: 'દર સુધારવાનો છેલ્લો પરિપત્ર' },
           { en: 'Budget GR', gu: 'બજેટ ઠરાવ' },
           { en: 'Other order', gu: 'અન્ય હુકમ' }
@@ -287,7 +287,7 @@ window.SPEC_B = {
 
   {
     id: 'B1.5', section: 'B1', blocking: false,
-    en: 'Is there one consolidated guideline document, or only scattered GRs? Any review or sunset date? Is a rate/rule revision currently in process?',
+    en: 'Is there one consolidated guideline document, or only scattered GRs? Any review date, or a date the scheme is due to end? Is a rate/rule revision currently in process?',
     gu: 'યોજનાની એક સંકલિત માર્ગદર્શિકા છે, કે છૂટાછવાયા ઠરાવો જ છે? કોઈ સમીક્ષા/મુદત પૂરી થવાની તારીખ છે? દર/નિયમ સુધારવાની કાર્યવાહી હાલ ચાલુ છે?',
     parts: [
       { key: 'consolidated', type: 'single',
@@ -298,7 +298,7 @@ window.SPEC_B = {
           ['scattered', 'No — only scattered GRs', 'ના — છૂટાછવાયા ઠરાવો જ']
         ]},
       { key: 'sunset', type: 'single',
-        en: 'Any review or sunset date?',
+        en: 'Any review date, or a date the scheme is due to end?',
         gu: 'કોઈ સમીક્ષા / મુદત પૂરી થવાની તારીખ છે?',
         opts: [
           ['yes', 'Yes', 'હા', 'which date', 'કઈ તારીખ'],
@@ -396,7 +396,7 @@ window.SPEC_B = {
 
   {
     id: 'B2.4', section: 'B2', blocking: false,
-    en: 'Is there a Gujarat requirement? Tick what actually binds.',
+    en: 'Is there a Gujarat requirement? Tick what actually applies.',
     gu: 'ગુજરાતનું બંધન છે? ખરેખર શું લાગુ પડે તે પર ✔ કરો.',
     parts: [
       { key: 'requirement', type: 'single', opts: [
@@ -471,8 +471,8 @@ window.SPEC_B = {
     id: 'B2.6', section: 'B2', blocking: true,
     en: 'If a group or institution applies, which registration is acceptable, and what proves it?',
     gu: 'જૂથ કે સંસ્થા અરજી કરે તો કઈ નોંધણી સ્વીકાર્ય છે અને શું પુરાવો?',
-    helpEN: 'Skip if only individuals apply. The registration NUMBER as a duplicate-matching key is asked in B5.1, not here — B2.6 is eligibility and proof only.',
-    helpGU: 'ફક્ત વ્યક્તિ અરજી કરે તો છોડો. નોંધણી નંબર (ડુપ્લિકેટ શોધ માટે) B5.1 માં પુછાય છે, અહીં નહીં — B2.6 ફક્ત પાત્રતા અને પુરાવા માટે છે.',
+    helpEN: 'Skip if only individuals apply. The registration NUMBER, used to match duplicates, is asked in B5.1, not here.',
+    helpGU: 'ફક્ત વ્યક્તિ અરજી કરે તો છોડો. નોંધણી નંબર (બેવડી અરજી શોધવા માટે) B5.1 માં પુછાય છે, અહીં નહીં.',
     parts: [
       { key: 'regTypes', type: 'multi', opts: [
         ['trust',   'Public Trust (Charity Commissioner)', 'પબ્લિક ટ્રસ્ટ (ચેરિટી કમિશનર)'],
@@ -511,7 +511,7 @@ window.SPEC_B = {
           ['amount', 'No limit on the total amount', 'કુલ રકમ પર મર્યાદા નથી']
         ]},
       { key: 'cooldown', type: 'text',
-        en: 'Any minimum gap / cooldown between two applications?',
+        en: 'Any minimum waiting period between two applications?',
         gu: 'બે અરજી વચ્ચે કોઈ લઘુતમ સમય-અંતર?' },
       { key: 'countedPer', type: 'multi',
         en: 'The limit is counted per —',
@@ -564,7 +564,7 @@ window.SPEC_B = {
         opts: [
           ['fraud',      'Fraud / fake bills', 'છેતરપિંડી / ખોટા બિલ'],
           ['doubleFund', 'Double funding (same event, two grants)', 'બેવડું ભંડોળ (એક જ કાર્યક્રમ, બે સહાય)'],
-          ['ghost',      'Event never held (ghost event)', 'કાર્યક્રમ થયો જ નહીં (ઘોસ્ટ ઇવેન્ટ)'],
+          ['ghost',      'Event never held', 'કાર્યક્રમ થયો જ નહીં'],
           ['noBills',    'Failure to submit bills / UC', 'બિલ / UC જમા ન કરવા'],
           ['falseInfo',  'False information in application', 'અરજીમાં ખોટી માહિતી'],
           ['other',      'Other', 'અન્ય', 'specify', 'જણાવો']
@@ -612,7 +612,7 @@ window.SPEC_B = {
 
   {
     id: 'B3.2', section: 'B3', blocking: true,
-    en: 'What is the actual amount paid, and what is it "per"? Give the figure used today.',
+    en: 'What amount is actually paid, and what is it paid for — per event, per day, per artist? Give the figure used today.',
     gu: 'આજે ખરેખર કેટલી રકમ ચૂકવાય છે અને તે શેના "દીઠ" છે? આજે વપરાતો આંકડો આપો.',
     helpEN: 'Today’s figure, not the old GR figure — that one is B1.3.',
     helpGU: 'આજનો આંકડો, જૂના ઠરાવનો નહીં — તે B1.3 માં.',
@@ -671,7 +671,7 @@ window.SPEC_B = {
     en: 'What are this year’s limits for this scheme?',
     gu: 'આ યોજનાની આ વર્ષની મર્યાદા શું છે?',
     helpEN: 'GR condition 18 — the department head must stay within both the beneficiary ceiling and the budget.',
-    helpGU: 'ઠરાવ શરત ૧૮ — વિભાગના વડાએ લાભાર્થી સંખ્યા અને બજેટ, બંને મર્યાદામાં રહેવું.',
+    helpGU: 'ઠરાવ શરત 18 — વિભાગના વડાએ લાભાર્થી સંખ્યા અને બજેટ, બંને મર્યાદામાં રહેવું.',
     parts: [
       { key: 'maxBeneficiaries', type: 'single',
         en: 'Is a maximum number of beneficiaries fixed for FY 2026-27?',
@@ -681,7 +681,7 @@ window.SPEC_B = {
           ['no',  'No number is fixed', 'કોઈ સંખ્યા નિયત નથી']
         ]},
       { key: 'allocation', type: 'text',
-        en: 'Budget allocation for this scheme, FY 2026-27 (₹) — pre-filled from the GR at the top of this page; correct it if wrong',
+        en: 'Budget allocation for this scheme, FY 2026-27 (₹) — shown at the top of this page, from the GR; correct it if wrong',
         gu: 'આ યોજનાની બજેટ ફાળવણી, FY 2026-27 (₹) — ઠરાવ પરથી ઉપર દર્શાવેલ છે; ખોટું હોય તો સુધારો' },
       { key: 'runningCount', type: 'single',
         en: 'Is the running count tracked anywhere today?',
@@ -755,18 +755,18 @@ window.SPEC_B = {
 
   {
     id: 'B4.2', section: 'B4', blocking: true,
-    en: 'Is there a prescribed application form, or is it a free-hand letter?',
-    gu: 'અરજી માટે નિયત ફોર્મ છે, કે છૂટા હાથે (ફ્રી-હેન્ડ) અરજી લખાય છે?',
+    en: 'Is there a prescribed application form, or is the application written on plain paper?',
+    gu: 'અરજી માટે નિયત ફોર્મ છે, કે સાદા કાગળ પર અરજી લખાય છે?',
     parts: [
       { key: 'form', type: 'single', opts: [
         ['prescribed', 'There is a prescribed form — please attach a blank copy (it becomes the basis for the online form)',
                        'નિયત ફોર્મ છે — કોરી નકલ જોડો (ઓનલાઈન ફોર્મનો આધાર બનશે)'],
-        ['freehand',   'No form — applicant writes a free-hand letter/application',
-                       'ફોર્મ નથી — અરજદાર છૂટા હાથે અરજી/પત્ર લખે છે']
+        ['freehand',   'No form — the applicant writes the application on plain paper',
+                       'ફોર્મ નથી — અરજદાર સાદા કાગળ પર અરજી લખે છે']
       ]},
       { key: 'expected', type: 'longtext',
-        en: 'If free-hand: what information is the letter expected to contain, even informally? (e.g. applicant details, event, dates, amount sought, bank details)',
-        gu: 'ફ્રી-હેન્ડ હોય તો: પત્રમાં અનૌપચારિક રીતે પણ કઈ માહિતી હોવી જોઈએ? (દા.ત. અરજદારની વિગત, કાર્યક્રમ, તારીખ, માંગેલ રકમ, બેંક વિગત)' }
+        en: 'If on plain paper: what information is the application expected to contain, even informally? (e.g. applicant details, event, dates, amount sought, bank details)',
+        gu: 'સાદા કાગળ પર હોય તો: અરજીમાં અનૌપચારિક રીતે પણ કઈ માહિતી હોવી જોઈએ? (દા.ત. અરજદારની વિગત, કાર્યક્રમ, તારીખ, માંગેલ રકમ, બેંક વિગત)' }
     ]
   },
 
@@ -774,8 +774,8 @@ window.SPEC_B = {
     id: 'B4.3', section: 'B4', blocking: true,
     en: 'Exactly which documents must the applicant attach WITH the application? Tick every one required today, and write M = mandatory / O = optional beside each.',
     gu: 'અરજી સાથે અરજદારે બરાબર કયા દસ્તાવેજ જોડવા પડે? આજે જરૂરી હોય તે દરેક પર ✔ કરો, અને દરેક સામે M = ફરજિયાત / O = મરજિયાત લખો.',
-    helpEN: 'This list exists nowhere in writing — it is the single most valuable answer. Post-event bills are asked separately in B9.1.',
-    helpGU: 'આ યાદી ક્યાંય લેખિત નથી — સૌથી મૂલ્યવાન જવાબ. કાર્યક્રમ પછીના બિલ B9.1 માં અલગથી પૂછાય છે.',
+    helpEN: 'Post-event bills are asked separately in B9.1.',
+    helpGU: 'કાર્યક્રમ પછીના બિલ B9.1 માં અલગથી પૂછાય છે.',
     parts: [
       { key: 'docs', type: 'multi', opts: [
         ['aadhaar',    'Identity & bank — Aadhaar', 'ઓળખ અને બેંક — આધાર', 'M or O', 'M કે O'],
@@ -847,7 +847,7 @@ window.SPEC_B = {
     ]
   },
 
-  /* ============ B5. Identity keys — applicant & event ============ */
+  /* ========== B5. Identity details — applicant & event ========== */
   {
     id: 'B5.1', section: 'B5', blocking: true,
     en: 'Which ID numbers or ID documents do you collect from the applicant? Tick all; for each, write WHEN it is collected — A = at application, P = at payment / after the event. Add M if compulsory.',
@@ -1085,8 +1085,8 @@ window.SPEC_B = {
 
   {
     id: 'B7.3', section: 'B7', blocking: false,
-    en: 'If a ground check were to be added, who could realistically do it, and what would they confirm?',
-    gu: 'જો રૂબરૂ ખરાઈ ઉમેરવી હોય, તો વાસ્તવમાં કોણ કરી શકે અને શું ખાતરી કરે?',
+    en: 'If a site inspection were to be added, who could actually do it, and what would they confirm?',
+    gu: 'જો સ્થળ તપાસ ઉમેરવી હોય, તો ખરેખર કોણ કરી શકે અને શું ખાતરી કરે?',
     parts: [
       { key: 'whoCould', type: 'multi',
         en: 'Who could do it?',
@@ -1161,7 +1161,7 @@ window.SPEC_B = {
     en: 'When there are more eligible applicants than budget/slots, how are the ones who get funded chosen?',
     gu: 'પાત્ર અરજદારો બજેટ/જગ્યા કરતાં વધુ હોય ત્યારે, કોને સહાય મળે તે કેવી રીતે પસંદ થાય?',
     helpEN: 'GR condition 27 — selection must be transparent.',
-    helpGU: 'ઠરાવ શરત ૨૭ — પસંદગી પારદર્શક હોવી જોઈએ.',
+    helpGU: 'ઠરાવ શરત 27 — પસંદગી પારદર્શક હોવી જોઈએ.',
     parts: [
       { key: 'method', type: 'single', opts: [
         ['fcfs',       'First come, first served (by application date)', 'પહેલા આવો પહેલા મેળવો (અરજી તારીખ પ્રમાણે)'],
@@ -1293,7 +1293,7 @@ window.SPEC_B = {
     en: 'Is this scheme registered on the DBT portal, and what is its scheme code?',
     gu: 'આ યોજના DBT પોર્ટલ પર નોંધાયેલ છે, અને તેનો સ્કીમ કોડ શું છે?',
     helpEN: 'GR condition 30 makes DBT-portal registration compulsory.',
-    helpGU: 'ઠરાવ શરત ૩૦ મુજબ DBT પોર્ટલ પર નોંધણી ફરજિયાત છે.',
+    helpGU: 'ઠરાવ શરત 30 મુજબ DBT પોર્ટલ પર નોંધણી ફરજિયાત છે.',
     parts: [
       { key: 'registered', type: 'single',
         en: 'Registered on the State DBT portal?',
@@ -1322,79 +1322,79 @@ window.SPEC_B = {
 
   {
     id: 'B8.6', section: 'B8', blocking: false,
-    en: 'How long does each stage take? Mark the usual band for each transition.',
-    gu: 'દરેક તબક્કામાં કેટલો સમય લાગે છે? દરેક સંક્રમણ માટે સામાન્ય બેન્ડ પર ✔ કરો.',
+    en: 'How long does each stage take? Tick the usual time taken between each stage.',
+    gu: 'દરેક તબક્કામાં કેટલો સમય લાગે છે? દરેક તબક્કા વચ્ચે સામાન્ય રીતે કેટલો સમય લાગે છે તે પર ✔ કરો.',
     parts: [
       { key: 't1', type: 'single',
         en: 'Application → Work order (permission)', gu: 'અરજી → વર્ક ઓર્ડર (પરવાનગી)',
         opts: [
-          ['u15',    'Up to 15 days', '૧૫ દિવસ સુધી'],
-          ['15to30', '15–30 days', '૧૫–૩૦ દિવસ'],
-          ['1to2m',  '1–2 months', '૧–૨ મહિના'],
-          ['o2m',    'Over 2 months', '૨ મહિનાથી વધુ'],
+          ['u15',    'Up to 15 days', '15 દિવસ સુધી'],
+          ['15to30', '15–30 days', '15–30 દિવસ'],
+          ['1to2m',  '1–2 months', '1–2 મહિના'],
+          ['o2m',    'Over 2 months', '2 મહિનાથી વધુ'],
           ['varies', 'Varies', 'બદલાય']
         ]},
       { key: 't2', type: 'single',
         en: 'Work order → Event / activity completion', gu: 'વર્ક ઓર્ડર → કાર્યક્રમ / પ્રવૃત્તિ પૂર્ણ',
         opts: [
-          ['u15',    'Up to 15 days', '૧૫ દિવસ સુધી'],
-          ['15to30', '15–30 days', '૧૫–૩૦ દિવસ'],
-          ['1to2m',  '1–2 months', '૧–૨ મહિના'],
-          ['o2m',    'Over 2 months', '૨ મહિનાથી વધુ'],
+          ['u15',    'Up to 15 days', '15 દિવસ સુધી'],
+          ['15to30', '15–30 days', '15–30 દિવસ'],
+          ['1to2m',  '1–2 months', '1–2 મહિના'],
+          ['o2m',    'Over 2 months', '2 મહિનાથી વધુ'],
           ['varies', 'Varies', 'બદલાય']
         ]},
       { key: 't3', type: 'single',
         en: 'Event / activity completion → Grant order', gu: 'કાર્યક્રમ / પ્રવૃત્તિ પૂર્ણ → ગ્રાન્ટ ઓર્ડર',
         opts: [
-          ['u15',    'Up to 15 days', '૧૫ દિવસ સુધી'],
-          ['15to30', '15–30 days', '૧૫–૩૦ દિવસ'],
-          ['1to2m',  '1–2 months', '૧–૨ મહિના'],
-          ['o2m',    'Over 2 months', '૨ મહિનાથી વધુ'],
+          ['u15',    'Up to 15 days', '15 દિવસ સુધી'],
+          ['15to30', '15–30 days', '15–30 દિવસ'],
+          ['1to2m',  '1–2 months', '1–2 મહિના'],
+          ['o2m',    'Over 2 months', '2 મહિનાથી વધુ'],
           ['varies', 'Varies', 'બદલાય']
         ]},
       { key: 't4', type: 'single',
         en: 'Grant order → Bill submission', gu: 'ગ્રાન્ટ ઓર્ડર → બિલ રજૂઆત',
         opts: [
-          ['u15',    'Up to 15 days', '૧૫ દિવસ સુધી'],
-          ['15to30', '15–30 days', '૧૫–૩૦ દિવસ'],
-          ['1to2m',  '1–2 months', '૧–૨ મહિના'],
-          ['o2m',    'Over 2 months', '૨ મહિનાથી વધુ'],
+          ['u15',    'Up to 15 days', '15 દિવસ સુધી'],
+          ['15to30', '15–30 days', '15–30 દિવસ'],
+          ['1to2m',  '1–2 months', '1–2 મહિના'],
+          ['o2m',    'Over 2 months', '2 મહિનાથી વધુ'],
           ['varies', 'Varies', 'બદલાય']
         ]},
       { key: 't5', type: 'single',
         en: 'Bill submission → Audit', gu: 'બિલ રજૂઆત → ઓડિટ',
         opts: [
-          ['u15',    'Up to 15 days', '૧૫ દિવસ સુધી'],
-          ['15to30', '15–30 days', '૧૫–૩૦ દિવસ'],
-          ['1to2m',  '1–2 months', '૧–૨ મહિના'],
-          ['o2m',    'Over 2 months', '૨ મહિનાથી વધુ'],
+          ['u15',    'Up to 15 days', '15 દિવસ સુધી'],
+          ['15to30', '15–30 days', '15–30 દિવસ'],
+          ['1to2m',  '1–2 months', '1–2 મહિના'],
+          ['o2m',    'Over 2 months', '2 મહિનાથી વધુ'],
           ['varies', 'Varies', 'બદલાય']
         ]},
       { key: 't6', type: 'single',
         en: 'Audit → District office', gu: 'ઓડિટ → જિલ્લા કચેરી',
         opts: [
-          ['u15',    'Up to 15 days', '૧૫ દિવસ સુધી'],
-          ['15to30', '15–30 days', '૧૫–૩૦ દિવસ'],
-          ['1to2m',  '1–2 months', '૧–૨ મહિના'],
-          ['o2m',    'Over 2 months', '૨ મહિનાથી વધુ'],
+          ['u15',    'Up to 15 days', '15 દિવસ સુધી'],
+          ['15to30', '15–30 days', '15–30 દિવસ'],
+          ['1to2m',  '1–2 months', '1–2 મહિના'],
+          ['o2m',    'Over 2 months', '2 મહિનાથી વધુ'],
           ['varies', 'Varies', 'બદલાય']
         ]},
       { key: 't7', type: 'single',
         en: 'District office → Treasury', gu: 'જિલ્લા કચેરી → તિજોરી',
         opts: [
-          ['u15',    'Up to 15 days', '૧૫ દિવસ સુધી'],
-          ['15to30', '15–30 days', '૧૫–૩૦ દિવસ'],
-          ['1to2m',  '1–2 months', '૧–૨ મહિના'],
-          ['o2m',    'Over 2 months', '૨ મહિનાથી વધુ'],
+          ['u15',    'Up to 15 days', '15 દિવસ સુધી'],
+          ['15to30', '15–30 days', '15–30 દિવસ'],
+          ['1to2m',  '1–2 months', '1–2 મહિના'],
+          ['o2m',    'Over 2 months', '2 મહિનાથી વધુ'],
           ['varies', 'Varies', 'બદલાય']
         ]},
       { key: 't8', type: 'single',
         en: 'Treasury → Final payment (credited)', gu: 'તિજોરી → આખરી ચૂકવણી (જમા)',
         opts: [
-          ['u15',    'Up to 15 days', '૧૫ દિવસ સુધી'],
-          ['15to30', '15–30 days', '૧૫–૩૦ દિવસ'],
-          ['1to2m',  '1–2 months', '૧–૨ મહિના'],
-          ['o2m',    'Over 2 months', '૨ મહિનાથી વધુ'],
+          ['u15',    'Up to 15 days', '15 દિવસ સુધી'],
+          ['15to30', '15–30 days', '15–30 દિવસ'],
+          ['1to2m',  '1–2 months', '1–2 મહિના'],
+          ['o2m',    'Over 2 months', '2 મહિનાથી વધુ'],
           ['varies', 'Varies', 'બદલાય']
         ]},
       { key: 'prescribed', type: 'single',
@@ -1449,13 +1449,13 @@ window.SPEC_B = {
                            'બિલ અને નાણાકીય — મુસાફરી ટિકિટ / ભાડાની પહોંચ (મુસાફરી સહાયપાત્ર હોય તો)', 'M or O', 'M કે O'],
           ['stampedRcpt',  'Bills & financial — stamped / revenue-stamp receipt',
                            'બિલ અને નાણાકીય — રેવન્યુ સ્ટેમ્પવાળી પહોંચ', 'M or O', 'M કે O'],
-          ['completionCert','Completion & output — completion certificate', 'પૂર્ણતા અને નિપજ — પૂર્ણતા પ્રમાણપત્ર', 'M or O', 'M કે O'],
+          ['completionCert','Completion & output — completion certificate', 'પૂર્ણતા અને પરિણામ — પૂર્ણતા પ્રમાણપત્ર', 'M or O', 'M કે O'],
           ['output',       'Completion & output — the finished work / output (publication · recording · artwork · asset created)',
-                           'પૂર્ણતા અને નિપજ — તૈયાર થયેલ કૃતિ / નિપજ (પ્રકાશન · રેકોર્ડિંગ · કલાકૃતિ · સર્જિત મિલકત)', 'M or O', 'M કે O'],
+                           'પૂર્ણતા અને પરિણામ — તૈયાર થયેલ કૃતિ / પરિણામ (પ્રકાશન · રેકોર્ડિંગ · કલાકૃતિ · સર્જિત મિલકત)', 'M or O', 'M કે O'],
           ['auditedAccts', 'Completion & output — audited statement of accounts (institutions / larger or capital grants)',
-                           'પૂર્ણતા અને નિપજ — ઓડિટ થયેલ હિસાબ પત્રક (સંસ્થા / મોટી કે મૂડી સહાય)', 'M or O', 'M કે O'],
+                           'પૂર્ણતા અને પરિણામ — ઓડિટ થયેલ હિસાબ પત્રક (સંસ્થા / મોટી કે મૂડી સહાય)', 'M or O', 'M કે O'],
           ['valuation',    'Completion & output — valuation / asset proof (capital works)',
-                           'પૂર્ણતા અને નિપજ — મૂલ્યાંકન / મિલકત પુરાવો (મૂડી કામ)', 'M or O', 'M કે O'],
+                           'પૂર્ણતા અને પરિણામ — મૂલ્યાંકન / મિલકત પુરાવો (મૂડી કામ)', 'M or O', 'M કે O'],
           ['eventReport',  'Event / activity evidence — activity / event report', 'કાર્યક્રમ પુરાવો — પ્રવૃત્તિ / કાર્યક્રમ અહેવાલ', 'M or O', 'M કે O'],
           ['photos',       'Event / activity evidence — photographs', 'કાર્યક્રમ પુરાવો — ફોટોગ્રાફ',
                            'how many? how many copies? M or O', 'કેટલા? કેટલી નકલ? M કે O'],
@@ -1500,7 +1500,7 @@ window.SPEC_B = {
         opts: [
           ['prescribed', 'Prescribed departmental / body UC format (attach a blank copy)',
                          'નિયત વિભાગીય / સંસ્થાકીય UC નમૂનો (કોરી નકલ જોડો)'],
-          ['freehand',   'Free-hand statement / letter', 'છૂટા હાથે લખેલ પત્રક / પત્ર'],
+          ['freehand',   'Statement / letter on plain paper', 'સાદા કાગળ પર લખેલ પત્રક / પત્ર'],
           ['none',       'No set format', 'કોઈ નિશ્ચિત નમૂનો નહીં']
         ]},
       { key: 'frequency', type: 'single',
@@ -1584,7 +1584,7 @@ window.SPEC_B = {
         opts: [
           ['days',      'Within ____ days of completion', 'પૂર્ણ થયાના ____ દિવસમાં', 'how many days', 'કેટલા દિવસ'],
           ['months',    'Within ____ months of the grant order', 'ગ્રાન્ટ ઓર્ડરના ____ મહિનામાં', 'how many months', 'કેટલા મહિના'],
-          ['financial', 'By 31 March / within the financial year', '૩૧ માર્ચ સુધીમાં / નાણાકીય વર્ષમાં'],
+          ['financial', 'By 31 March / within the financial year', '31 માર્ચ સુધીમાં / નાણાકીય વર્ષમાં'],
           ['other',     'Other', 'અન્ય', 'specify', 'જણાવો']
         ]},
       { key: 'extendable', type: 'single',
@@ -1699,7 +1699,7 @@ window.SPEC_B = {
         en: 'Within what timing must the district run it?',
         gu: 'જિલ્લાએ કયા સમય-બંધનમાં એ ચલાવવું પડે?',
         opts: [
-          ['fixedWindow', 'The State office sets a fixed window / last-date the district must open and close within',
+          ['fixedWindow', 'The State office sets a fixed period and last date the district must open and close within',
                           'કચેરી નિયત સમયગાળો / છેલ્લી તારીખ નક્કી કરે જેમાં જિલ્લાએ ખોલી-બંધ કરવું પડે'],
           ['ownPace',     'The district sets its own timing / runs at its own pace', 'જિલ્લો પોતાનો સમય નક્કી કરે / પોતાની ગતિએ'],
           ['noRule',      'No fixed rule', 'કોઈ નિશ્ચિત નિયમ નહીં']
@@ -1823,7 +1823,7 @@ window.SPEC_B = {
   {
     id: 'B11.1', section: 'B11', blocking: false,
     en: 'In your experience, what are the 3 biggest problems or difficulties in running this scheme?',
-    gu: 'તમારા અનુભવે, આ યોજના ચલાવવામાં સૌથી મોટી ૩ સમસ્યાઓ / મુશ્કેલીઓ કઈ છે?',
+    gu: 'તમારા અનુભવે, આ યોજના ચલાવવામાં સૌથી મોટી 3 સમસ્યાઓ / મુશ્કેલીઓ કઈ છે?',
     /* Example list MOVED behind a link, word for word — an open question should
        open with a box to write in, not three lines of prompts. */
     helpEN: 'Your candid view — this is not attributed to you.',
@@ -1832,15 +1832,15 @@ window.SPEC_B = {
     helpMoreGU: 'મદદ માટે — સમસ્યાઓ આ અંગે હોઈ શકે: વિલંબ · કાગળિયાં · અસ્પષ્ટ નિયમો · ભંડોળની અછત · અરજદારનું વર્તન · બેવડાપણું · અહેવાલ · અન્ય કંઈપણ.',
     helpMoreLabelEN: 'examples', helpMoreLabelGU: 'ઉદાહરણ',
     parts: [
-      { key: 'p1', type: 'longtext', en: '1.', gu: '૧.' },
-      { key: 'p2', type: 'longtext', en: '2.', gu: '૨.' },
-      { key: 'p3', type: 'longtext', en: '3.', gu: '૩.' }
+      { key: 'p1', type: 'longtext', en: '1.', gu: '1.' },
+      { key: 'p2', type: 'longtext', en: '2.', gu: '2.' },
+      { key: 'p3', type: 'longtext', en: '3.', gu: '3.' }
     ]
   },
 
   {
     id: 'B11.2', section: 'B11', blocking: false,
-    en: 'In your experience, where is this scheme hardest to verify — where could a determined applicant get money they shouldn’t?',
+    en: 'In your experience, where is this scheme hardest to verify — where could an ineligible applicant still receive assistance?',
     gu: 'તમારા અનુભવે, આ યોજનામાં ક્યાં ખરાઈ કરવી સૌથી અઘરી છે — ક્યાં કોઈ અરજદાર પાત્ર ન હોવા છતાં રકમ મેળવી શકે?',
     helpEN: 'This is about the scheme’s weak points, not about any person. Not attributed to you.',
     helpGU: 'આ યોજનાના નબળા મુદ્દા વિશે છે, કોઈ વ્યક્તિ વિશે નહીં. તમારા નામે નોંધાશે નહીં.',
@@ -1862,7 +1862,7 @@ window.SPEC_B = {
         en: 'What can you not check today, even if you suspect something is wrong?',
         gu: 'આજે તમે શું ચકાસી શકતા નથી, ભલે તમને શંકા હોય?' },
       { key: 'weakestStep', type: 'longtext',
-        en: 'At which step is the scheme most open to being gamed, and why?',
+        en: 'At which step is the scheme most open to misuse, and why?',
         gu: 'પ્રક્રિયાના કયા તબક્કે યોજના સૌથી વધુ ગેરરીતિ માટે ખુલ્લી છે, અને કેમ?' }
     ]
   },
@@ -1877,8 +1877,8 @@ window.SPEC_B = {
     helpMoreGU: 'મદદ માટે — આ જેવું હોઈ શકે: તૈયાર અરજી ફોર્મ · બેવડી અરજીની આપોઆપ તપાસ · ઓનલાઈન બિલ જેથી કોઈને રૂબરૂ ન આવવું પડે · અરજદાર પોતે જોઈ શકે તેવા સ્ટેટસ અપડેટ · તૈયાર અહેવાલ / યાદી · બાકી બિલ માટે રિમાઇન્ડર · ઓછી કાગળની નકલ · અન્ય કંઈપણ.',
     helpMoreLabelEN: 'examples', helpMoreLabelGU: 'ઉદાહરણ',
     parts: [
-      { key: 'w1', type: 'longtext', en: '1.', gu: '૧.' },
-      { key: 'w2', type: 'longtext', en: '2.', gu: '૨.' }
+      { key: 'w1', type: 'longtext', en: '1.', gu: '1.' },
+      { key: 'w2', type: 'longtext', en: '2.', gu: '2.' }
     ]
   },
 
@@ -1892,8 +1892,8 @@ window.SPEC_B = {
     helpMoreGU: 'દા.ત.: ચૂકવણું ધીમું કરે તેવા તબક્કા · એટલા કડક નિયમ કે સાચા અરજદાર અટકી જાય · સ્ટાફ વગર વધારાની ડેટા એન્ટ્રી · જ્યાં ઇન્ટરનેટ / સ્ટાફ મર્યાદિત હોય (જિલ્લા) ત્યાં મુશ્કેલી · ખાસ કેસ માટે જરૂરી છૂટ છીનવી લે · અન્ય કંઈપણ.',
     helpMoreLabelEN: 'examples', helpMoreLabelGU: 'ઉદાહરણ',
     parts: [
-      { key: 'n1', type: 'longtext', en: '1.', gu: '૧.' },
-      { key: 'n2', type: 'longtext', en: '2.', gu: '૨.' }
+      { key: 'n1', type: 'longtext', en: '1.', gu: '1.' },
+      { key: 'n2', type: 'longtext', en: '2.', gu: '2.' }
     ]
   }
 

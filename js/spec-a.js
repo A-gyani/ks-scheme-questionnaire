@@ -39,20 +39,20 @@
 window.SPEC_A = {
 
   sections: [
-    { id: 'A1',  en: 'Publicity & round opening',
-                 gu: 'પ્રસિદ્ધિ અને અરજી-તબક્કો ખોલવો' },
-    { id: 'A2',  en: 'Inward, acknowledgement & tracking',
-                 gu: 'આવક, પહોંચ અને ટ્રેકિંગ' },
+    { id: 'A1',  en: 'Publicity & opening the application period',
+                 gu: 'પ્રસિદ્ધિ અને અરજી-તબક્કો શરૂ કરવો' },
+    { id: 'A2',  en: 'Inward, acknowledgement & application status',
+                 gu: 'આવક, પહોંચ અને અરજીની સ્થિતિ' },
     { id: 'A3',  en: 'The approval chain',
                  gu: 'મંજૂરી-શૃંખલા' },
-    { id: 'A6',  en: 'Audit — the chokepoint',
-                 gu: 'ઓડિટ — નિર્ણાયક તબક્કો' },
-    { id: 'A7',  en: 'Upward reporting & compliance',
+    { id: 'A6',  en: 'Audit — the check before payment',
+                 gu: 'ઓડિટ — ચૂકવણી પહેલાંની ચકાસણી' },
+    { id: 'A7',  en: 'Reporting to Government & compliance',
                  gu: 'ઉપલી કક્ષાએ અહેવાલ અને પાલન' },
     { id: 'A8',  en: 'Records & duplicate detection as practised today',
-                 gu: 'હાલની રેકોર્ડ-પદ્ધતિ અને ડુપ્લિકેટ શોધ' },
-    { id: 'A10', en: 'Overlap & double-funding rules',
-                 gu: 'ઓવરલેપ અને બેવડા ભંડોળના નિયમો' }
+                 gu: 'હાલની રેકોર્ડ-પદ્ધતિ અને બેવડી અરજી શોધવાની રીત' },
+    { id: 'A10', en: 'Rules on assistance from more than one scheme',
+                 gu: 'એકથી વધુ યોજનામાંથી સહાય અને બેવડા ભંડોળના નિયમો' }
   ],
 
   questions: [
@@ -79,26 +79,26 @@ window.SPEC_A = {
         ['other',   'Other', 'અન્ય', 'specify', 'જણાવો']
       ]},
       { key: 'howKnow', type: 'longtext',
-        en: 'If nothing formal is issued, how do applicants actually come to know a round has opened?',
-        gu: 'જો કોઈ ઔપચારિક જાહેરાત ન થતી હોય, તો રાઉન્ડ ખૂલ્યાની જાણ અરજદારોને ખરેખર કઈ રીતે થાય છે?' }
+        en: 'If nothing formal is issued, how do applicants actually come to know the application period has opened?',
+        gu: 'જો કોઈ ઔપચારિક જાહેરાત ન થતી હોય, તો અરજી-તબક્કો શરૂ થયાની જાણ અરજદારોને ખરેખર કઈ રીતે થાય છે?' }
     ]
   },
 
   {
     id: 'A1.2', section: 'A1', blocking: false,
-    en: 'Across all schemes, is there a single standard rhythm for when applications open, or does it vary scheme to scheme?',
-    gu: 'તમામ યોજનાઓમાં અરજી ક્યારે શરૂ થાય તેની એક જ નિયત પધ્ધતિ છે, કે યોજના પ્રમાણે અલગ-અલગ છે?',
+    en: 'Across all schemes, is there one fixed procedure for when applications open, or does it vary scheme to scheme?',
+    gu: 'તમામ યોજનાઓમાં અરજી ક્યારે શરૂ થાય તેની એક જ નિયત પદ્ધતિ છે, કે યોજના પ્રમાણે અલગ-અલગ છે?',
     parts: [
       { key: 'model', type: 'single', opts: [
-        ['standard', 'One standard model for (almost) all schemes',
-                     'લગભગ બધી યોજનાઓ માટે એક જ નિયત પધ્ધતિ',
-                     'specify — open year-round / rolling · fixed annual dates · opened per round after funds are released · ad hoc, no fixed pattern',
+        ['standard', 'One uniform procedure for (almost) all schemes',
+                     'લગભગ બધી યોજનાઓ માટે એક જ નિયત પદ્ધતિ',
+                     'specify — open year-round / rolling · fixed annual dates · opened each time funds are released · ad hoc, no fixed pattern',
                      'જણાવો — આખું વર્ષ ખુલ્લી / દર વર્ષે નિયત તારીખો · ભંડોળ છૂટું થયા પછી તબક્કાવાર · કોઈ નિશ્ચિત ઢબ વગર'],
-        ['varies',   'It varies scheme to scheme (each scheme’s own model is recorded in its own section)',
-                     'યોજના પ્રમાણે અલગ-અલગ (દરેક યોજનાની પધ્ધતિ તેના પોતાના વિભાગમાં નોંધાય છે)']
+        ['varies',   'It varies scheme to scheme (each scheme’s own procedure is recorded in its own section)',
+                     'યોજના પ્રમાણે અલગ-અલગ (દરેક યોજનાની પદ્ધતિ તેના પોતાના વિભાગમાં નોંધાય છે)']
       ]},
       { key: 'trigger', type: 'multi',
-        en: 'What actually triggers a round opening, department-wide?',
+        en: 'Across the department, what actually starts the application period?',
         gu: 'વિભાગ-કક્ષાએ અરજીનો તબક્કો ખરેખર શેનાથી શરૂ થાય છે?',
         opts: [
           ['budgetGR',     'The budget GR itself', 'અંદાજપત્ર ઠરાવ'],
@@ -115,11 +115,11 @@ window.SPEC_A = {
 
   {
     id: 'A1.4', section: 'A1', blocking: false,
-    en: 'Who approves a round being announced to the public, and how much time do applicants get before the deadline?',
-    gu: 'રાઉન્ડ જાહેર કરવાની મંજૂરી કોણ આપે છે, અને છેલ્લી તારીખ પહેલાં અરજદારોને કેટલો સમય મળે છે?',
+    en: 'Who approves the application period being announced to the public, and how much time do applicants get before the deadline?',
+    gu: 'અરજી-તબક્કો જાહેર કરવાની મંજૂરી કોણ આપે છે, અને છેલ્લી તારીખ પહેલાં અરજદારોને કેટલો સમય મળે છે?',
     parts: [
       { key: 'approver', type: 'single',
-        en: 'Who signs off that a round can be publicly announced / opened?',
+        en: 'Who approves that the application period can be publicly announced / opened?',
         gu: 'તબક્કો જાહેર / ખુલ્લો કરવાની મંજૂરી કોણ આપે છે?',
         opts: [
           ['ad',       'AD / branch head', 'મદદનીશ નિયામક (AD) / શાખા વડા'],
@@ -129,7 +129,7 @@ window.SPEC_A = {
           ['other',    'Other', 'અન્ય', 'specify', 'જણાવો']
         ]},
       { key: 'minNotice', type: 'single',
-        en: 'Is there a minimum notice period — a rule that a round must stay open at least so many days?',
+        en: 'Is there a minimum notice period — a rule that the application period must stay open at least so many days?',
         gu: 'ઓછામાં ઓછો સૂચના સમય — તબક્કો ઓછામાં ઓછા અમુક દિવસ ખુલ્લો રાખવો પડે એવો કોઈ નિયમ છે?',
         opts: [
           ['yes', 'Yes', 'હા', 'how many days', 'કેટલા દિવસ'],
@@ -139,10 +139,10 @@ window.SPEC_A = {
         en: 'In practice, how long is the gap between announcement and the last date to apply?',
         gu: 'વ્યવહારમાં, જાહેરાત અને અરજીની છેલ્લી તારીખ વચ્ચે કેટલો સમય હોય છે?',
         opts: [
-          ['u7',    'Under 7 days', '૭ દિવસથી ઓછો'],
-          ['7to15', '7–15 days', '૭–૧૫ દિવસ'],
-          ['15to30','15–30 days', '૧૫–૩૦ દિવસ'],
-          ['o30',   'Over 30 days', '૩૦ દિવસથી વધુ'],
+          ['u7',    'Under 7 days', '7 દિવસથી ઓછો'],
+          ['7to15', '7–15 days', '7–15 દિવસ'],
+          ['15to30','15–30 days', '15–30 દિવસ'],
+          ['o30',   'Over 30 days', '30 દિવસથી વધુ'],
           ['varies','Varies', 'અલગ-અલગ']
         ]}
     ]
@@ -217,7 +217,7 @@ window.SPEC_A = {
       { key: 'systems', type: 'multi', star: true, opts: [
         ['register', 'Manual paper register (inward book)', 'હાથે લખેલ કાગળનું આવક રજિસ્ટર (ઇનવર્ડ બુક)'],
         ['excel',    'Excel / spreadsheet on a clerk’s computer', 'ક્લાર્કના કમ્પ્યુટર પર એક્સેલ / સ્પ્રેડશીટ'],
-        ['eTappal',  'e-Tappal — the e-Sarkar inward (dak) module (the application is logged as a tappal at receipt)',
+        ['eTappal',  'e-Tappal — the e-Sarkar inward (tappal) system (the application is logged as a tappal at receipt)',
                      'ઈ-ટપાલ — ઈ-સરકારની આવક (ટપાલ) સિસ્ટમ (અરજી મળતાં ટપાલ તરીકે નોંધાય)'],
         ['eFile',    'e-Sarkar e-file (a formal e-file is opened)', 'ઈ-સરકાર ઈ-ફાઈલ (ઔપચારિક ઈ-ફાઈલ ખૂલે)'],
         ['software', 'A departmental / scheme software', 'વિભાગનું / યોજનાનું સોફ્ટવેર', 'which', 'કયું'],
@@ -259,7 +259,7 @@ window.SPEC_A = {
         gu: 'જો હા — એ તબક્કામાં અરજી પડતી મૂકાય / નામંજૂર થાય, તો કોઈ ડિજિટલ નિશાની રહે છે?',
         opts: [['yes','Yes','હા'], ['no','No','ના']] },
       { key: 'coverage', type: 'single',
-        en: 'Of the applications that do proceed (clear the informal in-principle approval), are all of them filed on e-Sarkar, or do some still move ahead on paper / off-system?',
+        en: 'Of the applications that do proceed (clear the informal in-principle approval), are all of them filed on e-Sarkar, or do some go ahead on paper, outside the system?',
         gu: 'જે અરજીઓ આગળ વધે છે (અનૌપચારિક સૈદ્ધાંતિક મંજૂરી મળી હોય), તે બધી ઈ-સરકાર પર દાખલ થાય છે, કે અમુક કાગળ પર / સિસ્ટમ બહાર આગળ ચાલે છે?',
         opts: [
           ['all',      'All on e-Sarkar', 'બધી ઈ-સરકાર પર'],
@@ -307,14 +307,14 @@ window.SPEC_A = {
           ['other',    'Other', 'અન્ય', 'specify', 'જણાવો']
         ]},
       { key: 'written', type: 'single',
-        en: 'Is the routing rule written anywhere, or is it by experience/custom?',
+        en: 'Is the rule for assigning applications written anywhere, or is it by experience/custom?',
         gu: 'આ સોંપણીનો નિયમ ક્યાંય લેખિત છે, કે અનુભવ / રિવાજથી થાય છે?',
         opts: [
           ['written', 'Written', 'લેખિત', 'where', 'ક્યાં'],
           ['custom',  'Custom / experience', 'રિવાજ / અનુભવ']
         ]},
       { key: 'multiBranch', type: 'longtext',
-        en: 'When a scheme could sit in more than one branch or body, who decides, and can it be routed wrongly?',
+        en: 'When a scheme could sit in more than one branch or body, who decides, and can it be sent to the wrong branch?',
         gu: 'જ્યારે કોઈ યોજના એકથી વધુ શાખા કે કચેરીમાં બંધ બેસે, ત્યારે કોણ નક્કી કરે, અને શું ખોટી શાખામાં જઈ શકે?' },
       { key: 'notOurs', type: 'single',
         en: 'If a received application doesn’t belong to this department at all, but to another office / department, what happens to it?',
@@ -336,8 +336,8 @@ window.SPEC_A = {
     gu: 'આ કચેરી માટે ફાઈલ કઈ મંજૂરી-શૃંખલામાંથી, કયા ક્રમે પસાર થાય છે તે જણાવો.',
     parts: [
       { key: 'chain', type: 'text',
-        en: 'List the desks in order, from first handling to final sanction (use → between them).',
-        gu: 'પ્રથમ કાર્યવાહીથી અંતિમ મંજૂરી સુધી, ડેસ્ક ક્રમમાં લખો (વચ્ચે → વાપરો).',
+        en: 'List, in order, the officers the file passes through — from first handling to final sanction (use → between them).',
+        gu: 'ફાઈલ જે અધિકારીઓ પાસેથી ક્રમશઃ પસાર થાય તે પ્રથમ કાર્યવાહીથી અંતિમ મંજૂરી સુધી ક્રમમાં લખો (વચ્ચે → વાપરો).',
         placeholder: '____ → ____ → ____ → ____ → ____ → ____' },
       { key: 'variesByAmount', type: 'single',
         en: 'Does the chain change with the amount (small sums stop lower, large sums go higher)?',
@@ -361,7 +361,7 @@ window.SPEC_A = {
 
   {
     id: 'A3.2', section: 'A3', blocking: true,
-    en: 'Up to what amount can each authority give final sanction? (the financial delegation bands)',
+    en: 'Up to what amount can each authority give final sanction? (the financial delegation limits)',
     gu: 'દરેક અધિકારી પોતાની કક્ષાએ કેટલી રકમ સુધીની અંતિમ મંજૂરી આપી શકે? (નાણાકીય સત્તા-સોંપણીની મર્યાદા)',
     helpEN: 'Fill the rupee limit each level can finally approve on its own.',
     helpGU: 'દરેક કક્ષા પોતાની રીતે જે રકમ સુધી મંજૂર કરી શકે તે ભરો.',
@@ -491,7 +491,7 @@ window.SPEC_A = {
     ]
   },
 
-  /* ================= A6. Audit — the chokepoint ================= */
+  /* ========= A6. Audit — the check before payment ========= */
   {
     id: 'A6.1', section: 'A6', blocking: true,
     en: 'Does every payment pass one audit / pre-audit check before money is released? Are there any exceptions at all?',
@@ -506,7 +506,7 @@ window.SPEC_A = {
           ['some',     'Only some', 'ફક્ત અમુક']
         ]},
       { key: 'bypass', type: 'multi',
-        en: 'Does anything at all bypass that audit gate? Tick any that can be paid without passing it.',
+        en: 'Is any payment made without passing through audit? Tick any that can be paid without it.',
         gu: 'કંઈ પણ આ ઓડિટ તબક્કાને ટાળીને (વગર પસાર થયે) ચૂકવાય છે? જે ટાળી શકે તે પર ✔ કરો.',
         opts: [
           ['advances',  'Advances (paid before the event)', 'પેશગી (કાર્યક્રમ પહેલાં ચૂકવાતી)'],
@@ -527,8 +527,8 @@ window.SPEC_A = {
         gu: 'ઓડિટ તબક્કો ઈ-સરકાર / સિસ્ટમ પર છે, કે કાગળ પર?',
         opts: [['system','System','સિસ્ટમ'], ['paper','Paper','કાગળ'], ['mixed','Mixed','મિશ્ર']] },
       { key: 'canBlock', type: 'single',
-        en: 'The critical one: if a duplicate or ineligible payment were caught here, could this stage actually stop the payment?',
-        gu: 'સૌથી અગત્યનું: જો કોઈ ડુપ્લિકેટ કે અપાત્ર ચૂકવણું અહીં પકડાય, તો આ તબક્કો ખરેખર ચૂકવણું અટકાવી શકે?',
+        en: 'If a duplicate or ineligible payment were caught here, could this stage actually stop the payment?',
+        gu: 'જો કોઈ બેવડું કે અપાત્ર ચૂકવણું અહીં પકડાય, તો આ તબક્કો ખરેખર ચૂકવણું અટકાવી શકે?',
         opts: [
           ['canBlock',  'Yes — it can block release', 'હા — છૂટા થતાં અટકાવી શકે'],
           ['objectOnly','No — it can only object after the fact', 'ના — ફક્ત પછીથી વાંધો કાઢી શકે']
@@ -563,7 +563,7 @@ window.SPEC_A = {
   {
     id: 'A6.3', section: 'A6', blocking: true,
     en: 'The GR (condition 12) requires social audit + third-party verification to be done periodically and the result submitted to Government. Is this actually happening?',
-    gu: 'ઠરાવ (શરત ૧૨) મુજબ સામાજિક ઓડિટ + ત્રાહિત-પક્ષ ચકાસણી સમયાંતરે કરવી અને પરિણામ સરકારને રજૂ કરવું જરૂરી છે. શું આ ખરેખર થાય છે?',
+    gu: 'ઠરાવ (શરત 12) મુજબ સામાજિક ઓડિટ + ત્રાહિત-પક્ષ ચકાસણી સમયાંતરે કરવી અને પરિણામ સરકારને રજૂ કરવું જરૂરી છે. શું આ ખરેખર થાય છે?',
     parts: [
       { key: 'done', type: 'single',
         en: 'Is any social audit / third-party verification of these grants carried out periodically, as the condition requires?',
@@ -613,12 +613,12 @@ window.SPEC_A = {
   {
     id: 'A7.1', section: 'A7', blocking: true,
     en: 'Is the department set up on the State DBT Portal at all, and who runs that? (GR condition 30)',
-    gu: 'વિભાગ રાજ્ય DBT પોર્ટલ પર બિલકુલ નોંધાયેલ છે, અને એ કોણ સંભાળે છે? (ઠરાવ શરત ૩૦)',
+    gu: 'વિભાગ રાજ્ય DBT પોર્ટલ પર બિલકુલ નોંધાયેલ છે, અને એ કોણ સંભાળે છે? (ઠરાવ શરત 30)',
     helpEN: 'Per-scheme registration status and scheme codes are recorded scheme-by-scheme; here we need only the office-level picture.',
     helpGU: 'દરેક યોજનાની નોંધણી-સ્થિતિ અને સ્કીમ કોડ યોજનાવાર અલગ નોંધાય છે; અહીં ફક્ત કચેરી-કક્ષાનું ચિત્ર જોઈએ.',
     parts: [
       { key: 'onboarded', type: 'single',
-        en: 'Is the department / office onboarded to the State DBT Portal?',
+        en: 'Is the department / office registered on the State DBT Portal?',
         gu: 'વિભાગ / કચેરી રાજ્ય DBT પોર્ટલ પર જોડાયેલ છે?',
         opts: [
           ['yes','Yes','હા'], ['no','No','ના'],
@@ -639,7 +639,7 @@ window.SPEC_A = {
         en: 'And how many are still pending?', gu: 'અને કેટલી બાકી છે?' },
       { key: 'flowing', type: 'single',
         en: 'Is financial assistance actually flowing through DBT today (cond. 29), or is DBT registration only on paper?',
-        gu: 'આજે નાણાકીય સહાય ખરેખર DBT મારફતે ચૂકવાય છે (શરત ૨૯), કે DBT નોંધણી ફક્ત કાગળ પર છે?',
+        gu: 'આજે નાણાકીય સહાય ખરેખર DBT મારફતે ચૂકવાય છે (શરત 29), કે DBT નોંધણી ફક્ત કાગળ પર છે?',
         opts: [
           ['flowing',  'Flowing through DBT', 'DBT મારફતે ચૂકવાય'],
           ['paperOnly','Paper-only / not really used', 'ફક્ત કાગળ પર / ખરેખર વપરાતું નથી'],
@@ -650,8 +650,8 @@ window.SPEC_A = {
 
   {
     id: 'A7.2', section: 'A7', blocking: true,
-    en: 'Does any scheme’s data feed the CM Dashboard today? (GR condition 14)',
-    gu: 'આજે કોઈ યોજનાનો ડેટા CM ડેશબોર્ડમાં જાય છે? (ઠરાવ શરત ૧૪)',
+    en: 'Is any scheme’s data sent to the CM Dashboard today? (GR condition 14)',
+    gu: 'આજે કોઈ યોજનાનો ડેટા CM ડેશબોર્ડમાં જાય છે? (ઠરાવ શરત 14)',
     parts: [
       { key: 'reports', type: 'single',
         en: 'Does any scheme currently report to the CM Dashboard?',
@@ -682,8 +682,8 @@ window.SPEC_A = {
         en: 'Who is responsible for updating it, and how often?',
         gu: 'એ અપડેટ કરવાની જવાબદારી કોની, અને કેટલી વાર?' },
       { key: 'ifNot', type: 'single',
-        en: 'If it isn’t fed today, is it because there’s no structured data to feed from?',
-        gu: 'જો આજે ફીડ ન થતું હોય, તો શું એ કારણે કે ફીડ કરવા માટે કોઈ માળખાગત ડેટા જ નથી?',
+        en: 'If nothing is sent today, is it because there is no structured data to send?',
+        gu: 'જો આજે કંઈ મોકલાતું ન હોય, તો શું એ કારણે કે મોકલવા માટે કોઈ માળખાગત ડેટા જ નથી?',
         opts: [
           ['noSource', 'Yes — no source data', 'હા — કોઈ સ્રોત ડેટા નથી'],
           ['other',    'Other reason', 'અન્ય કારણ', 'specify', 'જણાવો']
@@ -811,8 +811,8 @@ window.SPEC_A = {
           ['no',  'No', 'ના']
         ]},
       { key: 'howNoticed', type: 'multi',
-        en: 'In practice today, how is a possible duplicate noticed at all?',
-        gu: 'આજે વ્યવહારમાં, સંભવિત ડુપ્લિકેટ કઈ રીતે ધ્યાનમાં આવે છે?',
+        en: 'In practice today, how is a possible duplicate noticed?',
+        gu: 'આજે વ્યવહારમાં, સંભવિત બેવડી અરજી કઈ રીતે ધ્યાનમાં આવે છે?',
         opts: [
           ['informalAsk',  'One officer informally asks another', 'એક અધિકારી બીજાને અનૌપચારિક પૂછે'],
           ['alreadyKnown', 'The applicant is already known', 'અરજદાર પહેલેથી ઓળખીતો હોય'],
@@ -878,12 +878,12 @@ window.SPEC_A = {
 
   {
     id: 'A8.5', section: 'A8', blocking: true,
-    en: 'Can the past few years’ beneficiary lists be obtained and assembled across all branches / bodies, to seed the portal?',
+    en: 'Can the past few years’ beneficiary lists be obtained and assembled across all branches / bodies, to start the portal’s records?',
     gu: 'પોર્ટલ શરૂ કરવા માટે, છેલ્લા થોડા વર્ષોની લાભાર્થી યાદીઓ બધી શાખાઓ / સંસ્થાઓમાંથી મેળવીને એકઠી કરી શકાય?',
     parts: [
       { key: 'canPull', type: 'single',
-        en: 'Can beneficiary lists for the last 3 years be pulled together?',
-        gu: 'છેલ્લા ૩ વર્ષની લાભાર્થી યાદીઓ એકઠી કરી શકાય?',
+        en: 'Can beneficiary lists for the last 3 years be compiled?',
+        gu: 'છેલ્લા 3 વર્ષની લાભાર્થી યાદીઓ એકઠી કરી શકાય?',
         opts: [
           ['fully',  'Yes, fully', 'હા, સંપૂર્ણ'],
           ['partly', 'Partly', 'આંશિક', 'which years / branches', 'કયા વર્ષ / શાખા'],
@@ -942,7 +942,7 @@ window.SPEC_A = {
         en: 'Where is this rule written?', gu: 'આ નિયમ ક્યાં લખેલ છે?',
         opts: [
           ['gr',        'A GR / condition', 'ઠરાવ / શરત', 'which', 'કઈ'],
-          ['propriety', 'Only general financial-propriety rules (e.g. GR cond. 4, 5)', 'ફક્ત સામાન્ય નાણાકીય-ઔચિત્યના નિયમો (દા.ત. ઠરાવ શરત ૪, ૫)'],
+          ['propriety', 'Only general financial-propriety rules (e.g. GR cond. 4, 5)', 'ફક્ત સામાન્ય નાણાકીય-ઔચિત્યના નિયમો (દા.ત. ઠરાવ શરત 4, 5)'],
           ['notWritten','Not written — understood practice', 'ક્યાંય લખેલ નથી — સમજણ મુજબની પ્રથા']
         ]},
       { key: 'copyAttachable', type: 'single',
@@ -972,7 +972,7 @@ window.SPEC_A = {
     en: 'Can an applicant funded under an SC/ST (caste-earmarked) budget head ALSO draw from the general head for the SAME activity?',
     gu: 'SC/ST (જ્ઞાતિ-આધારિત) સદર હેઠળ સહાય પામનાર અરજદાર એ જ પ્રવૃત્તિ માટે સામાન્ય સદરમાંથી પણ સહાય લઈ શકે?',
     helpEN: 'The same activity often exists in both a general version and an SC/ST version — e.g. the same camp under head 98 and head 95/96.',
-    helpGU: 'એક જ પ્રવૃત્તિ ઘણી વાર સામાન્ય અને SC/ST — બંને સ્વરૂપે હોય છે — દા.ત. એ જ શિબિર સદર ૯૮ અને સદર ૯૫/૯૬ હેઠળ.',
+    helpGU: 'એક જ પ્રવૃત્તિ ઘણી વાર સામાન્ય અને SC/ST — બંને સ્વરૂપે હોય છે — દા.ત. એ જ શિબિર સદર 98 અને સદર 95/96 હેઠળ.',
     parts: [
       { key: 'allowed', type: 'single', opts: [
         ['yes',        'Yes, allowed', 'હા, માન્ય'],
