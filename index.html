@@ -35,6 +35,11 @@
         <div class="whoami" id="whoami">
           <span id="who-text"></span>
           <button id="btn-home" class="btn ghost sm hidden">મુખ્ય <span class="eng">Home</span></button>
+          <!-- Opens in a NEW TAB on purpose: an officer stuck halfway through a
+               58-question sheet must be able to read the guide and come back to
+               the form exactly as they left it. -->
+          <a id="btn-guide" class="btn ghost sm" href="guide.html" target="_blank"
+             rel="noopener">માર્ગદર્શિકા <span class="eng">Guide</span></a>
           <button id="btn-profile" class="btn ghost sm hidden">પ્રોફાઇલ <span class="eng">Profile</span></button>
           <button id="btn-admin" class="btn ghost sm hidden">વહીવટ <span class="eng">Admin</span></button>
           <button id="btn-signout" class="btn ghost sm">સાઇન આઉટ <span class="eng">Sign out</span></button>
@@ -94,6 +99,11 @@
              immediately afterwards. It is said once now, on the profile. -->
         <p class="note">આપના સત્તાવાર Google ખાતાથી પ્રવેશ કરો.
           <span class="eng block">Sign in with your official Google account.</span></p>
+        <!-- The app bar is hidden on this screen, so an officer who cannot get
+             past sign-in would have no way to reach the guide that explains
+             sign-in. This link is that way. -->
+        <p class="note"><a href="guide.html" target="_blank" rel="noopener">માર્ગદર્શિકા વાંચો
+          <span class="eng">Read the guide</span></a></p>
       </div>
     </section>
 

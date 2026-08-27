@@ -77,6 +77,10 @@ button{font:inherit;cursor:pointer;border:none;border-radius:10px}
 .btn.ghost{background:var(--grey-soft);color:var(--ink)}
 .btn.ghost:hover{background:#e6e9ee}
 .btn.sm{padding:7px 12px;font-size:13px;border-radius:8px}
+/* The Guide is an <a> (it opens in a new tab) but must sit in the app bar
+   looking exactly like the buttons beside it. */
+a.btn{display:inline-block;text-decoration:none;border-radius:10px}
+a.btn.sm{border-radius:8px}
 input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:9px;
   font:inherit;background:#fff;color:var(--ink)}
 label.fl{display:block;font-size:13px;font-weight:600;margin:14px 0 5px}

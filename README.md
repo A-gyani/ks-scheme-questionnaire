@@ -143,6 +143,8 @@ number of answer keys per document at 400.
 | `css/styles.css` | Design tokens and components from the approved flow mockup. |
 | `js/firebase-config.js` | **You paste your Firebase config here.** Not a secret. |
 | `js/firebase.js` | Initialises Firebase, enables the offline cache, exposes `window.FB`. |
+| `guide.html` | The officers' manual. Standalone page, linked from the app bar. |
+| `check_manual.js` | Guards the manual: run `node check_manual.js` after any UI text change. |
 | `js/i18n.js` | `Bi` — the one place that decides how a bilingual pair is drawn. |
 | `js/spec-a.js` | The 25 Part A questions, bilingual. Mirrors the locked instrument. |
 | `js/spec-b.js` | The 58 Part B questions, bilingual. Mirrors the locked instrument. |
@@ -754,3 +756,29 @@ beneficiary.
 
 **Watch out:** `paintFixCurrent` now *builds* `#fix-confirm` and `#fix-open`, so those two are not
 in `index.html` and are not wired in `boot()`. Anything touching them must null-check.
+
+---
+
+### The officers' manual — `guide.html`
+
+Served from the app's own address (`…/guide.html`) and reachable two ways: a
+**માર્ગદર્શિકા / Guide** link in the app bar, and a link on the sign-in card — because an
+officer who cannot get past sign-in would otherwise have no way to reach the section that
+explains sign-in.
+
+**It opens in a new tab, on purpose.** An officer stuck halfway through a 58-question sheet
+must be able to read the guide and come back to the form exactly as they left it.
+
+**Standalone page, not a view inside `index.html`.** It carries its own copy of the app's
+palette tokens and loads the same two fonts, so it reads as the same product without coupling
+to `css/styles.css`. It is **light-only, like the app** — a guide that went dark beside a light
+app would look broken.
+
+**⚠️ `node check_manual.js` after ANY change to UI text.** The guide reproduces the app's
+on-screen wording in 36 places and states counts (25 / 58 questions, 13 / 39 important, the ★
+questions, the letter-code questions). The script asserts every string still exists in **both**
+the app source and `guide.html`, and re-derives every count from the specs. It caught three
+paraphrases on its first run. **A manual that misquotes the app is worse than no manual.**
+
+`a.btn` in `css/styles.css` exists only so the Guide link — an `<a>`, because it opens a new
+tab — sits in the app bar looking exactly like the buttons beside it.

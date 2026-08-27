@@ -142,3 +142,38 @@ did not silently move an answer key.
 ### Not fixed, said plainly to the user
 Vocabulary only. Several questions still ask three things at once (A2.4, B1.1), and Part B is
 still 58 questions. Those are Phase 0 structure, settled with the department.
+
+---
+
+## Officer manual moved into the app — `guide.html` (2026-08-25)
+
+The manual was first published as a private Claude artifact. On the user's instruction it now
+lives at the app's own address, so officers reach it without being sent a separate link.
+(The user also decided the planned **admin page is not needed** — dropped.)
+
+### What was added
+- **`guide.html`** — standalone page: 16 sections + a printable quick-start card
+  (`@media print` hides everything except the card).
+- **App bar link** `#btn-guide` — an `<a target="_blank">`, not a button, so a half-filled form
+  is never disturbed. New CSS rule `a.btn` makes it match the buttons beside it.
+- **Sign-in card link** — the app bar is hidden on the sign-in screen, so an officer who cannot
+  sign in could not otherwise reach section 16, which explains sign-in.
+- **`guide.html` added to the service-worker SHELL**, `CACHE` → `csq-shell-v15`, so the manual
+  works offline like the rest of the app.
+
+### The bug the guard caught, on its first run
+`check_manual.js` was extended to check the quoted strings against **both** the app and
+`guide.html`. It immediately failed on three: the guide *paraphrased*
+`સ્થાપના બાબતો છુપાવેલ`, `ભાગ A — સામાન્ય પ્રશ્નાવલિ` and `ભાગ B — યોજના દીઠ` rather than
+quoting them. Fixed in the guide — quoting the card titles exactly is also more useful to an
+officer than describing them. **This is exactly the drift the script exists to catch.**
+
+### A smaller one, caught by measuring rather than looking
+The Guide link rendered **5px shorter** than the buttons beside it (48px vs 53px) and sat 3px
+off. Cause: `line-height:normal` in the new `a.btn` rule, which `button` does not have. Removed.
+Comparing bounding boxes found it; eyeballing a screenshot would not have.
+
+### Checks run
+16 sections · 16 TOC anchors, none broken · 10 quick-start steps · both back-links resolve ·
+no horizontal overflow at 375px · body font resolves to Noto Sans Gujarati · app bar buttons all
+top=27 h=53 after the fix · 36/36 strings match both sides · all counts re-derived correct.

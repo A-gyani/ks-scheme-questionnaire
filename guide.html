@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#2557a7" />
+<title>પ્રશ્નાવલિ માર્ગદર્શિકા — સાંસ્કૃતિક યોજના પ્રશ્નાવલિ</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Gujarati:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<!--
+  guide.html — the officers' manual, served from the app's own address.
+
+  Deliberately a STANDALONE page with its own styles rather than a view inside
+  index.html: it opens in a new tab, so an officer can read it beside a
+  half-filled form without leaving the form or risking an unsaved answer.
+
+  It reuses the app's exact palette and fonts (css/styles.css tokens, copied
+  here) so it reads as the same product, and it is LIGHT ONLY because the app
+  is — a guide that went dark beside a light app would look broken.
+
+  ⚠️ This page QUOTES the app's on-screen wording in ~36 places. After ANY UI
+  text change, run `node check_manual.js` — it fails loudly if a quote has
+  drifted. A manual that misquotes the app is worse than no manual.
+-->
+
+<style>
+  /* Tokens copied from css/styles.css so the guide and the app match exactly. */
+  :root{
+    --bg:#eef1f5; --card:#ffffff; --ink:#1a2230; --muted:#69707d; --line:#e2e6ec;
+    --accent:#2557a7; --accent-soft:#e8effb; --saffron:#e08a1e;
+    --green:#2e7d52; --green-soft:#e5f3ea; --amber:#b7791f; --amber-soft:#fbf3e3;
+    --grey-soft:#f1f3f6; --danger:#b3261e; --danger-soft:#fdeceb;
+    --radius:14px; --shadow:0 1px 3px rgba(20,30,50,.08),0 8px 24px rgba(20,30,50,.06);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Noto Sans Gujarati","Nirmala UI","Inter","Segoe UI",sans-serif;
+    font-size:17px;line-height:1.75;-webkit-font-smoothing:antialiased;
+  }
+  /* English is the supporting line — same relationship as in the app. */
+  .en{
+    font-family:"Inter","Segoe UI",Roboto,system-ui,sans-serif;
+    font-size:.8em;color:var(--muted);line-height:1.5;display:block;margin-top:2px;font-weight:400;
+  }
+  .en-i{font-family:"Inter",system-ui,sans-serif;font-size:.85em;color:var(--muted)}
+
+  .wrap{max-width:660px;margin:0 auto;padding:0 20px 100px}
+
+  /* ---------- bar back to the app ---------- */
+  .bar{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+  .bar-in{
+    max-width:660px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;
+    justify-content:space-between;gap:12px;flex-wrap:wrap
+  }
+  .bar .logo{
+    width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#3b7de0);
+    display:grid;place-items:center;color:#fff;font-weight:700;font-size:14px;flex:0 0 30px
+  }
+  .bar .name{display:flex;align-items:center;gap:9px;font-weight:600;font-size:15px}
+  .backlink{
+    background:var(--grey-soft);color:var(--ink);text-decoration:none;font-size:13.5px;
+    font-weight:600;padding:8px 14px;border-radius:9px;white-space:nowrap
+  }
+  .backlink:hover{background:#e6e9ee}
+
+  /* ---------- masthead ---------- */
+  .top{padding:44px 0 30px}
+  .kicker{
+    display:inline-block;font-size:12.5px;font-weight:600;letter-spacing:.04em;
+    color:var(--accent);background:var(--accent-soft);padding:5px 12px;border-radius:999px;line-height:1.5
+  }
+  h1{font-size:clamp(28px,6.5vw,40px);line-height:1.35;font-weight:700;margin:18px 0 0;text-wrap:balance}
+  h1 .en{font-size:.44em;margin-top:8px}
+  .intro{font-size:17.5px;margin:16px 0 0}
+
+  /* ---------- printable quick card ---------- */
+  .card-quick{
+    margin-top:28px;background:var(--card);border:2px solid var(--accent);
+    border-radius:var(--radius);padding:24px 22px 20px;box-shadow:var(--shadow)
+  }
+  .card-quick h2{font-size:19px;margin:0 0 4px;font-weight:700;color:var(--accent)}
+  .qsteps{list-style:none;margin:16px 0 0;padding:0;counter-reset:qs}
+  .qsteps li{
+    counter-increment:qs;position:relative;padding:0 0 0 38px;margin-bottom:13px;
+    font-size:16px;line-height:1.6
+  }
+  .qsteps li::before{
+    content:counter(qs);position:absolute;left:0;top:1px;width:26px;height:26px;
+    background:var(--accent);color:#fff;border-radius:50%;display:grid;place-items:center;
+    font-family:"Inter",sans-serif;font-size:14px;font-weight:600
+  }
+  .qsteps .en{font-size:.78em}
+  .print-hint{margin-top:18px;padding-top:14px;border-top:1px dashed var(--line);
+    font-size:13.5px;color:var(--muted)}
+
+  /* ---------- contents ---------- */
+  .toc{margin-top:30px;background:var(--card);border:1px solid var(--line);
+    border-radius:12px;padding:18px 20px}
+  .toc h2{font-size:15px;margin:0 0 10px;color:var(--muted);font-weight:600}
+  .toc ol{margin:0;padding-left:22px;font-size:15.5px;line-height:1.9}
+  .toc a{color:var(--ink);text-decoration:none;border-bottom:1px solid transparent}
+  .toc a:hover{border-bottom-color:var(--accent);color:var(--accent)}
+
+  /* ---------- sections ---------- */
+  section{margin-top:50px;scroll-margin-top:70px}
+  h2.sec{font-size:22.5px;font-weight:700;line-height:1.4;margin:0 0 4px;
+    display:flex;gap:12px;align-items:baseline}
+  h2.sec .num{
+    font-family:"Inter",sans-serif;font-size:14px;font-weight:600;color:#fff;
+    background:var(--accent);min-width:28px;height:28px;border-radius:8px;
+    display:inline-grid;place-items:center;flex:0 0 auto
+  }
+  h2.sec .en{font-size:.6em;margin-top:3px}
+  p{margin:14px 0}
+  strong{font-weight:600}
+  ul.plain{padding-left:22px;margin:14px 0}
+  ul.plain li{margin-bottom:10px}
+
+  /* ---------- replicas of the app's own controls ---------- */
+  .demo{margin:18px 0;padding:18px;background:var(--card);border:1px solid var(--line);
+    border-radius:12px}
+  .demo-cap{font-family:"Inter",sans-serif;font-size:11.5px;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+  .chip{display:inline-block;font-size:13px;font-weight:600;padding:4px 12px;
+    border-radius:999px;margin:0 6px 8px 0}
+  .chip .en{display:inline;font-size:.85em;margin-left:5px}
+  .chip.ok{color:var(--green);background:var(--green-soft)}
+  .chip.wait{color:var(--amber);background:var(--amber-soft)}
+  .chip.bad{color:var(--danger);background:var(--danger-soft)}
+  .pill{display:inline-block;font-size:12.5px;font-weight:600;padding:3px 11px;
+    border-radius:999px;margin:0 6px 6px 0}
+  .pill.todo{background:var(--grey-soft);color:var(--muted)}
+  .pill.draft{background:var(--amber-soft);color:var(--amber)}
+  .pill.done{background:var(--green-soft);color:var(--green)}
+  .pill.req{background:var(--danger-soft);color:var(--danger)}
+  .qid{font-family:"Inter",sans-serif;font-size:12px;font-weight:700;color:var(--accent);
+    background:var(--accent-soft);padding:3px 9px;border-radius:6px}
+  .btn-demo{display:inline-block;background:var(--accent);color:#fff;font-size:14px;
+    font-weight:600;padding:8px 16px;border-radius:9px;margin:0 8px 8px 0}
+  .btn-demo.ghost{background:var(--grey-soft);color:var(--ink)}
+  .star{color:var(--saffron);font-size:19px}
+  .star.off{color:#c9ced7}
+
+  .optdemo{border:1px solid var(--line);border-radius:9px;padding:12px 14px;background:var(--bg)}
+  .optdemo .row{display:flex;gap:10px;align-items:flex-start;padding:5px 0}
+  .optdemo .box{width:17px;height:17px;border:2px solid #9aa1ad;border-radius:4px;
+    flex:0 0 auto;margin-top:5px;background:#fff}
+  .optdemo .box.round{border-radius:50%}
+  .optdemo .box.on{background:var(--accent);border-color:var(--accent);position:relative}
+  .optdemo .box.on::after{content:"✓";position:absolute;inset:0;color:#fff;font-size:12px;
+    display:grid;place-items:center}
+  .writein{margin:6px 0 4px 27px;border:1px solid var(--line);border-radius:7px;
+    padding:7px 11px;background:var(--card);font-size:14px;color:var(--muted)}
+
+  .foldcard{border:1px dashed var(--line);border-radius:10px;background:var(--grey-soft);
+    padding:14px 16px}
+  .foldcard .what{font-weight:600;font-size:15px}
+  .foldcard .why{font-size:14px;color:var(--muted);margin-top:6px}
+  .foldcard .kept{font-size:13.5px;color:var(--amber);font-weight:600;margin-top:8px}
+
+  /* ---------- call-outs ---------- */
+  .note{margin:20px 0;padding:16px 18px;border-left:4px solid var(--accent);
+    background:var(--accent-soft);border-radius:0 10px 10px 0;font-size:16px}
+  .note.warn{border-left-color:var(--saffron);background:var(--amber-soft)}
+  .note.stop{border-left-color:var(--danger);background:var(--danger-soft)}
+  .note b{font-weight:700;display:block;margin-bottom:4px}
+  .note .en{font-size:.8em}
+
+  table{width:100%;border-collapse:collapse;margin:18px 0;font-size:15px}
+  th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}
+  th{background:var(--grey-soft);font-weight:600;font-size:14px}
+  td .en{font-size:.8em}
+  .scroll{overflow-x:auto}
+
+  footer{margin-top:66px;padding-top:26px;border-top:1px solid var(--line);
+    font-size:14px;color:var(--muted)}
+  a{color:var(--accent)}
+  :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+
+  /* ---------- print: the quick card only ---------- */
+  @media print{
+    body{background:#fff;color:#000;font-size:12pt}
+    .bar,.top,.toc,section,footer,.print-hint{display:none !important}
+    .card-quick{display:block;margin:0;border:2px solid #000;box-shadow:none;
+      page-break-inside:avoid}
+    .card-quick h2{color:#000}
+    .qsteps li::before{background:#000;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .en{color:#333}
+  }
+  @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="bar-in">
+    <span class="name"><span class="logo">સા</span> માર્ગદર્શિકા</span>
+    <a class="backlink" href="./">← પ્રશ્નાવલિ પર પાછા <span class="en-i">Back to the questionnaire</span></a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <header class="top">
+    <span class="kicker">યુવક સેવા અને સાંસ્કૃતિક પ્રવૃત્તિઓની કચેરી · લલિત કલા અકાદમી · સંગીત નાટક અકાદમી</span>
+    <h1>પ્રશ્નાવલિ કઈ રીતે ભરવી
+      <span class="en">How to fill the Cultural Schemes Questionnaire — a guide for officers</span>
+    </h1>
+    <p class="intro">
+      આ માર્ગદર્શિકા એક જ પ્રશ્નનો જવાબ આપે છે: <strong>સ્ક્રીન પર જે દેખાય છે તેનો અર્થ શું છે.</strong>
+      પ્રશ્નાવલિમાં થોડી બાબતો એવી છે જે જાતે સમજવી અઘરી છે — સાચવવાનું બટન નથી, અમુક પ્રશ્નો આપોઆપ બાજુ પર
+      ખસી જાય છે, અને ભાગ A આખી કચેરી માટે એક જ પત્રક છે. તે બધું નીચે સમજાવ્યું છે.
+      <span class="en">This guide answers one question: what does the thing on screen mean? A few
+      behaviours are hard to work out on your own — there is no Save button, some questions move
+      aside by themselves, and Part A is one shared sheet for the whole office.</span>
+    </p>
+
+    <div class="card-quick">
+      <h2>ઝડપી માર્ગદર્શન
+        <span class="en">Quick start — print this and keep it on your desk</span>
+      </h2>
+      <ol class="qsteps">
+        <li>લિંક ખોલો અને આપના Google ખાતાથી <strong>સાઇન ઇન</strong> કરો.
+          <span class="en">Open the link and sign in with your Google account.</span></li>
+        <li>એક જ વાર <strong>પ્રોફાઇલ</strong> ભરો — કચેરી, નામ, હોદ્દો, શાખા.
+          <span class="en">Fill your profile once — office, name, rank, branch.</span></li>
+        <li><strong>ભાગ A</strong> આખી કચેરી માટે એક જ વાર ભરાય છે. કોઈ પણ અધિકારી તેમાં ઉમેરી શકે.
+          <span class="en">Part A is answered once for the whole office. Anyone may add to it.</span></li>
+        <li><strong>ભાગ B</strong> દરેક યોજના માટે અલગ. આપની શાખાની યાદીમાંથી યોજના પસંદ કરો.
+          <span class="en">Part B is one sheet per scheme. Pick a scheme from your branch's list.</span></li>
+        <li><strong>સાચવવાનું બટન નથી.</strong> આપ લખો તે આપોઆપ સચવાય છે. ઉપર જમણે
+          <span class="chip ok">સચવાયું ✓</span> દેખાય એટલે થઈ ગયું.
+          <span class="en">There is no Save button. Watch for the "Saved" tag at the top right.</span></li>
+        <li><span class="pill req">જરૂરી</span> નિશાનવાળા પ્રશ્નો સૌથી અગત્યના છે.
+          <span class="en">Questions marked જરૂરી / important matter most.</span></li>
+        <li><strong>"ખબર નથી" સાચો જવાબ છે.</strong> અનુમાનથી ભરવા કરતાં એ લખવું વધુ સારું.
+          <span class="en">"Don't know" is a valid answer. Better than a guess.</span></li>
+        <li>વચ્ચે બંધ કરી શકો છો. પછી ફરી ખોલશો ત્યાં જ ચાલુ થશે.
+          <span class="en">You can stop any time and come back where you left off.</span></li>
+        <li>પૂરું થાય એટલે <span class="btn-demo">રજૂ કરો</span> દબાવો — પછી પણ સુધારી શકાય છે.
+          <span class="en">Press Submit when done — you can still edit afterwards.</span></li>
+        <li><strong>કામ પૂરું થાય એટલે હંમેશાં <span class="btn-demo ghost">સાઇન આઉટ</span> કરો</strong> —
+          ખાસ કરીને સહિયારા કમ્પ્યુટર પર.
+          <span class="en">Always sign out when finished — especially on a shared computer.</span></li>
+      </ol>
+      <p class="print-hint">આ કાર્ડ છાપવા માટે Ctrl + P દબાવો. ફક્ત આટલો ભાગ છપાશે.
+        <span class="en">Press Ctrl + P to print. Only this card prints, not the whole guide.</span></p>
+    </div>
+
+    <nav class="toc">
+      <h2>વિષય-સૂચિ <span class="en-i">/ Contents</span></h2>
+      <ol>
+        <li><a href="#s1">આ પ્રશ્નાવલિ શા માટે છે</a></li>
+        <li><a href="#s2">શરૂ કરતાં પહેલાં</a></li>
+        <li><a href="#s3">સાઇન ઇન કરવું</a></li>
+        <li><a href="#s4">પ્રોફાઇલ — એક જ વાર</a></li>
+        <li><a href="#s5">મુખ્ય પાનું</a></li>
+        <li><a href="#s6">ભાગ A — કચેરીની એક જ પત્રક</a></li>
+        <li><a href="#s7">ભાગ B — આપની યોજના શોધવી</a></li>
+        <li><a href="#s8">પ્રશ્નોના પ્રકાર</a></li>
+        <li><a href="#s9">M / O અને A / P અક્ષરો</a></li>
+        <li><a href="#s10">સાચવવાનું આપોઆપ થાય છે</a></li>
+        <li><a href="#s11">બાજુ પર ખસી ગયેલા પ્રશ્નો</a></li>
+        <li><a href="#s12">"જરૂરી" નિશાન અને "ખબર નથી"</a></li>
+        <li><a href="#s13">રજૂ કરવું</a></li>
+        <li><a href="#s14">સાથી અધિકારી સાથે એક જ પત્રક</a></li>
+        <li><a href="#s15">યોજના ખોટી શાખામાં હોય તો</a></li>
+        <li><a href="#s16">ફોન, ઇન્ટરનેટ અને મુશ્કેલી</a></li>
+      </ol>
+    </nav>
+  </header>
+
+  <!-- 1 -->
+  <section id="s1">
+    <h2 class="sec"><span class="num">1</span><span>આ પ્રશ્નાવલિ શા માટે છે<span class="en">Why this questionnaire exists</span></span></h2>
+    <p>આજે વિભાગ પાસે યોજનાઓની કોઈ એક સંકલિત માહિતી નથી. કઈ યોજનામાં કોણ અરજી કરી શકે, કયા દસ્તાવેજ જોઈએ,
+      મંજૂરી કોણ આપે, ચૂકવણું કઈ રીતે થાય — આ બધું અલગ-અલગ શાખાઓમાં, અલગ-અલગ કારકુન પાસે, અલગ-અલગ
+      સ્વરૂપે છે.</p>
+    <p><strong>આ પ્રશ્નાવલિ એ માહિતી એક જગ્યાએ લાવવા માટે છે.</strong> તેના આધારે નાગરિકો માટે ઓનલાઈન પોર્ટલ
+      બનશે, અને એક જ કાર્યક્રમને બે યોજનામાંથી સહાય મળી જવાનું અટકાવી શકાશે.</p>
+    <div class="note">
+      <b>આપ જે લખશો તે જ સાચી માહિતી ગણાશે.</b>
+      અમે કોઈ જવાબ પહેલેથી ભરેલો રાખ્યો નથી. જે ખરેખર થાય છે તે લખો — નિયમમાં જે લખ્યું છે તે નહીં,
+      પણ કચેરીમાં ખરેખર જે પ્રથા છે તે.
+      <span class="en">Nothing is pre-filled. Write what actually happens in practice, not what
+      the rule book says should happen. That difference is exactly what we need to learn.</span>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section id="s2">
+    <h2 class="sec"><span class="num">2</span><span>શરૂ કરતાં પહેલાં<span class="en">Before you start</span></span></h2>
+    <ul class="plain">
+      <li><strong>એક Google ખાતું</strong> — આપનું સત્તાવાર ખાતું વાપરો.
+        <span class="en">A Google account — use your official one.</span></li>
+      <li><strong>ઇન્ટરનેટ</strong> — શરૂઆતમાં જરૂરી. પછી થોડી વાર માટે જોડાણ તૂટે તો પણ ચાલશે (વિભાગ 16).
+        <span class="en">Internet — needed to start. A short drop later is handled (section 16).</span></li>
+      <li><strong>સમય</strong> — ભાગ A માં 25 પ્રશ્ન. દરેક યોજના માટે ભાગ B માં વધુમાં વધુ 58 પ્રશ્ન,
+        પણ મોટા ભાગની યોજનાઓમાં એથી ઓછા પુછાય છે.
+        <span class="en">Part A has 25 questions. Part B has up to 58 per scheme — usually fewer.</span></li>
+      <li><strong>એકસાથે બધું ભરવું જરૂરી નથી.</strong> વચ્ચે બંધ કરીને પછી ચાલુ કરી શકાય છે.
+        <span class="en">You do not have to finish in one sitting.</span></li>
+    </ul>
+    <p>ફોન પર પણ ચાલે છે, પણ કોષ્ટકવાળા પ્રશ્નો (વિભાગ 8) કમ્પ્યુટર પર ભરવા સહેલા પડશે.
+      <span class="en">It works on a phone, but the table questions are easier on a computer.</span></p>
+  </section>
+
+  <!-- 3 -->
+  <section id="s3">
+    <h2 class="sec"><span class="num">3</span><span>સાઇન ઇન કરવું<span class="en">Signing in</span></span></h2>
+    <p>લિંક ખોલો. <span class="btn-demo ghost">Google થી સાઇન ઇન</span> બટન દબાવો અને આપનું ખાતું પસંદ કરો.</p>
+    <div class="note warn">
+      <b>દર વખતે ખાતું પસંદ કરવાનું પૂછશે — આ જાણી જોઈને રાખ્યું છે.</b>
+      સહિયારા કમ્પ્યુટર પર આગલા અધિકારીનું ખાતું ચાલુ રહી જાય તો આપના જવાબ તેમના નામે નોંધાય. તેથી
+      દર વખતે ખાતરી કરો કે આપનું જ ખાતું પસંદ થયું છે.
+      <span class="en">The account chooser appears every time, deliberately. On a shared machine a
+      leftover session would record your answers under someone else's name.</span>
+    </div>
+    <p>સાઇન ઇન થતું ન હોય તો વિભાગ 16 જુઓ.</p>
+  </section>
+
+  <!-- 4 -->
+  <section id="s4">
+    <h2 class="sec"><span class="num">4</span><span>પ્રોફાઇલ — એક જ વાર<span class="en">Your profile — asked once</span></span></h2>
+    <p>પહેલી વાર સાઇન ઇન કરો ત્યારે ચાર વિગત પુછાય છે:</p>
+    <div class="scroll"><table>
+      <tr><th>ખાનું <span class="en-i">/ Field</span></th><th>શું ભરવું <span class="en-i">/ What to enter</span></th></tr>
+      <tr><td><strong>કચેરી</strong><span class="en">Office / body</span></td>
+          <td>કમિશનરેટ, લલિત કલા અકાદમી, કે સંગીત નાટક અકાદમી.</td></tr>
+      <tr><td><strong>પૂરું નામ</strong><span class="en">Full name</span></td>
+          <td>આપનું સત્તાવાર નામ. Google માં જે નામ હોય તે અનૌપચારિક હોઈ શકે — સુધારી લો.</td></tr>
+      <tr><td><strong>હોદ્દો</strong><span class="en">Rank</span></td>
+          <td>જેમ કે "મદદનીશ નિયામક". હાલ લખવાનું ખાનું છે; આગળ જતાં યાદી ઉમેરાશે.</td></tr>
+      <tr><td><strong>શાખા</strong><span class="en">Branch</span></td>
+          <td>ફક્ત કમિશનરેટ માટે દેખાય છે — સાંસ્કૃતિક, ઉજવણી, સાહસિક, કે યુવક બોર્ડ.</td></tr>
+    </table></div>
+    <p>પછી <span class="btn-demo">સાચવીને આગળ વધો</span> દબાવો.</p>
+    <div class="note">
+      <b>આ વિગત દરેક જવાબ સાથે નોંધાય છે.</b>
+      આપ જે પણ સાચવો તેની સાથે આપનું નામ, હોદ્દો અને કચેરી કાયમી નોંધાય છે. કંઈ ખોટું નોંધાયું હોય તો
+      ઉપર <span class="btn-demo ghost">પ્રોફાઇલ</span> દબાવીને ગમે ત્યારે સુધારી શકાય છે.
+      <span class="en">Your name, rank and office are recorded with every answer you save. You can
+      correct your profile any time from the Profile button at the top.</span>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section id="s5">
+    <h2 class="sec"><span class="num">5</span><span>મુખ્ય પાનું<span class="en">The home screen</span></span></h2>
+    <p>અહીંથી બધું શરૂ થાય છે. બે ખાના દેખાશે — <strong>ભાગ A — સામાન્ય પ્રશ્નાવલિ</strong> અને
+      <strong>ભાગ B — યોજના દીઠ</strong>. દરેક ખાનામાં એક નિશાન બતાવે છે કે કામ ક્યાં પહોંચ્યું:</p>
+    <div class="demo">
+      <div class="demo-cap">Status marks</div>
+      <span class="pill todo">શરૂ થયું નથી <span class="en-i">Not started</span></span>
+      <span class="pill draft">ચાલુ છે <span class="en-i">In progress</span></span>
+      <span class="pill done">રજૂ થયું <span class="en-i">Submitted</span></span>
+    </div>
+    <p>નીચે પ્રગતિ પણ લખેલી હોય છે, જેમ કે <strong>"25 માંથી 1 જવાબ અપાયા"</strong>, અને બાકી રહેલા
+      અગત્યના પ્રશ્નોની સંખ્યા <span class="pill req">13 જરૂરી બાકી</span>.</p>
+    <p>ભાગ B ના ખાનામાં આપની શાખાની પ્રગતિ પણ દેખાય છે — કેટલી યોજના રજૂ થઈ, કેટલી ચાલુ છે, કેટલી બાકી.</p>
+  </section>
+
+  <!-- 6 -->
+  <section id="s6">
+    <h2 class="sec"><span class="num">6</span><span>ભાગ A — કચેરીની એક જ પત્રક<span class="en">Part A — one sheet for the whole office</span></span></h2>
+    <p>ભાગ A માં 25 પ્રશ્ન છે. તે કોઈ એક યોજના વિશે નથી — <strong>આખી કચેરી કઈ રીતે કામ કરે છે</strong>
+      તે વિશે છે: અરજી ક્યાં આવે, મંજૂરી કોણ આપે, ઓડિટ ક્યારે થાય, રેકોર્ડ ક્યાં રખાય.</p>
+    <div class="note stop">
+      <b>⚠️ આ પત્રક આપની આખી કચેરી માટે એક જ છે.</b>
+      આપની કચેરીના બધા અધિકારીઓ <em>એ જ</em> પત્રક ભરે છે. કોઈ સાથી અધિકારીએ કોઈ પ્રશ્નનો જવાબ આપ્યો હોય
+      તો આપને એ દેખાશે. અને જો આપ બંને <em>એક જ</em> પ્રશ્ન ભરો, તો <strong>પછી સાચવનારનો જવાબ રહે
+      છે.</strong> તેથી પહેલેથી ભરેલો જવાબ ભૂંસતાં પહેલાં વિચારો — વિભાગ 14 જુઓ.
+      <span class="en">Part A is ONE shared sheet per office. Everyone in your office fills the same
+      one. If two of you answer the same question, the later save wins. Think before you overwrite
+      an answer that is already there — see section 14.</span>
+    </div>
+    <p>તેથી ભાગ A ભરવાની સારી રીત: <strong>જે પ્રશ્ન આપ ચોક્કસ જાણો છો તે ભરો</strong>, બાકીના સાથી
+      અધિકારીઓ માટે છોડી દો.</p>
+  </section>
+
+  <!-- 7 -->
+  <section id="s7">
+    <h2 class="sec"><span class="num">7</span><span>ભાગ B — આપની યોજના શોધવી<span class="en">Part B — finding your scheme</span></span></h2>
+    <p>ભાગ B માં <strong>દરેક યોજના માટે અલગ પત્રક</strong> છે. મુખ્ય પાના પરના ભાગ B ખાનામાં યાદી છે.</p>
+    <ul class="plain">
+      <li><strong>યાદી પહેલેથી આપની શાખા પ્રમાણે ગળાયેલી છે.</strong> બીજી શાખાની યોજના જોવી હોય તો
+        ઉપરના ખાનામાં <strong>બધી શાખા</strong> પસંદ કરો.</li>
+      <li><strong>શોધવા માટે</strong> — યોજનાનું નામ, પત્રક ક્રમ કે બજેટ સદર લખો.</li>
+      <li>દરેક હરોળમાં યોજનાનું નામ, પત્રક ક્રમ, ફાળવણી અને શાખા દેખાય છે.</li>
+    </ul>
+    <div class="demo">
+      <div class="demo-cap">A row in the scheme list</div>
+      <div style="font-weight:600">કલા મહાકુંભ<span class="en">Kala Mahakumbh</span></div>
+      <div style="font-size:13px;color:var(--muted);margin-top:6px">
+        પત્રક-5 · ₹ 15.00 કરોડ · સાંસ્કૃતિક શાખા <strong>(ખાતરી બાકી)</strong>
+        &nbsp;<span class="pill draft">ચાલુ છે</span>
+      </div>
+    </div>
+    <div class="note warn">
+      <b>"(ખાતરી બાકી)" નો અર્થ</b>
+      અંદાજપત્ર ઠરાવમાં અમુક યોજના કઈ શાખાની છે તે લખેલું નથી, તેથી અમે અનુમાન કર્યું છે. આ નિશાન એટલે
+      "આ શાખા અમારું અનુમાન છે". <strong>એ ખરી હોય તો આપ ખાતરી કરી શકો</strong> — વિભાગ 15 જુઓ.
+      <span class="en">"(ખાતરી બાકી)" / "to confirm" means the branch is our guess, not the GR's word.</span>
+    </div>
+    <p>યાદીની નીચે લખેલું હોય છે કે કેટલી યોજના બતાવી, અને સાથે
+      <strong>"સ્થાપના બાબતો છુપાવેલ"</strong> એમ પણ લખેલું હોય છે. સ્થાપના બાબતો એટલે પગાર, કચેરી ખર્ચ,
+      જાહેરાત જેવી બાબતો — તેમાં કોઈ અરજી કરતું નથી, તેથી તેના પ્રશ્નો પુછાતા નથી.
+      <span class="en">Establishment lines — salaries, office costs, advertising. Nobody applies for
+      these, so they are left out of the list.</span></p>
+  </section>
+
+  <!-- 8 -->
+  <section id="s8">
+    <h2 class="sec"><span class="num">8</span><span>પ્રશ્નોના પ્રકાર<span class="en">The kinds of question</span></span></h2>
+
+    <p><strong>1. બધા લાગુ પડતા પર ✔ કરો</strong> — એકથી વધુ પસંદ કરી શકાય.
+      <span class="en">Tick all that apply — more than one allowed.</span></p>
+    <div class="demo"><div class="optdemo">
+      <div class="row"><span class="box on"></span><span>છાપામાં જાહેરાત<span class="en">Newspaper advertisement</span></span></div>
+      <div class="row"><span class="box"></span><span>વિભાગ / કચેરીની વેબસાઇટ<span class="en">Department / office website</span></span></div>
+    </div></div>
+
+    <p><strong>2. એક જ પસંદ કરો</strong> — ગોળ ખાનું હોય ત્યાં ફક્ત એક જવાબ.
+      <span class="en">Choose one — round boxes allow a single answer.</span></p>
+    <div class="demo"><div class="optdemo">
+      <div class="row"><span class="box round on"></span><span>હા<span class="en">Yes</span></span></div>
+      <div class="row"><span class="box round"></span><span>ના<span class="en">No</span></span></div>
+    </div></div>
+
+    <p><strong>3. લખવાનું ખાનું</strong> — એક લીટી, અથવા મોટું ખાનું જેમાં ફકરો લખાય.</p>
+
+    <p><strong>4. કોષ્ટક</strong> — હરોળ અને ખાનાં ભરવાનાં હોય (જેમ કે A3.2 નાણાકીય મર્યાદા, B1.1 ઠરાવોની
+      યાદી). ફોન પર કોષ્ટક બાજુમાં સરકાવીને જોઈ શકાય છે.</p>
+
+    <p><strong>5. ★ નિશાન</strong> — અમુક પ્રશ્નોમાં દરેક વિકલ્પ પાસે ★ હોય છે. બધા લાગુ પડતા પર ✔ કર્યા
+      પછી, <strong>જે સૌથી સામાન્ય હોય તેના ★ પર દબાવો</strong>. બંને અલગ માહિતી છે: ✔ એટલે "આ થાય છે",
+      ★ એટલે "આ સૌથી વધુ થાય છે".</p>
+    <div class="demo"><div class="optdemo">
+      <div class="row"><span class="box on"></span><span style="flex:1">છાપામાં જાહેરાત</span><span class="star off">★</span></div>
+      <div class="row"><span class="box on"></span><span style="flex:1">જિલ્લા કચેરીઓને પરિપત્ર</span><span class="star">★</span></div>
+    </div></div>
+
+    <p><strong>6. વિકલ્પ સાથેનું નાનું ખાનું</strong> — અમુક વિકલ્પ પર ✔ કરતાં જ નીચે નાનું ખાનું ખૂલે છે.
+      તે <em>એ જ વિકલ્પ</em> માટે છે. જેમ કે "છાપામાં જાહેરાત" પર ✔ કરો તો "કયા છાપાં" પુછાય.</p>
+    <div class="demo"><div class="optdemo">
+      <div class="row"><span class="box on"></span><span>છાપામાં જાહેરાત</span></div>
+      <div class="writein">કયા છાપાં · which papers</div>
+    </div></div>
+  </section>
+
+  <!-- 9 -->
+  <section id="s9">
+    <h2 class="sec"><span class="num">9</span><span>M / O અને A / P અક્ષરો<span class="en">The letter codes</span></span></h2>
+    <p>ત્રણ પ્રશ્નોમાં — <strong>B4.3</strong>, <strong>B9.1</strong> અને <strong>B5.1</strong> — ✔ કર્યા
+      પછી નાના ખાનામાં <strong>એક અક્ષર</strong> લખવાનો હોય છે. કાગળના ફોર્મમાં જેમ ✔ કરીને બાજુમાં
+      અક્ષર લખાય છે, તેમ જ.</p>
+    <div class="scroll"><table>
+      <tr><th>ક્યાં</th><th>અક્ષર</th><th>અર્થ</th></tr>
+      <tr><td rowspan="2"><strong>B4.3</strong> અરજી સાથેના દસ્તાવેજ<br><strong>B9.1</strong> કાર્યક્રમ પછીના દસ્તાવેજ</td>
+          <td><strong>M</strong></td><td>ફરજિયાત — આ વગર અરજી/બિલ ન સ્વીકારાય<span class="en">Mandatory</span></td></tr>
+      <tr><td><strong>O</strong></td><td>મરજિયાત — હોય તો સારું, ન હોય તો ચાલે<span class="en">Optional</span></td></tr>
+      <tr><td rowspan="3"><strong>B5.1</strong> ઓળખના દસ્તાવેજ</td>
+          <td><strong>A</strong></td><td>અરજી વખતે લેવાય છે<span class="en">At application</span></td></tr>
+      <tr><td><strong>P</strong></td><td>ચૂકવણી વખતે / કાર્યક્રમ પછી લેવાય છે<span class="en">At payment / after the event</span></td></tr>
+      <tr><td><strong>+M</strong></td><td>અને તે ફરજિયાત છે<span class="en">…and it is compulsory</span></td></tr>
+    </table></div>
+    <p>જેમ કે B5.1 માં આધાર કાર્ડ અરજી વખતે ફરજિયાત લેવાતું હોય તો, આધાર પર ✔ કરીને ખાનામાં
+      <strong>A M</strong> લખો.</p>
+  </section>
+
+  <!-- 10 -->
+  <section id="s10">
+    <h2 class="sec"><span class="num">10</span><span>સાચવવાનું આપોઆપ થાય છે<span class="en">Saving is automatic</span></span></h2>
+    <div class="note">
+      <b>સાચવવાનું બટન નથી — અને તેની જરૂર પણ નથી.</b>
+      આપ કોઈ ખાનામાં લખીને બહાર નીકળો, કે કોઈ વિકલ્પ પર ✔ કરો, કે તરત જ થોડી ક્ષણોમાં એ સચવાઈ જાય છે.
+      <span class="en">There is no Save button. Your answer is saved a couple of seconds after you
+      tick an option or move out of a box.</span>
+    </div>
+    <p>પાનાની ઉપર જમણી બાજુએ નાનું નિશાન દેખાય છે. તેના ચાર સ્વરૂપ છે:</p>
+    <div class="demo">
+      <div class="demo-cap">The four save marks</div>
+      <div style="margin-bottom:12px"><span class="chip wait">સાચવાય છે…</span>
+        સચવાઈ રહ્યું છે. થોડી ક્ષણ રાહ જુઓ.<span class="en">Saving — wait a moment.</span></div>
+      <div style="margin-bottom:12px"><span class="chip ok">સચવાયું ✓</span>
+        <strong>થઈ ગયું.</strong> હવે પાનું બંધ કરી શકો છો.<span class="en">Saved. You may close the page.</span></div>
+      <div style="margin-bottom:12px"><span class="chip wait">આ ઉપકરણ પર સચવાયું — પછી સિંક થશે</span>
+        ઇન્ટરનેટ નથી, પણ જવાબ આ ઉપકરણ પર સચવાયો છે. જોડાણ આવતાં આપોઆપ મોકલાઈ જશે.
+        <strong>આ ભૂલ નથી.</strong><span class="en">No internet, but the answer is safe on this device
+        and will sync by itself. This is not an error.</span></div>
+      <div><span class="chip bad">સચવાયું નથી — ફરી પ્રયાસ થશે</span>
+        સચવાયું નથી. એપ્લિકેશન જાતે ફરી પ્રયાસ કરશે. <strong>વારંવાર દેખાય તો પાનું બંધ ન કરો</strong> —
+        વિભાગ 16 જુઓ.<span class="en">Not saved. It will retry. If this persists, do not close the
+        page — see section 16.</span></div>
+    </div>
+    <p>નીચે <span class="btn-demo ghost">સાચવીને બહાર</span> બટન પણ છે. તે બાકી રહેલું સાચવીને મુખ્ય
+      પાના પર લઈ જાય છે.</p>
+  </section>
+
+  <!-- 11 -->
+  <section id="s11">
+    <h2 class="sec"><span class="num">11</span><span>બાજુ પર ખસી ગયેલા પ્રશ્નો<span class="en">Questions that move aside</span></span></h2>
+    <p>ભાગ B માં અમુક પ્રશ્નો <strong>આપોઆપ બાજુ પર ખસી જાય છે</strong>. આ ભૂલ નથી અને આપે કંઈ ખોટું કર્યું
+      નથી.</p>
+    <p>જેમ કે પ્રશ્ન <strong>B0.5</strong> માં આપ જણાવો કે "કચેરી પોતે કાર્યક્રમ યોજે છે અને કલાકારો પસંદ
+      કરે છે" — તો એ યોજનામાં કોઈ અરજી કરતું જ નથી. તેથી "અરજી કઈ રીતે થાય છે" વિભાગના પ્રશ્નો પુછાતા
+      નથી. તેની જગ્યાએ આવું ખાનું દેખાય છે:</p>
+    <div class="demo"><div class="foldcard">
+      <div class="what">B4. અરજી કઈ રીતે થાય છે<span class="en">How the application is made</span></div>
+      <div class="why">બાજુ પર: આ યોજનામાં અરજદાર નથી. B0.5 મુજબ કચેરી પોતે કાર્યક્રમ યોજે છે અને કલાકારો
+        પસંદ કરે છે, તેથી અરજી કરવાની પ્રક્રિયા જ નથી.</div>
+      <div class="kept">અહીં અપાયેલા 2 જવાબ સચવાયેલા છે, ભૂંસાયા નથી</div>
+      <div style="margin-top:12px"><span class="btn-demo ghost">તો પણ બતાવો</span></div>
+    </div></div>
+    <div class="note">
+      <b>કંઈ પણ ભૂંસાતું નથી.</b>
+      આપે પહેલેથી કોઈ જવાબ આપ્યો હોય અને પછી પ્રશ્ન બાજુ પર ખસે, તો પણ એ જવાબ સચવાયેલો રહે છે —
+      ખાનામાં લખેલું જ હોય છે કે કેટલા જવાબ સચવાયેલા છે.
+      <span class="en">Nothing is deleted. If answers were already given, the card says how many are
+      being kept.</span>
+    </div>
+    <p><strong>પાછા લાવવાની બે રીત છે:</strong></p>
+    <ul class="plain">
+      <li><span class="btn-demo ghost">તો પણ બતાવો</span> — એ એક પ્રશ્ન કે વિભાગ ફરી ખૂલે.
+        <strong>અમારો નિયમ ખોટો લાગે તો આ વાપરો.</strong></li>
+      <li>પાનાની નીચે <span class="btn-demo ghost">બધા પ્રશ્નો બતાવો</span> — બધા 58 પ્રશ્નો એકસાથે ખૂલે.</li>
+    </ul>
+    <p><strong>ઊલટું પણ થઈ શકે.</strong> કોઈ વિભાગ આ યોજનાને લાગુ ન પડતો હોય તો, વિભાગના મથાળા પાસે
+      <strong>"આ વિભાગ લાગુ પડતો નથી"</strong> દબાવીને આપ જાતે બાજુ પર રાખી શકો છો. આપનો પોતાનો
+      અભિપ્રાય અમારા નિયમ કરતાં ઉપર છે.</p>
+  </section>
+
+  <!-- 12 -->
+  <section id="s12">
+    <h2 class="sec"><span class="num">12</span><span>"જરૂરી" નિશાન અને "ખબર નથી"<span class="en">The "important" mark, and not knowing</span></span></h2>
+    <p>અમુક પ્રશ્નોના ક્રમાંક પાસે લાલ નિશાન હોય છે:</p>
+    <div class="demo">
+      <span class="qid">B0.5</span>
+      &nbsp;<span class="pill req">જરૂરી <span class="en-i">important</span></span>
+    </div>
+    <p>એનો અર્થ: <strong>પોર્ટલની રચના આ જવાબ પર આધારિત છે.</strong> આવા પ્રશ્નનો જવાબ ન મળે તો પોર્ટલનો
+      એ ભાગ બનાવી શકાતો નથી. ભાગ A માં 13 અને ભાગ B માં 39 પ્રશ્નો આવા છે.</p>
+    <div class="note warn">
+      <b>"ખબર નથી" સાચો અને ઉપયોગી જવાબ છે.</b>
+      અનુમાનથી ભરેલો જવાબ ખોટી માહિતી બની જાય છે, અને પછી એ ખોટી માહિતી પર પોર્ટલ બને છે.
+      <strong>ખબર ન હોય તો "ખબર નથી" જ પસંદ કરો</strong>, અથવા ખાનું ખાલી છોડો. અમારે માટે એ પણ
+      માહિતી છે — એ બતાવે છે કે આ બાબત ક્યાંય લખેલી નથી.
+      <span class="en">"Don't know" is a real answer, and a useful one. A guess becomes wrong data,
+      and the portal then gets built on it. An empty answer tells us the fact is not written down
+      anywhere — which is itself a finding.</span>
+    </div>
+  </section>
+
+  <!-- 13 -->
+  <section id="s13">
+    <h2 class="sec"><span class="num">13</span><span>રજૂ કરવું<span class="en">Submitting</span></span></h2>
+    <p>પાનાની નીચે <span class="btn-demo">ભાગ A રજૂ કરો</span> અથવા
+      <span class="btn-demo">આ યોજના રજૂ કરો</span> બટન છે.</p>
+    <p>જો કોઈ <strong>જરૂરી</strong> પ્રશ્ન બાકી હોય તો પહેલાં આવો સંદેશો દેખાશે:</p>
+    <div class="demo" style="font-size:15px">
+      <div class="demo-cap">Browser message</div>
+      13 જરૂરી પ્રશ્નોના જવાબ બાકી છે.<br>
+      <span class="en-i">13 important question(s) are still unanswered.</span><br><br>
+      તો પણ રજૂ કરવું? &nbsp;·&nbsp; <span class="en-i">Submit anyway?</span>
+    </div>
+    <p>આપ <strong>તો પણ રજૂ કરી શકો છો</strong>. આ ચેતવણી છે, રોકટોક નથી.</p>
+    <div class="note">
+      <b>રજૂ કર્યા પછી પણ સુધારી શકાય છે.</b>
+      "રજૂ કરો" દબાવવાથી પત્રક બંધ થઈ જતું નથી. ફરી ખોલીને જવાબ બદલી શકાય છે, અને દરેક ફેરફાર
+      નોંધાય છે. તેથી અધૂરું હોય તો પણ રજૂ કરવામાં વાંધો નથી — પછી ઉમેરી શકાશે.
+      <span class="en">Submitting does NOT lock the sheet. You can reopen it and change answers;
+      every change is recorded. So there is no harm in submitting an incomplete sheet.</span>
+    </div>
+  </section>
+
+  <!-- 14 -->
+  <section id="s14">
+    <h2 class="sec"><span class="num">14</span><span>સાથી અધિકારી સાથે એક જ પત્રક<span class="en">Sharing a sheet with colleagues</span></span></h2>
+    <p>ભાગ A આખી કચેરી માટે એક જ છે, અને ભાગ B માં દરેક યોજનાનું પત્રક પણ આપની કચેરીના બધા અધિકારીઓ
+      માટે એક જ છે.</p>
+    <p>કોઈ સાથીએ આપની પહેલાં કંઈ ભર્યું હોય તો પાનાની ઉપર આવો સંદેશો દેખાશે:</p>
+    <div class="demo" style="font-size:15px;color:var(--accent);background:var(--accent-soft);border-color:transparent">
+      છેલ્લે સુધારનાર: શ્રી એ. બી. પટેલ · નાયબ નિયામક · કમિશનરેટ (ઉજવણી), 21-08-2026, 03:45 pm
+    </div>
+    <p>નિયમ સાદો છે: <strong>એક જ પ્રશ્નમાં બે જણ જવાબ આપે તો પછી સાચવનારનો જવાબ રહે છે.</strong></p>
+    <div class="note warn">
+      <b>જૂનો જવાબ ખોવાતો નથી.</b>
+      દરેક ફેરફારની કાયમી નોંધ રહે છે — કોણે, ક્યારે, શું બદલ્યું. તેથી ભૂલથી કંઈ ભૂંસાય તો પણ પાછું
+      મેળવી શકાય છે. તેમ છતાં, પહેલેથી ભરેલો જવાબ બદલતાં પહેલાં એક વાર વિચારો.
+      <span class="en">Every change is permanently logged — who, when, and what changed — so an
+      overwrite can always be recovered. Still, think once before changing an answer someone else
+      has already given.</span>
+    </div>
+  </section>
+
+  <!-- 15 -->
+  <section id="s15">
+    <h2 class="sec"><span class="num">15</span><span>યોજના ખોટી શાખામાં હોય તો<span class="en">If a scheme is in the wrong branch</span></span></h2>
+    <p>યોજના ખોલો ત્યારે ઉપર એક લીટી દેખાય છે કે એ કઈ કચેરી અને શાખા હેઠળ નોંધાયેલી છે:</p>
+    <div class="demo">
+      <div style="font-size:15px">નોંધાયેલ: યુવક સેવા અને સાંસ્કૃતિક પ્રવૃત્તિઓની કચેરી → સાંસ્કૃતિક શાખા
+        <strong>(ખાતરી બાકી)</strong></div>
+      <div style="margin-top:12px">
+        <span class="btn-demo ghost">ખરી છે</span>
+        <span class="btn-demo ghost">સુધારો સૂચવો</span>
+        <span style="color:var(--accent);font-size:14px;text-decoration:underline">શા માટે?</span>
+      </div>
+    </div>
+    <ul class="plain">
+      <li><strong>શાખા ખરી હોય</strong> → <span class="btn-demo ghost">ખરી છે</span> દબાવો. બધા માટે
+        "(ખાતરી બાકી)" નિશાન દૂર થઈ જશે. યોજના જ્યાં છે ત્યાં જ રહેશે.
+        <span class="en">This button appears only for schemes in your own branch — you are the person
+        who would know.</span></li>
+      <li><strong>શાખા ખોટી હોય</strong> → <span class="btn-demo ghost">સુધારો સૂચવો</span> દબાવો,
+        સાચી કચેરી/શાખા પસંદ કરો અને મોકલો.</li>
+    </ul>
+    <div class="note">
+      <b>આપની જાણથી યોજના તરત ખસતી નથી.</b>
+      સૂચવેલો સુધારો વહીવટકર્તા પાસે જાય છે. તેઓ મંજૂર કરે ત્યારે જ યોજના ખસે છે. તેથી ભૂલથી પણ
+      કોઈની યાદીમાંથી યોજના ગુમ થઈ જતી નથી.
+      <span class="en">Reporting does not move the scheme. It goes to the administrator, who applies
+      it — so nothing can vanish from anyone's list by mistake.</span>
+    </div>
+  </section>
+
+  <!-- 16 -->
+  <section id="s16">
+    <h2 class="sec"><span class="num">16</span><span>ફોન, ઇન્ટરનેટ અને મુશ્કેલી<span class="en">Phone, internet, and when something goes wrong</span></span></h2>
+
+    <p><strong>ફોન પર</strong> — બધું ચાલે છે. કોષ્ટકવાળા પ્રશ્નો બાજુમાં સરકાવીને ભરવા પડશે.</p>
+
+    <p><strong>ઇન્ટરનેટ જાય તો</strong> — લખવાનું ચાલુ રાખો. નિશાન
+      <span class="chip wait">આ ઉપકરણ પર સચવાયું — પછી સિંક થશે</span> બતાવશે. જોડાણ પાછું આવતાં
+      આપોઆપ મોકલાઈ જશે. <strong>પણ એ પહેલાં પાનું બંધ ન કરો.</strong></p>
+
+    <div class="scroll"><table>
+      <tr><th>મુશ્કેલી <span class="en-i">/ Problem</span></th><th>શું કરવું <span class="en-i">/ What to do</span></th></tr>
+      <tr><td>સાઇન ઇન બટન દબાવ્યા પછી કંઈ ખૂલતું નથી</td>
+          <td>બ્રાઉઝર પોપ-અપ રોકે છે. <strong>બટન ફરી એક વાર દબાવો</strong> — બીજી વાર એ જ પાના પર
+            સાઇન ઇન થશે.</td></tr>
+      <tr><td>"આ સાઇટ પરથી સાઇન ઇન કરવાની મંજૂરી અપાઈ નથી"</td>
+          <td>આ ગોઠવણની બાબત છે, આપની ભૂલ નથી. વહીવટકર્તાને જાણ કરો.</td></tr>
+      <tr><td><span class="chip bad">સચવાયું નથી — ફરી પ્રયાસ થશે</span> વારંવાર દેખાય છે</td>
+          <td>પહેલાં ઇન્ટરનેટ ચકાસો. જોડાણ બરાબર હોય તો પણ ચાલુ રહે તો
+            <strong>પાનું બંધ કર્યા વગર</strong> વહીવટકર્તાને જાણ કરો.</td></tr>
+      <tr><td>જૂનું પાનું દેખાય છે / ફેરફાર દેખાતા નથી</td>
+          <td><strong>Ctrl + Shift + R</strong> દબાવો (ફોન પર પાનું ફરી ખોલો).</td></tr>
+      <tr><td>બીજા અધિકારીના નામે જવાબ નોંધાયા</td>
+          <td>સહિયારા કમ્પ્યુટર પર આગલું ખાતું ચાલુ રહી ગયું હશે.
+            <strong>સાઇન આઉટ કરીને આપના ખાતાથી ફરી સાઇન ઇન કરો</strong>, અને વહીવટકર્તાને જાણ કરો.</td></tr>
+    </table></div>
+
+    <div class="note stop">
+      <b>⚠️ કામ પૂરું થાય એટલે હંમેશાં સાઇન આઉટ કરો</b>
+      ઉપર જમણે <span class="btn-demo ghost">સાઇન આઉટ</span> બટન છે. સહિયારા કમ્પ્યુટર પર આ ન કરો તો
+      પછીના અધિકારીના જવાબ <strong>આપના નામે</strong> નોંધાશે.
+      <span class="en">Always sign out. On a shared computer, the next officer's answers would
+      otherwise be recorded under your name.</span>
+    </div>
+
+    <p style="margin-top:26px"><strong>કંઈ પણ પૂછવું હોય તો</strong> — વહીવટકર્તાનો સંપર્ક કરો.
+      પ્રશ્નનો અર્થ ન સમજાય તો અનુમાનથી ભરવા કરતાં પૂછી લેવું વધુ સારું.
+      <span class="en">If a question is unclear, ask rather than guess.</span></p>
+
+    <p style="margin-top:26px"><a class="backlink" href="./">← પ્રશ્નાવલિ પર પાછા
+      <span class="en-i">Back to the questionnaire</span></a></p>
+  </section>
+
+  <footer>
+    સાંસ્કૃતિક યોજના પ્રશ્નાવલિ · રમતગમત, યુવા અને સાંસ્કૃતિક પ્રવૃત્તિઓ વિભાગ, ગુજરાત સરકાર
+    <span class="en">Cultural Schemes Questionnaire · Sports, Youth &amp; Cultural Activities
+    Department, Government of Gujarat · officers' guide</span>
+  </footer>
+
+</div>
+</body>
+</html>

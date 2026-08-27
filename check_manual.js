@@ -4,9 +4,11 @@
  * and check the counts it states.
  */
 const fs = require('fs');
-const APP = 'C:/Users/MOHINI MALIK/OneDrive/Desktop/CM Fellowship/cm-scheme-questionnaire/';
+const path = require('path');
+const APP = __dirname + path.sep;
 const src = ['index.html', 'js/app.js', 'js/render.js', 'js/route-b.js']
   .map(f => fs.readFileSync(APP + f, 'utf8')).join('\n');
+const guide = fs.readFileSync(APP + 'guide.html', 'utf8');
 
 const quoted = [
   'સચવાયું ✓', 'સાચવાય છે…', 'સચવાયું નથી — ફરી પ્રયાસ થશે',
@@ -26,11 +28,12 @@ const quoted = [
 
 let bad = 0;
 quoted.forEach(s => {
-  if (!src.includes(s)) { console.log('MISSING FROM APP: "' + s + '"'); bad++; }
+  if (!src.includes(s))   { console.log('MISSING FROM APP  : "' + s + '"'); bad++; }
+  if (!guide.includes(s)) { console.log('MISSING FROM GUIDE: "' + s + '"'); bad++; }
 });
 console.log(bad === 0
-  ? '✓ all ' + quoted.length + ' quoted UI strings match the app'
-  : '✗ ' + bad + ' string(s) do not match');
+  ? '✓ all ' + quoted.length + ' UI strings match between the app and guide.html'
+  : '✗ ' + bad + ' mismatch(es) - the guide and the app disagree');
 
 /* counts the manual states */
 global.window = global;
